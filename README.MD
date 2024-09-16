@@ -4,5 +4,5 @@ HOW TO COMPILE
 
 Enter terminal commands:
 
-2. cmake -S . -B ./build
-3. make -C ./build
+2. cmake -B ./build
+3. cmake --build ./build

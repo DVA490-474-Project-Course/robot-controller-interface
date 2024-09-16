@@ -4,9 +4,9 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <sys/types.h>
-#include "grSim_Packet.pb.h"
-#include "grSim_Commands.pb.h"
-#include "grSim_Replacement.pb.h"
+//#include "grSim_Packet.pb.h"
+//#include "grSim_Commands.pb.h"
+//#include "grSim_Replacement.pb.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ public:
     Client();
     ~Client();
 public slots:
-    void reconnectUdp();
+    void connectUdp();
     void sendPacket();
     void disconnectUdp();
 private:

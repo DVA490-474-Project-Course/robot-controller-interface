@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     Client client;
-    client.reconnectUdp();
+    client.connectUdp();
     client.sendPacket();
     client.disconnectUdp();
     return 0;
