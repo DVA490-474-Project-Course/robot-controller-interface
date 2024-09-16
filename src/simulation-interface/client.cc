@@ -1,4 +1,3 @@
-#include <QByteArray>
 #include <string>
 #include <sys/socket.h>
 #include <arpa/inet.h>
