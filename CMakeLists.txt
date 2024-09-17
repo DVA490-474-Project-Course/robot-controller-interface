@@ -46,3 +46,20 @@ target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulat
 
 # link libraries
 target_link_libraries(client ${Protobuf_LIBRARIES})
+#____________________________________________________________
+#googleTest
+#_____________________________________________________________
+# Add GoogleTest manually
+add_subdirectory(/home/aaiza/googletest ${CMAKE_BINARY_DIR}/googletest-build)
+
+# Add your test executable
+add_executable(my_tests /home/aaiza/CLionProjects/robot-controller-interface/test
+)
+
+# Link GoogleTest and GoogleTest main library
+target_link_libraries(my_tests gtest_main)
+# Enable testing
+enable_testing()
+
+# Add a test to be run with `ctest`
+add_test(NAME my_test COMMAND my_tests)
