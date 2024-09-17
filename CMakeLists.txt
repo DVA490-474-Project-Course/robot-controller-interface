@@ -28,13 +28,14 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
 
 find_package(Threads REQUIRED)
 
-# Google test
+# Google test (not used yet)
 include(FetchContent)
 FetchContent_Declare(
   googletest
   # Specify the commit you depend on and update it regularly.
   URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
 )
+
 
 # add .cc files to executable
 file(GLOB_RECURSE SRC_FILES src/*.cc)

@@ -20,7 +20,6 @@ public:
 private:
     string ip;
     uint16_t port;
-
 };
 
 #endif // CLIENT_H
