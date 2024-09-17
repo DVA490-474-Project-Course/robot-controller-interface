@@ -4,6 +4,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include "client.h"
+#include "grSim_Packet.pb.h"
+#include "grSim_Commands.pb.h"
+#include "grSim_Replacement.pb.h"
 
 Client::Client()
 {
@@ -46,6 +49,12 @@ void Client::sendPacket()
     command->set_kickspeedx(0);
     command->set_kickspeedz(0);
     command->set_spinner(false);
+    */
+
+    /*
+    QByteArray dgram;
+    dgram.resize(packet.ByteSize());
+    packet.SerializeToArray(dgram.data(), dgram.size());
     */
 
     sockaddr_in destination;
