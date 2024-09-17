@@ -1,10 +1,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <sys/types.h>
-//#include "grSim_Packet.pb.h"
-//#include "grSim_Commands.pb.h"
-//#include "grSim_Replacement.pb.h"
+#include <string>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -14,12 +12,12 @@ public:
     Client();
     ~Client();
 public:
-    void connectUdp();
     void sendPacket();
-    void disconnectUdp();
 private:
-    string ip;
-    uint16_t port;
+    string ip = "127.0.0.1";
+    uint16_t port = 20011;
+    sockaddr_in destination;
+    int socket;
 };
 
 #endif // CLIENT_H
