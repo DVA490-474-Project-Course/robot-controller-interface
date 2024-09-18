@@ -58,3 +58,6 @@ cmake-build-debug/googletest-build/googletest/generated/GTestConfigVersion.cmake
 .idea/modules.xml
 .idea/robot-controller-interface.iml
 .idea/vcs.xml
+/build/*
+/bin/*
+/.vscode/*
