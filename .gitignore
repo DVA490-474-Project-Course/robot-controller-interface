@@ -61,3 +61,4 @@ cmake-build-debug/googletest-build/googletest/generated/GTestConfigVersion.cmake
 /build/*
 /bin/*
 /.vscode/*
+/CMakeFiles/*
