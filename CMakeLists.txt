@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-set(CMAKe_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED_ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
@@ -28,13 +28,7 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
 
 find_package(Threads REQUIRED)
 
-# Google test (not used yet)
-#include(FetchContent)
-#FetchContent_Declare(
- # googletest
-  ## Specify the commit you depend on and update it regularly.
-  #URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
-#)
+
 
 
 # add .cc files to executable
@@ -50,19 +44,32 @@ target_link_libraries(client ${Protobuf_LIBRARIES})
 #googleTest
 #_____________________________________________________________
 # Add GoogleTest manually
-add_subdirectory(/home/aaiza/googletest ${CMAKE_BINARY_DIR}/googletest-build)
+#add_subdirectory(/home/aaiza/googletest ${CMAKE_BINARY_DIR}/googletest-build)
+
+
+# Fetch and Add GoogleTest
+include(FetchContent)
+
+# Declare GoogleTest as a dependency and download it automatically
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/release-1.11.0.zip
+)
+
+# Make GoogleTest available
+FetchContent_MakeAvailable(googletest)
 
 # Add your test executable
 add_executable(my_tests test/dummy.cpp test/dummy_test.cpp
 )
 
 # Include GoogleTest headers
-#target_include_directories(my_tests PRIVATE ${CMAKE_SOURCE_DIR}/googletest/googletest/include/gtest)
-# Include GoogleTest headers
 target_include_directories(my_tests PRIVATE 
-    ${CMAKE_BINARY_DIR}/googletest/googletest/include/gtest
-    ${CMAKE_BINARY_DIR}/googletest/googlemock/include/gmock
+    ${gtest_SOURCE_DIR}/include
+    ${gmock_SOURCE_DIR}/include
 )
+
+
 
 # Link GoogleTest and GoogleTest main library
 target_link_libraries(my_tests gtest_main)
