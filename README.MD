@@ -18,3 +18,4 @@ Enter terminal commands:
 HOW TO RUN
 
 Run the executable that can be found in the bin folder
+
