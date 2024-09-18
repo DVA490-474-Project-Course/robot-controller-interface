@@ -29,12 +29,12 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
 find_package(Threads REQUIRED)
 
 # Google test (not used yet)
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  # Specify the commit you depend on and update it regularly.
-  URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
-)
+#include(FetchContent)
+#FetchContent_Declare(
+ # googletest
+  ## Specify the commit you depend on and update it regularly.
+  #URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
+#)
 
 
 # add .cc files to executable
@@ -53,7 +53,15 @@ target_link_libraries(client ${Protobuf_LIBRARIES})
 add_subdirectory(/home/aaiza/googletest ${CMAKE_BINARY_DIR}/googletest-build)
 
 # Add your test executable
-add_executable(my_tests /home/aaiza/CLionProjects/robot-controller-interface/test
+add_executable(my_tests test/dummy.cpp test/dummy_test.cpp
+)
+
+# Include GoogleTest headers
+#target_include_directories(my_tests PRIVATE ${CMAKE_SOURCE_DIR}/googletest/googletest/include/gtest)
+# Include GoogleTest headers
+target_include_directories(my_tests PRIVATE 
+    ${CMAKE_BINARY_DIR}/googletest/googletest/include/gtest
+    ${CMAKE_BINARY_DIR}/googletest/googlemock/include/gmock
 )
 
 # Link GoogleTest and GoogleTest main library
