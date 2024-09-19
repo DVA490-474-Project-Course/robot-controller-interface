@@ -10,20 +10,20 @@ INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf REQUIRED)
 INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
 protobuf_generate_cpp(PROTO_CPP PROTO_H
-    include/ssl-protobuf/grSim_Commands.proto
-    include/ssl-protobuf/grSim_Packet.proto
-    include/ssl-protobuf/grSim_Replacement.proto
-    include/ssl-protobuf/grSim_Robotstatus.proto
-    include/ssl-protobuf/ssl_gc_common.proto
-    include/ssl-protobuf/ssl_simulation_config.proto
-    include/ssl-protobuf/ssl_simulation_control.proto
-    include/ssl-protobuf/ssl_simulation_error.proto
-    include/ssl-protobuf/ssl_simulation_robot_control.proto
-    include/ssl-protobuf/ssl_simulation_robot_feedback.proto
-    include/ssl-protobuf/ssl_simulation_synchronous.proto
-    include/ssl-protobuf/ssl_vision_detection.proto
-    include/ssl-protobuf/ssl_vision_geometry.proto
-    include/ssl-protobuf/ssl_vision_wrapper.proto
+    proto/grSim_Commands.proto
+    proto/grSim_Packet.proto
+    proto/grSim_Replacement.proto
+    proto/grSim_Robotstatus.proto
+    proto/ssl_gc_common.proto
+    proto/ssl_simulation_config.proto
+    proto/ssl_simulation_control.proto
+    proto/ssl_simulation_error.proto
+    proto/ssl_simulation_robot_control.proto
+    proto/ssl_simulation_robot_feedback.proto
+    proto/ssl_simulation_synchronous.proto
+    proto/ssl_vision_detection.proto
+    proto/ssl_vision_geometry.proto
+    proto/ssl_vision_wrapper.proto
 )
 
 find_package(Threads REQUIRED)
