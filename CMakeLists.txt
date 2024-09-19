@@ -38,7 +38,7 @@ target_include_directories(client PRIVATE
     ${PROTO_GENERATED_DIR}  # Protobuf-generated headers
 )
 # include header files
-target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface ${CMAKE_CURRENT_SOURCE_DIR}/build)
+target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
 
 # link libraries
 target_link_libraries(client ${Protobuf_LIBRARIES})
