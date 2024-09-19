@@ -8,11 +8,21 @@ project(client VERSION 1.0)
 # Protobuf
 INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf REQUIRED)
-INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
+# Specify output directory for generated files
+set(PROTO_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
+file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
+# Generate Protobuf files
 file(GLOB_RECURSE PROTO_FILES proto/*.proto)
 protobuf_generate_cpp(PROTO_CPP PROTO_H
     ${PROTO_FILES}
+    PROTOC_OUT_DIR ${PROTO_GENERATED_DIR}
 )
+
+# Add the generated directory to the include path
+include_directories(${PROTO_GENERATED_DIR})
+
+INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
+
 
 find_package(Threads REQUIRED)
 
@@ -23,6 +33,10 @@ find_package(Threads REQUIRED)
 file(GLOB_RECURSE SRC_FILES src/*.cc)
 add_executable(client ${SRC_FILES} ${PROTO_CPP} ${PROTO_H})
 
+# Include header files for the client target
+target_include_directories(client PRIVATE 
+    ${PROTO_GENERATED_DIR}  # Protobuf-generated headers
+)
 # include header files
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
