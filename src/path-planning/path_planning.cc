@@ -2,9 +2,11 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-19 by Carl Larsson
-// Description: Path planning source file, straight line for global and DWA for 
-// local.
+// Last modified: 2024-09-20 by Carl Larsson
+// Description: Path planning source file, global path planning is not
+// necessary, passing the desitnation position instantly and letting DWA (local
+// path planning) handle the rest is an acceptable simplification in the 
+// SSL-RoboCup environment.
 // License: See LICENSE file for license details.
 //==============================================================================
 
@@ -12,10 +14,18 @@
 // Related .h files
 #include "path_planning/path_planning.h"
 
+// C++ standard library headers
+#include <functional>
+
 // Other .h files
 #include "rclcpp/rclcpp.hpp"
 #include "dwb_core/dwb_local_planner.hpp"
 #include "nav2_core/controller.hpp"
+#include "nav2_util/lifecycle_node.hpp"
+#include "nav2_msgs/msg/path.hpp"
+#include "nav2_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 // Project .h files
 #include "common_types.h"
@@ -31,18 +41,26 @@ namespace path_planning
 // Input: 
 void local_path_planning(RobotState CurrentState, Position TargetPosition)
 {
-    
-};
+    // Initialize rclcpp in main
 
-// Performs global plath planning with straight line
-// Output:
-// Input: 
-void global_path_planning()
-{
     // Create pointer to the DWA ROS2 node
-    rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("dwb_planner_node");
+    std::shared_ptr<DwbNode> dwb_node = std::make_shared<DwbNode>();
 
+    // Define a single goal pose
+    geometry_msgs::msg::PoseStamped goal_pose;
+    goal_pose.header.stamp = rclcpp::Clock().now();
+    goal_pose.header.frame_id = "odom";  // TODO maybe have a map frame?
+    // Set goal position
+    goal_pose.pose.position.x = TargetPosition.x;
+    goal_pose.pose.position.y = TargetPosition.y;
+    goal_pose.pose.orientation.w = TargetPosition.theta;
 
+    // Publish target position
+    (*dwb_node).publish_single_goal(goal_pose);
+
+    rclcpp::spin(dwb_node);
+
+    // Shutdown rclcpp in main
 };
 
 } // namespace path_planning
