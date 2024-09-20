@@ -16,6 +16,7 @@
 
 // C++ standard library headers
 #include <functional>
+#include <memory>
 
 // Other .h files
 #include "rclcpp/rclcpp.hpp"
@@ -49,6 +50,7 @@ struct Position
 class DwbNode : public nav2_util::LifecycleNode
 {
 public:
+    // Initilizations
     DwbNode() : nav2_util::LifecycleNode("dwb_controller_node"),
                 tf_buffer_(get_clock()), tf_listener_(tf_buffer_)
     {
@@ -101,6 +103,7 @@ protected:
         }
     }
 
+    // Start the periodic control loop
     void StartControlLoop()
     {
         timer_ = this->create_wall_timer(
@@ -109,6 +112,7 @@ protected:
     }
 
 private:
+    // Definitions
     std::shared_ptr<nav2_dwb_controller::DWBController> dwb_controller_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;

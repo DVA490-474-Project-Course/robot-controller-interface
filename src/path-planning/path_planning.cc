@@ -12,10 +12,11 @@
 
 
 // Related .h files
-#include "path_planning/path_planning.h"
+#include "../path-planning/path_planning.h"
 
 // C++ standard library headers
 #include <functional>
+#include <memory>
 
 // Other .h files
 #include "rclcpp/rclcpp.hpp"
@@ -57,6 +58,8 @@ void local_path_planning(RobotState CurrentState, Position TargetPosition)
 
     // Publish target position
     (*dwb_node).publish_single_goal(goal_pose);
+    // Start control loop which handles velocity publishing
+    (*dwb_node).StartControlLoop();
 
     rclcpp::spin(dwb_node);
 
