@@ -1,4 +1,6 @@
 add_library(path_planning_lib path_planning.cc)
 ament_target_dependencies(path_planning_lib rclcpp)
+ament_target_dependencies(path_planning_lib dwb_core)
+ament_target_dependencies(path_planning_lib nav_msgs)
 
 target_include_directories(path_planning_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")

@@ -23,13 +23,13 @@
 #include "dwb_core/dwb_local_planner.hpp"
 #include "nav2_core/controller.hpp"
 #include "nav2_util/lifecycle_node.hpp"
-#include "nav2_msgs/msg/path.hpp"
-#include "nav2_msgs/msg/odometry.hpp"
+#include "nav_msgs/msg/path.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 
 // Project .h files
-#include "common_types.h"
+#include "../common_types.h"
 
 
 namespace robot_controller_interface
@@ -42,7 +42,7 @@ struct Position
 {
     int x;
     int y;
-    double theta
+    double theta;
 };
 
 
@@ -66,11 +66,11 @@ public:
         cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
     }
 
-protected:
+//protected:
     void OdometryCallbackFunction(const nav_msgs::msg::Odometry::SharedPtr msg)
     {
         geometry_msgs::msg::Pose current_pose = msg->pose.pose;
-        dwb_controller_->setRobotPose(current_pose);
+        //dwb_controller_->setRobotPose(current_pose);
     }
 
     // Publish a single target position
@@ -94,8 +94,8 @@ protected:
         geometry_msgs::msg::Twist cmd_vel;
         try
         {
-            cmd_vel = dwb_controller_->computeVelocityCommands();
-            cmd_vel_pub_->publish(cmd_vel);
+            //cmd_vel = dwb_controller_->computeVelocityCommands();
+            //cmd_vel_pub_->publish(cmd_vel);
         }
         catch (const std::exception & e)
         {
@@ -113,7 +113,7 @@ protected:
 
 private:
     // Definitions
-    std::shared_ptr<nav2_dwb_controller::DWBController> dwb_controller_;
+    std::shared_ptr<dwb_core::DWBLocalPlanner> dwb_controller_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;

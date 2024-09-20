@@ -8,6 +8,8 @@ if(Carl)
 
     find_package(ament_cmake REQUIRED)
     find_package(rclcpp REQUIRED)
+    find_package(dwb_core REQUIRED)
+    find_package(nav_msgs REQUIRED)
 
     add_subdirectory(src)
 

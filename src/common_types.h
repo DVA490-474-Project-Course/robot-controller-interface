@@ -25,14 +25,14 @@ class RobotState
 // Enum class describing the playing field dimensions
 enum class PlayingField
 {
-    kFrameX = 9600;
-    kFrameY = 6600;
-    kTouchLineX = 9000;
-    kGoalLineY = 6000;
-    kDefenseAreaX = 1000;
-    kDefenseAreaY = 2000;
-    kCenterCircleRadius = 500;
-    kGoalY = 1000;
+    kFrameX = 9600,
+    kFrameY = 6600,
+    kTouchLineX = 9000,
+    kGoalLineY = 6000,
+    kDefenseAreaX = 1000,
+    kDefenseAreaY = 2000,
+    kCenterCircleRadius = 500,
+    kGoalY = 1000
 };
 
 } // namespace robot_controller_interface
