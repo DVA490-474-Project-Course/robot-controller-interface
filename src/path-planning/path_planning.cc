@@ -20,9 +20,12 @@
 
 // Other .h files
 #include "rclcpp/rclcpp.hpp"
-#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
+#include "nav_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 #include "nav2_msgs/action/follow_path.hpp"
+#include "nav2_controller/controller_server.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
@@ -36,11 +39,11 @@ namespace path_planning
 
 //==============================================================================
 // DWB controller
-class DwbNavController : public rclcpp::Node 
+class DwbNavController : public rclcpp_lifecycle::LifecycleNode
 {
 //------------------------------------------------------------------------------
  public:
-  DwbNavController() : Node("dwb_nav_controller")
+  DwbNavController() : rclcpp_lifecycle::LifecycleNode("dwb_nav_controller")
   {
     // Variables
 
@@ -51,6 +54,12 @@ class DwbNavController : public rclcpp::Node
     // Define the action client for sending target position to controller
     controller_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowPath>(
       this, "follow_path");
+
+    // Publisher for velocity commands
+    cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+
+    // Initialize DWB controller
+    dwb_controller_->configure();
   }
 
 //------------------------------------------------------------------------------
@@ -63,21 +72,20 @@ class DwbNavController : public rclcpp::Node
     nav2_msgs::action::FollowPath::Goal goal_msg;
 
     // Message contents (target position)
-    geometry_msgs::msg::PoseStamped target_pose;
-    target_pose.header.frame_id = "map"; // Change in the future?
-    target_pose.header.stamp = this->now();
-    target_pose.pose.position.x = target_position.x;
-    target_pose.pose.position.y = target_position.y;
+    target_position_.header.frame_id = "map"; // Change in the future?
+    target_position_.header.stamp = this->now();
+    target_position_.pose.position.x = target_position.x;
+    target_position_.pose.position.y = target_position.y;
     // Transform euler angle to quaternion
     tf2::Quaternion quaternion_heading;
     quaternion_heading.setRPY(0, 0, target_position.theta);
-    target_pose.pose.orientation.x = quaternion_heading.x();
-    target_pose.pose.orientation.y = quaternion_heading.y();
-    target_pose.pose.orientation.z = quaternion_heading.z();
-    target_pose.pose.orientation.w = quaternion_heading.w();
+    target_position_.pose.orientation.x = quaternion_heading.x();
+    target_position_.pose.orientation.y = quaternion_heading.y();
+    target_position_.pose.orientation.z = quaternion_heading.z();
+    target_position_.pose.orientation.w = quaternion_heading.w();
 
     // Send target position
-    goal_msg.path.poses.push_back(target_pose);
+    goal_msg.path.poses.push_back(target_position_);
 
     // Options so results are received, if target was reached
     rclcpp_action::Client<nav2_msgs::action::FollowPath>::SendGoalOptions options;
@@ -94,9 +102,20 @@ class DwbNavController : public rclcpp::Node
   // Odometry callback function
   void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
   {
+    // Store for DWB controller computation
+    current_position_ = msg->pose.pose;
+
+    // Store globally
     current_state.x = msg->pose.pose.position.x;
     current_state.y = msg->pose.pose.position.y;
     current_state.theta = msg->pose.pose.orientation.z;
+
+
+    // Run the DWB controller to get velocity commands
+    geometry_msgs::msg::Twist cmd_vel = dwb_controller_->computeVelocityCommands(current_position_, target_position_);
+
+    // Publish the computed velocity command
+    cmd_vel_pub_->publish(cmd_vel);
   }
 
   // Callback function indicating if target position has been reached
@@ -126,6 +145,13 @@ class DwbNavController : public rclcpp::Node
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
   // Client for sending target position to DWB controller
   rclcpp_action::Client<nav2_msgs::action::FollowPath>::SharedPtr controller_client_;
+  // Velocity publisher
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
+  // DWB controller
+  std::shared_ptr<nav2_controller::ControllerServer> dwb_controller_;
+
+  geometry_msgs::msg::Pose current_position_;
+  geometry_msgs::msg::PoseStamped target_position_;
 };
 
 
