@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-19 by Carl Larsson
+// Last modified: 2024-09-21 by Carl Larsson
 // Description: Common types used by the individual robot behaviour program.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -16,11 +16,15 @@ namespace robot_controller_interface
 // Class describing the current state of the robot
 class RobotState
 {
+public:
     int x;
     int y;
     double theta;
     bool ball;
 };
+
+// Global variable for keeping track of current robot state
+RobotState current_state = RobotState{0,0,0,false};
 
 // Enum class describing the playing field dimensions
 enum class PlayingField
