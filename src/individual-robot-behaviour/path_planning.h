@@ -15,8 +15,17 @@
 // Related .h files
 
 // C++ standard library headers
+#include <algorithm>
+#include <memory>
 
 // Other .h files
+#include "nav_msgs/msg/odometry.hpp"
+#include "nav2_msgs/action/navigate_to_pose.hpp"
+#include "nav2_controller/controller_server.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
 #include "../common_types.h"
@@ -31,8 +40,8 @@ namespace individual_robot_behaviour
 // Struct for a pose in 2D space.
 struct Pose
 {
-    int x;
-    int y;
+    double x;
+    double y;
     double theta;
 };
 

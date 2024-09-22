@@ -14,16 +14,19 @@ namespace robot_controller_interface
 {
 
 // Class describing the current state of the robot
+// Neither copyable nor move-only.
 class RobotState
 {
 public:
-    int x;
-    int y;
+    double x;
+    double y;
     double theta;
     bool ball;
 };
 
 // Global variable for keeping track of current robot state
+// Needs to be global since its used between multiple threads to keep track
+// of current robot state.
 RobotState current_state = RobotState{0,0,0,false};
 
 // Enum class describing the playing field dimensions

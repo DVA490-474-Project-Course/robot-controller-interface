@@ -19,12 +19,12 @@
 #include <memory>
 
 // Other .h files
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "nav2_controller/controller_server.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
@@ -39,19 +39,25 @@ namespace individual_robot_behaviour
 //==============================================================================
 
 // DWB controller
+// Neither copyable nor move-only.
 class DwbController : public rclcpp_lifecycle::LifecycleNode
 {
  public:
   DwbController() : rclcpp_lifecycle::LifecycleNode("dwb_controller")
   {
     // Define the action client for sending target pose to controller
-    navigate_to_pose_client_ = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(
+    navigate_to_pose_client_ = 
+        rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(
             this, "navigate_to_pose");
   }
 
-  // Function for sending the target pose to DWB controller.
+  // Description: Function for sending the target pose to DWB controller.
   // This should automatically have DWB run in the background and publish
   // velocities on cmd_vel.
+  // Use: rclcpp must be initialized before function call
+  // Input: Target pose using class Pose
+  // Output: N/A
+  // Return value: void
   void SendTargetPose(Pose target_pose) 
   {
     geometry_msgs::msg::PoseStamped target_pose_;
@@ -70,9 +76,11 @@ class DwbController : public rclcpp_lifecycle::LifecycleNode
     goal_msg.pose = target_pose_;
 
     // Options so results are received, if target was reached
-    rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions options;
+    rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions 
+        options;
     // Specify results callback so it is checked if target was reached
-    options.result_callback = std::bind(&DwbController::ResultCallback, this, std::placeholders::_1);
+    options.result_callback = std::bind(&DwbController::ResultCallback, this, 
+        std::placeholders::_1);
 
     // Send the message containing target pose asynchronously
     navigate_to_pose_client_->async_send_goal(goal_msg, options);
@@ -80,33 +88,46 @@ class DwbController : public rclcpp_lifecycle::LifecycleNode
 //------------------------------------------------------------------------------
  private:
 
-  // Callback function indicating if target position has been reached
-  void ResultCallback(const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult &result)
+  // Description: Callback function indicating if target position has been 
+  // reached.
+  // Use: Use as argument for option in async_send_goal.
+  // Input: See bellow 
+  // Output: N/A
+  // Return value: void
+  void ResultCallback(
+      const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>
+          ::WrappedResult &result)
   {
     switch (result.code) 
     {
       case rclcpp_action::ResultCode::SUCCEEDED:
-        RCLCPP_INFO(this->get_logger(), "Target position reached.");
+        RCLCPP_INFO(this->get_logger(), 
+            "Target position reached.");
         break;
       case rclcpp_action::ResultCode::ABORTED:
-        RCLCPP_ERROR(this->get_logger(), "ABORTED path planning to target position.");
+        RCLCPP_ERROR(this->get_logger(), 
+            "ABORTED path planning to target position.");
         break;
       case rclcpp_action::ResultCode::CANCELED:
-        RCLCPP_WARN(this->get_logger(), "CANCELED path planning to target position.");
+        RCLCPP_WARN(this->get_logger(), 
+            "CANCELED path planning to target position.");
         break;
       default:
-        RCLCPP_ERROR(this->get_logger(), "Unknown result code");
+        RCLCPP_ERROR(this->get_logger(), 
+            "Unknown result code");
         break;
     }
   }
 
   // Client for sending target pose to DWB controller
-  rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr navigate_to_pose_client_;
+  rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr 
+      navigate_to_pose_client_;
 };
 
 //==============================================================================
 
 // Odom Subscriber
+// Neither copyable nor move-only.
 class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode 
 {
  public:
@@ -114,10 +135,16 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
   {
     // Subscribe to odom topic
     odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, std::placeholders::_1));
+        "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, 
+            std::placeholders::_1));
   }
  private:
-  // Odometry callback function
+  // Description: Odometry callback function, stores current state in global
+  // variable current_state.
+  // Use: use as argument when creating odometry subscriber.
+  // Input: const shared pointer to msg containing odometry data. 
+  // Output N/A
+  // Return value: void
   void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
   {
     // Store globally
@@ -132,10 +159,13 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
 
 //==============================================================================
 
-// Performs local path planning using DWA.
+// Description: Performs local path planning using DWA.
+// Use: Function call must be after rclcpp has been initialized. Shutdown rclcpp
+// after finished using.
+// Input: Target position using class Pose
 // Output: N/A
-// Input: 
-void local_path_planning(RobotState current_state, Pose target_pose)
+// Return value: void
+void local_path_planning(Pose target_pose)
 {
   // Initialize rclcpp in main
 
