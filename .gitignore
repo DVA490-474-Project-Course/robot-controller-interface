@@ -64,3 +64,4 @@ cmake-build-debug/googletest-build/googletest/generated/GTestConfigVersion.cmake
 /CMakeFiles/*
 /generated/*
 /cmake-build-debug/*
+*.swp
