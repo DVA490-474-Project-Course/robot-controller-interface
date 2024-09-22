@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-21 by Carl Larsson
+// Last modified: 2024-09-22 by Carl Larsson
 // Description: Path planning source file, global path planning is not
 // necessary, passing the desitnation position instantly and letting DWA (local
 // path planning) handle the rest is an acceptable simplification in the 
@@ -38,62 +38,55 @@ namespace path_planning
 {
 
 //==============================================================================
+
 // DWB controller
-class DwbNavController : public rclcpp_lifecycle::LifecycleNode
+class DwbController : public rclcpp_lifecycle::LifecycleNode
 {
 //------------------------------------------------------------------------------
  public:
-  DwbNavController() : rclcpp_lifecycle::LifecycleNode("dwb_nav_controller")
+  DwbController() : rclcpp_lifecycle::LifecycleNode("dwb_controller")
   {
     // Variables
 
     // Subscribe to odom topic
     odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "/odom", 10, std::bind(&DwbNavController::OdomCallback, this, std::placeholders::_1));
+      "/odom", 10, std::bind(&DwbController::OdomCallback, this, std::placeholders::_1));
 
-    // Define the action client for sending target position to controller
-    controller_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowPath>(
+    // Define the action client for sending target pose to controller
+    goal_sending_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowPath>(
       this, "follow_path");
-
-    // Publisher for velocity commands
-    cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-
-    // Initialize DWB controller
-    dwb_controller_->configure();
   }
 
 //------------------------------------------------------------------------------
-//Functions
+  //Functions
 
-  // Send the target pose to DWB controller
-  void SendTargetPose(Position target_position) 
+  // Function for sending the target pose to DWB controller.
+  // This should automatically have DWB run in the background and publish
+  // velocities on cmd_vel.
+  void SendTargetPose(Pose target_pose) 
   {
-    // Create message which will be sent
-    nav2_msgs::action::FollowPath::Goal goal_msg;
-
-    // Message contents (target position)
-    target_position_.header.frame_id = "map"; // Change in the future?
-    target_position_.header.stamp = this->now();
-    target_position_.pose.position.x = target_position.x;
-    target_position_.pose.position.y = target_position.y;
+    geometry_msgs::msg::PoseStamped target_pose_;
+    // Message contents (target pose)
+    target_pose_.header.frame_id = "map"; // Change in the future?
+    target_pose_.header.stamp = this->now();
+    target_pose_.pose.position.x = target_pose.x;
+    target_pose_.pose.position.y = target_pose.y;
     // Transform euler angle to quaternion
     tf2::Quaternion quaternion_heading;
-    quaternion_heading.setRPY(0, 0, target_position.theta);
-    target_position_.pose.orientation.x = quaternion_heading.x();
-    target_position_.pose.orientation.y = quaternion_heading.y();
-    target_position_.pose.orientation.z = quaternion_heading.z();
-    target_position_.pose.orientation.w = quaternion_heading.w();
+    quaternion_heading.setRPY(0, 0, target_pose.theta);
+    target_pose_.pose.orientation = tf2::toMsg(quaternion_heading);
 
-    // Send target position
-    goal_msg.path.poses.push_back(target_position_);
+    nav2_msgs::action::FollowPath::Goal goal_msg;
+    // Send target pose
+    goal_msg.path.poses.push_back(target_pose_);
 
     // Options so results are received, if target was reached
     rclcpp_action::Client<nav2_msgs::action::FollowPath>::SendGoalOptions options;
     // Specify results callback so it is checked if target was reached
-    options.result_callback = std::bind(&DwbNavController::ResultCallback, this, std::placeholders::_1);
+    options.result_callback = std::bind(&DwbController::ResultCallback, this, std::placeholders::_1);
 
-    // Send the message containing target position asynchronously
-    controller_client_->async_send_goal(goal_msg, options);
+    // Send the message containing target pose asynchronously
+    goal_sending_client_->async_send_goal(goal_msg, options);
   }
 //------------------------------------------------------------------------------
  private:
@@ -102,20 +95,10 @@ class DwbNavController : public rclcpp_lifecycle::LifecycleNode
   // Odometry callback function
   void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
   {
-    // Store for DWB controller computation
-    current_position_ = msg->pose.pose;
-
     // Store globally
     current_state.x = msg->pose.pose.position.x;
     current_state.y = msg->pose.pose.position.y;
-    current_state.theta = msg->pose.pose.orientation.z;
-
-
-    // Run the DWB controller to get velocity commands
-    geometry_msgs::msg::Twist cmd_vel = dwb_controller_->computeVelocityCommands(current_position_, target_position_);
-
-    // Publish the computed velocity command
-    cmd_vel_pub_->publish(cmd_vel);
+    current_state.theta = tf2::getYaw(msg->pose.pose.orientation);
   }
 
   // Callback function indicating if target position has been reached
@@ -139,26 +122,20 @@ class DwbNavController : public rclcpp_lifecycle::LifecycleNode
   }
 
 //------------------------------------------------------------------------------
-// Variables
+  // Variables
 
   // Odom subscriber
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
-  // Client for sending target position to DWB controller
-  rclcpp_action::Client<nav2_msgs::action::FollowPath>::SharedPtr controller_client_;
-  // Velocity publisher
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
-  // DWB controller
-  std::shared_ptr<nav2_controller::ControllerServer> dwb_controller_;
-
-  geometry_msgs::msg::Pose current_position_;
-  geometry_msgs::msg::PoseStamped target_position_;
+  // Client for sending target pose to DWB controller
+  rclcpp_action::Client<nav2_msgs::action::FollowPath>::SharedPtr goal_sending_client_;
 };
 
+//==============================================================================
 
 // Performs local path planning using DWA.
 // Output: N/A
 // Input: 
-void local_path_planning(RobotState CurrentState, Position TargetPosition)
+void local_path_planning(RobotState current_state, Pose target_pose)
 {
     // Initialize rclcpp in main
 
@@ -166,6 +143,8 @@ void local_path_planning(RobotState CurrentState, Position TargetPosition)
 
     // Shutdown rclcpp in main
 };
+
+//==============================================================================
 
 } // namespace path_planning
 } // namesapce robot_controller_interface

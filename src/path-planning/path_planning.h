@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-21 by Carl Larsson
+// Last modified: 2024-09-22 by Carl Larsson
 // Description: Path planning header file.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -28,8 +28,8 @@ namespace path_planning
 {
 
 
-// Struct for a location in 2D space.
-struct Position
+// Struct for a pose in 2D space.
+struct Pose
 {
     int x;
     int y;
