@@ -8,8 +8,8 @@
 //==============================================================================
 
 
-#ifndef ROBOTCONTROLLERINTERFACE_PATHPLANNING_PATHPLANNING_H_
-#define ROBOTCONTROLLERINTERFACE_PATHPLANNING_PATHPLANNING_H_
+#ifndef ROBOTCONTROLLERINTERFACE_INDIVIDUALROBOTBEHAVIOUR_PATHPLANNING_H_
+#define ROBOTCONTROLLERINTERFACE_INDIVIDUALROBOTBEHAVIOUR_PATHPLANNING_H_
 
 
 // Related .h files
@@ -24,7 +24,7 @@
 
 namespace robot_controller_interface
 {
-namespace path_planning
+namespace individual_robot_behaviour
 {
 
 
@@ -37,7 +37,7 @@ struct Pose
 };
 
 
-} // namespace path_planning
+} // namespace individual_robot_behaviour
 } // namespace robot_controller_interface
 
-#endif // ROBOTCONTROLLERINTERFACE_PATHPLANNING_PATHPLANNING_H_
+#endif // ROBOTCONTROLLERINTERFACE_INDIVIDUALROBOTBEHAVIOUR_PATHPLANNING_H_

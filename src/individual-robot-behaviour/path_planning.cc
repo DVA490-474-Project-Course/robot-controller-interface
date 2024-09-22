@@ -12,7 +12,7 @@
 
 
 // Related .h files
-#include "../path-planning/path_planning.h"
+#include "../individual-robot-behaviour/path_planning.h"
 
 // C++ standard library headers
 #include <algorithm>
@@ -33,7 +33,7 @@
 
 namespace robot_controller_interface
 {
-namespace path_planning
+namespace individual_robot_behaviour
 {
 
 //==============================================================================
@@ -137,14 +137,15 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
 // Input: 
 void local_path_planning(RobotState current_state, Pose target_pose)
 {
-    // Initialize rclcpp in main
+  // Initialize rclcpp in main
+
+  
 
 
-
-    // Shutdown rclcpp in main
+  // Shutdown rclcpp in main
 };
 
 //==============================================================================
 
-} // namespace path_planning
+} // namespace individual_robot_behaviour
 } // namesapce robot_controller_interface
