@@ -15,6 +15,8 @@
 // Related .h files
 
 // C++ standard library headers
+#include <cmath>
+#include <mutex>
 
 // Other .h files
 #include "nav_msgs/msg/odometry.hpp"
@@ -32,11 +34,22 @@ namespace individual_robot_behaviour
 //==============================================================================
 
 // Struct for a pose in 2D space.
-struct Pose
+class Pose
 {
-    double x;
-    double y;
-    double theta;
+ public:
+    double x_;
+    double y_;
+    double theta_;
+
+    // != operator for this class
+    bool operator!=(const Pose& other) const
+    {
+        return (std::fabs(x_ - other.x_) > tolerance_) ||
+               (std::fabs(y_ - other.y_) > tolerance_) ||
+               (std::fabs(theta_ - other.theta_) > tolerance_);
+    }
+ private:
+    const double tolerance_ = 1e-6;
 };
 
 //==============================================================================
@@ -46,10 +59,10 @@ struct Pose
 class RobotState
 {
 public:
-    double x;
-    double y;
-    double theta;
-    bool ball;
+    double x_;
+    double y_;
+    double theta_;
+    bool ball_;
 };
 
 //==============================================================================
@@ -58,6 +71,8 @@ public:
 // Needs to be global since its used between multiple threads to keep track
 // of current robot state.
 RobotState current_state = RobotState{0,0,0,false};
+// Global mutex to protect target_pose
+std::mutex target_mutex;
 
 //==============================================================================
 

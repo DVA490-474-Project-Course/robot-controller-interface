@@ -51,9 +51,9 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
   void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
   {
     // Store globally
-    current_state.x = msg->pose.pose.position.x;
-    current_state.y = msg->pose.pose.position.y;
-    current_state.theta = tf2::getYaw(msg->pose.pose.orientation);
+    current_state.x_ = msg->pose.pose.position.x;
+    current_state.y_ = msg->pose.pose.position.y;
+    current_state.theta_ = tf2::getYaw(msg->pose.pose.orientation);
   }
 
   // Odom subscriber

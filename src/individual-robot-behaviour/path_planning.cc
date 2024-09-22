@@ -17,6 +17,7 @@
 // C++ standard library headers
 #include <algorithm>
 #include <memory>
+#include <mutex>
 
 // Other .h files
 #include "nav2_msgs/action/navigate_to_pose.hpp"
@@ -39,10 +40,10 @@ namespace individual_robot_behaviour
 
 // DWB controller
 // Neither copyable nor move-only.
-class DwbController : public rclcpp_lifecycle::LifecycleNode
+class DwbController : public rclcpp::Node
 {
  public:
-  DwbController() : rclcpp_lifecycle::LifecycleNode("dwb_controller")
+  DwbController() : rclcpp::Node("dwb_controller")
   {
     // Define the action client for sending target pose to controller
     navigate_to_pose_client_ = 
@@ -63,11 +64,11 @@ class DwbController : public rclcpp_lifecycle::LifecycleNode
     // Message contents (target pose)
     target_pose_.header.frame_id = "map"; // Change in the future?
     target_pose_.header.stamp = this->now();
-    target_pose_.pose.position.x = target_pose.x;
-    target_pose_.pose.position.y = target_pose.y;
+    target_pose_.pose.position.x = target_pose.x_;
+    target_pose_.pose.position.y = target_pose.y_;
     // Transform euler angle to quaternion
     tf2::Quaternion quaternion_heading;
-    quaternion_heading.setRPY(0, 0, target_pose.theta);
+    quaternion_heading.setRPY(0, 0, target_pose.theta_);
     target_pose_.pose.orientation = tf2::toMsg(quaternion_heading);
 
     nav2_msgs::action::NavigateToPose::Goal goal_msg;
@@ -131,14 +132,48 @@ class DwbController : public rclcpp_lifecycle::LifecycleNode
 // Input: Target position using class Pose
 // Output: N/A
 // Return value: void
-void local_path_planning(Pose target_pose)
+void local_path_planning(Pose *target_pose)
 {
   // Initialize rclcpp in main
+
+  // Local copy of most recent target pose, used to check if new target has 
+  // been set.
+  // Make it thread safe
+  target_mutex.lock();
+  Pose current_target = *target_pose;
+  target_mutex.unlock();
   
   // Create DWB node
   DwbController dwb_node;
-  // Send example target pose
-  dwb_node.SendTargetPose(target_pose);
+  // Pointer to it
+  std::shared_ptr<DwbController> dwb_node_ptr = std::make_shared<DwbController>();
+  // Send target pose
+  dwb_node.SendTargetPose(current_target);
+
+  // Set the execution rate to 10 Hz for this loop
+  rclcpp::Rate rate(10);
+
+  // Loop forever
+  while(rclcpp::ok())
+  {
+    rclcpp::spin_some(dwb_node_ptr->get_node_base_interface());
+
+    // Make it thread safe
+    target_mutex.lock();
+    // We have received a new target
+    if(*target_pose != current_target)
+    {
+      current_target.x_ = (*target_pose).x_;
+      current_target.y_ = (*target_pose).y_;
+      current_target.theta_ = (*target_pose).theta_;
+      // Send target pose
+      dwb_node.SendTargetPose(current_target);
+    }
+    target_mutex.unlock();
+
+    // Ensure 10 Hz is maintained
+    rate.sleep();
+  }
 
   // Shutdown rclcpp in main
 };
