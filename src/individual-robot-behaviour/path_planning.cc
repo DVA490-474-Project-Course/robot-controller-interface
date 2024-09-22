@@ -19,7 +19,6 @@
 #include <memory>
 
 // Other .h files
-#include "nav_msgs/msg/odometry.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "nav2_controller/controller_server.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -28,7 +27,7 @@
 #include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
-#include "../common_types.h"
+#include "../individual-robot-behaviour/state.h"
 
 
 namespace robot_controller_interface
@@ -126,39 +125,6 @@ class DwbController : public rclcpp_lifecycle::LifecycleNode
 
 //==============================================================================
 
-// Odom Subscriber
-// Neither copyable nor move-only.
-class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode 
-{
- public:
-  OdomSubscriber() : rclcpp_lifecycle::LifecycleNode("odom_subscriber") 
-  {
-    // Subscribe to odom topic
-    odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, 
-            std::placeholders::_1));
-  }
- private:
-  // Description: Odometry callback function, stores current state in global
-  // variable current_state.
-  // Use: use as argument when creating odometry subscriber.
-  // Input: const shared pointer to msg containing odometry data. 
-  // Output N/A
-  // Return value: void
-  void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
-  {
-    // Store globally
-    current_state.x = msg->pose.pose.position.x;
-    current_state.y = msg->pose.pose.position.y;
-    current_state.theta = tf2::getYaw(msg->pose.pose.orientation);
-  }
-
-  // Odom subscriber
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
-};
-
-//==============================================================================
-
 // Description: Performs local path planning using DWA.
 // Use: Function call must be after rclcpp has been initialized. Shutdown rclcpp
 // after finished using.
@@ -168,9 +134,11 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
 void local_path_planning(Pose target_pose)
 {
   // Initialize rclcpp in main
-
   
-
+  // Create DWB node
+  DwbController dwb_node;
+  // Send example target pose
+  dwb_node.SendTargetPose(target_pose);
 
   // Shutdown rclcpp in main
 };
