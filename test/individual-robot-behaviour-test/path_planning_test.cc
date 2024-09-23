@@ -8,7 +8,12 @@
 //==============================================================================
 
 
+// Related .h files
+#include "../../src/individual-robot-behaviour/path_planning.h"
+
+// C++ standard library headers
+
 // Other .h files
 #include "gtest/gtest.h"
 
-
+// Project .h files

@@ -3,7 +3,7 @@
 // Author: Carl Larsson
 // Creation date: 2024-09-23
 // Last modified: 2024-09-23 by Carl Larsson
-// Description: Test file for state source and header file.
+// Description: Test file for state source and header files.
 // License: See LICENSE file for license details.
 //==============================================================================
 
@@ -14,7 +14,7 @@
 // C++ standard library headers
 
 // Other .h files
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 // Project .h files
 
@@ -49,6 +49,11 @@ TEST(PoseClassTest, InequalityOperator)
   // Difference slightly within tollerance
   a.x_ = 1.0 + 1e-7;
   EXPECT_FALSE(a != b);
+}
+
+TEST(Dummy, Dum)
+{
+  EXPECT_EQ(1,1);
 }
 
 //==============================================================================

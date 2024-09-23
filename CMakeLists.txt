@@ -1,5 +1,5 @@
 #===============================================================================
-# Standards
+# Setup
 
 # Must have 14 or late
 cmake_minimum_required(VERSION 3.14)
@@ -69,7 +69,7 @@ else(Communication)
 endif()
 
 #===============================================================================
-# add_subdirectories last
+# add_subdirectories must be last
 
 add_subdirectory(src)
 add_subdirectory(test)

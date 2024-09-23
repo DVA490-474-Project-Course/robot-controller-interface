@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-22
-// Last modified: 2024-09-22 by Carl Larsson
+// Last modified: 2024-09-23 by Carl Larsson
 // Description: Robot state header file.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -85,9 +85,9 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
 // Global variable for keeping track of current robot state
 // Needs to be global since its used between multiple threads to keep track
 // of current robot state.
-RobotState current_state = RobotState{0,0,0,false};
+extern RobotState current_state;
 // Global mutex to protect target_pose
-std::mutex target_mutex;
+extern std::mutex target_mutex;
 
 //==============================================================================
 

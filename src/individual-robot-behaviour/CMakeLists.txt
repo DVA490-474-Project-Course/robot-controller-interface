@@ -2,9 +2,7 @@
 # Path planning
 
 add_library(path_planning_lib path_planning.cc)
-ament_target_dependencies(path_planning_lib rclcpp)
-ament_target_dependencies(path_planning_lib dwb_core)
-ament_target_dependencies(path_planning_lib nav_msgs)
+ament_target_dependencies(path_planning_lib rclcpp dwb_core nav_msgs)
 
 target_include_directories(path_planning_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -12,9 +10,7 @@ target_include_directories(path_planning_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR
 # State
 
 add_library(state_lib state.cc)
-ament_target_dependencies(state_lib rclcpp)
-ament_target_dependencies(state_lib dwb_core)
-ament_target_dependencies(state_lib nav_msgs)
+ament_target_dependencies(state_lib rclcpp dwb_core nav_msgs)
 
 target_include_directories(state_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 

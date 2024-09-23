@@ -37,7 +37,6 @@ namespace individual_robot_behaviour
 {
 
 //==============================================================================
-// Types
 
 // DWB controller
 // Neither copyable nor move-only.
@@ -120,7 +119,6 @@ void DwbController::ResultCallback(
 }
 
 //==============================================================================
-// Functions
 
 // Description: Performs local path planning using DWA.
 // Use: Function call must be after rclcpp has been initialized. Shutdown rclcpp

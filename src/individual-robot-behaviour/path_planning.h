@@ -37,7 +37,6 @@ namespace individual_robot_behaviour
 {
 
 //==============================================================================
-// Types
 
 // DWB controller
 // Neither copyable nor move-only.
@@ -72,7 +71,6 @@ class DwbController : public rclcpp::Node
 };
 
 //==============================================================================
-// Functions
 
 // Description: Performs local path planning using DWA.
 // Use: Function call must be after rclcpp has been initialized. Shutdown rclcpp
@@ -83,11 +81,9 @@ class DwbController : public rclcpp::Node
 void local_path_planning(Pose *target_pose);
 
 //==============================================================================
-// Global variables
 
 // Mutex to protect target_reached_flag
 std::mutex target_reached_mutex;
-
 // Global flag used to indicate if target has been reached or not
 bool target_reached_flag = false;
 

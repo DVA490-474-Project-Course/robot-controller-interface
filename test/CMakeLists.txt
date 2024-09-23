@@ -6,34 +6,38 @@ FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
+include(GoogleTest)
 
 enable_testing()
 
 #===============================================================================
-# Add
+# Setup gtest with main_test
 
-add_executable(
-  main_test
-  main_test.cc
-)
+add_executable(main_test_exe main_test.cc)
 
 target_link_libraries(
-  main_test
+  main_test_exe
   GTest::gtest_main
 )
 
-ament_target_dependencies(main_test rclcpp)
-ament_target_dependencies(main_test dwb_core)
-ament_target_dependencies(main_test nav_msgs)
+#===============================================================================
+# Dependencies
 
-target_include_directories(main_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/test")
+# !!! Add packages that must be included here !!!
+ament_target_dependencies(main_test_exe rclcpp dwb_core nav_msgs)
+target_include_directories(main_test_exe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/test")
 
-#add_subdirectory(individual-robot-behaviour-test)
+# !!! This is where you add your source files which contain tests !!!
+target_sources(main_test_exe PRIVATE 
+  main_test.cc 
+  individual-robot-behaviour-test/path_planning_test.cc
+  individual-robot-behaviour-test/state_test.cc
+  individual-robot-behaviour-test/ball_test.cc
+  )
 
 #===============================================================================
-# Must be last, and in this order.
+# Must be last (I think)
 
-gtest_discover_tests(main_test)
-include(GoogleTest)
+gtest_discover_tests(main_test_exe)
 
 #===============================================================================
