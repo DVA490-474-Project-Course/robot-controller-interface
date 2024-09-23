@@ -14,51 +14,25 @@ if(Carl)
     add_subdirectory(src)
 
 else(Communication)
-    project(client VERSION 1.0)
-
-    # Protobuf
-    INCLUDE(FindProtobuf)
-    FIND_PACKAGE(Protobuf REQUIRED)
-    # Specify output directory for generated files
-    set(PROTO_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
-    file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
-    # Generate Protobuf files
-    file(GLOB_RECURSE PROTO_FILES proto/*.proto)
-    protobuf_generate_cpp(PROTO_CPP PROTO_H
-        ${PROTO_FILES}
-        PROTOC_OUT_DIR ${PROTO_GENERATED_DIR}
-    )
-
-    # Add the generated directory to the include path
-    include_directories(${PROTO_GENERATED_DIR})
-
-    INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
-
+    project(robot_controller_interface)
 
     find_package(Threads REQUIRED)
 
-
-
+    add_subdirectory(src)
 
     # add .cc files to executable
-    file(GLOB_RECURSE SRC_FILES src/*.cc)
-    add_executable(client ${SRC_FILES} ${PROTO_CPP} ${PROTO_H})
+    file(GLOB_RECURSE SRC_FILES src/simulation-interface/*.cc)
+    add_executable(client_demo ${SRC_FILES} src/main.cc)
 
-    # Include header files for the client target
-    target_include_directories(client PRIVATE 
-        ${PROTO_GENERATED_DIR}  # Protobuf-generated headers
-    )
     # include header files
-    target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
+    target_include_directories(client_demo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
 
     # link libraries
-    target_link_libraries(client ${Protobuf_LIBRARIES})
-    #____________________________________________________________
-    #googleTest
-    #_____________________________________________________________
-    # Add GoogleTest manually
-    #add_subdirectory(/home/aaiza/googletest ${CMAKE_BINARY_DIR}/googletest-build)
+    target_link_libraries(client_demo client_lib)
 
+    #____________________________________________________________
+    # Google Test
+    #_____________________________________________________________
 
     # Fetch and Add GoogleTest
     include(FetchContent)
@@ -72,23 +46,19 @@ else(Communication)
     # Make GoogleTest available
     FetchContent_MakeAvailable(googletest)
 
-    # Add your test executable
-    add_executable(my_tests test/dummy.cpp test/dummy_test.cpp
-    )
+    # Add test executable
+    file(GLOB_RECURSE TEST_SRC_FILES test/simulation-interface-test/*.cc)
+    add_executable(simulation_interface_test ${TEST_SRC_FILES})
 
-    # Include GoogleTest headers
-    target_include_directories(my_tests PRIVATE 
-        ${gtest_SOURCE_DIR}/include
-        ${gmock_SOURCE_DIR}/include
-    )
-
-
+    # include header files
+    target_include_directories(simulation_interface_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
 
     # Link GoogleTest and GoogleTest main library
-    target_link_libraries(my_tests gtest_main)
+    target_link_libraries(simulation_interface_test gtest_main client_lib)
     # Enable testing
     enable_testing()
 
     # Add a test to be run with `ctest`
-    add_test(NAME my_test COMMAND my_tests)
+    add_test(NAME simulation_interface_test COMMAND simulation_interface_test)
+
 endif()

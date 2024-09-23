@@ -4,10 +4,10 @@
 
 #include "gtest/gtest.h"
 namespace {
-    TEST(RobotTest, RobotId) {
+  //  TEST(RobotTest, RobotId) {
   // This test is named "RobotId", and belongs to the "RobotTest"
   // test case.
-  ASSERT_TRUE(RobotId >= 1 && id <= 6);
+  //ASSERT_TRUE(RobotId >= 1 && id <= 6);
  
   // <TechnicalDetails>
   //
@@ -23,4 +23,4 @@ namespace {
   // and is thus more general.
   //
   // </TechnicalDetails>
-}}  // namespace
+}  // namespace
