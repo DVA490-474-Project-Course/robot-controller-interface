@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED_ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 project(robot_controller_interface)
+
 add_subdirectory(src)
 
 if(Carl)
@@ -11,8 +12,6 @@ if(Carl)
     find_package(rclcpp REQUIRED)
     find_package(dwb_core REQUIRED)
     find_package(nav_msgs REQUIRED)
-
-    add_subdirectory(src)
 
 else(Communication)
     find_package(Threads REQUIRED)
