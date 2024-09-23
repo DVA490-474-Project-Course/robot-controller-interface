@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-22 by Carl Larsson
+// Last modified: 2024-09-23 by Carl Larsson
 // Description: Path planning source file, global path planning is not
 // necessary, passing the desitnation position instantly and letting DWA (local
 // path planning) handle the rest is an acceptable simplification in the 
@@ -103,6 +103,11 @@ class DwbController : public rclcpp::Node
       case rclcpp_action::ResultCode::SUCCEEDED:
         RCLCPP_INFO(this->get_logger(), 
             "Target position reached.");
+        // Thread safe
+        target_reached_mutex.lock();
+        // Indicate that target has been reached
+        target_reached_flag = true;
+        target_reached_mutex.unlock();
         break;
       case rclcpp_action::ResultCode::ABORTED:
         RCLCPP_ERROR(this->get_logger(), 
@@ -145,7 +150,7 @@ void local_path_planning(Pose *target_pose)
   
   // Create DWB node
   DwbController dwb_node;
-  // Pointer to it
+  // Pointer to DWB node
   std::shared_ptr<DwbController> dwb_node_ptr = std::make_shared<DwbController>();
   // Send target pose
   dwb_node.SendTargetPose(current_target);
@@ -156,6 +161,7 @@ void local_path_planning(Pose *target_pose)
   // Loop forever
   while(rclcpp::ok())
   {
+    // Do work for a while
     rclcpp::spin_some(dwb_node_ptr->get_node_base_interface());
 
     // Make it thread safe
@@ -163,11 +169,19 @@ void local_path_planning(Pose *target_pose)
     // We have received a new target
     if(*target_pose != current_target)
     {
+      // Store new target in local copy
       current_target.x_ = (*target_pose).x_;
       current_target.y_ = (*target_pose).y_;
       current_target.theta_ = (*target_pose).theta_;
-      // Send target pose
+      // Send new target pose
+      // This will cancel the old one and retarget to the new one
       dwb_node.SendTargetPose(current_target);
+
+      // Thread safe
+      target_reached_mutex.lock();
+      // Reset flag
+      target_reached_flag = false;
+      target_reached_mutex.unlock();
     }
     target_mutex.unlock();
 

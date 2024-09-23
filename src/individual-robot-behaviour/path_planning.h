@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-22 by Carl Larsson
+// Last modified: 2024-09-23 by Carl Larsson
 // Description: Path planning header file.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -17,6 +17,7 @@
 // C++ standard library headers
 #include <algorithm>
 #include <memory>
+#include <mutex>
 
 // Other .h files
 #include "nav2_msgs/action/navigate_to_pose.hpp"
@@ -34,6 +35,12 @@ namespace robot_controller_interface
 {
 namespace individual_robot_behaviour
 {
+
+// 
+std::mutex target_reached_mutex;
+
+// Global flag used to indicate if target has been reached or not
+bool target_reached_flag = false;
 
 //==============================================================================
 //==============================================================================
