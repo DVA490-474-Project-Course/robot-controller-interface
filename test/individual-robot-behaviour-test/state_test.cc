@@ -14,7 +14,7 @@
 // C++ standard library headers
 
 // Other .h files
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 // Project .h files
 
@@ -24,12 +24,12 @@
 // Test case for Pose class inequality operator
 TEST(PoseClassTest, InequalityOperator)
 {
-  Pose a;
+  robot_controller_interface::individual_robot_behaviour::Pose a;
   a.x_ = 1.0;
   a.y_ = 1.0;
   a.theta_ = 1.0;
 
-  Pose b;
+  robot_controller_interface::individual_robot_behaviour::Pose b;
   b.x_ = 1.0;
   b.y_ = 1.0;
   b.theta_ = 1.0;
@@ -40,7 +40,7 @@ TEST(PoseClassTest, InequalityOperator)
 
   // Difference exactly equal to tollerance
   a.x_ = 1.0 + 1e-6;
-  EXPECT_FALSE(a != b)
+  EXPECT_FALSE(a != b);
 
   // Difference slightly outside tollerance
   a.x_ = 1.0 + 1e-5;
@@ -50,4 +50,5 @@ TEST(PoseClassTest, InequalityOperator)
   a.x_ = 1.0 + 1e-7;
   EXPECT_FALSE(a != b);
 }
+
 //==============================================================================
