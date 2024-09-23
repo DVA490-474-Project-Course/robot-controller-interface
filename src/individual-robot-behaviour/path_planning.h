@@ -83,9 +83,9 @@ void local_path_planning(Pose *target_pose);
 //==============================================================================
 
 // Mutex to protect target_reached_flag
-std::mutex target_reached_mutex;
+extern std::mutex target_reached_mutex;
 // Global flag used to indicate if target has been reached or not
-bool target_reached_flag = false;
+extern bool target_reached_flag;
 
 //==============================================================================
 
