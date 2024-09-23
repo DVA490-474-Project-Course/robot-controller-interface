@@ -31,34 +31,27 @@ namespace individual_robot_behaviour
 
 // Odom Subscriber
 // Neither copyable nor move-only.
-class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode 
+OdomSubscriber::OdomSubscriber()
+  : rclcpp_lifecycle::LifecycleNode("odom_subscriber")
 {
- public:
-  OdomSubscriber() : rclcpp_lifecycle::LifecycleNode("odom_subscriber") 
-  {
-    // Subscribe to odom topic
-    odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, 
-            std::placeholders::_1));
-  }
- private:
-  // Description: Odometry callback function, stores current state in global
-  // variable current_state.
-  // Use: use as argument when creating odometry subscriber.
-  // Input: const shared pointer to msg containing odometry data. 
-  // Output N/A
-  // Return value: void
-  void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
-  {
-    // Store globally
-    current_state.x_ = msg->pose.pose.position.x;
-    current_state.y_ = msg->pose.pose.position.y;
-    current_state.theta_ = tf2::getYaw(msg->pose.pose.orientation);
-  }
+  // Subscribe to odom topic
+  odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
+      "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, std::placeholders::_1));
+}
 
-  // Odom subscriber
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
-};
+// Description: Odometry callback function, stores current state in global
+// variable current_state.
+// Use: use as argument when creating odometry subscriber.
+// Input: const shared pointer to msg containing odometry data. 
+// Output N/A
+// Return value: void
+void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
+{
+  // Store globally
+  current_state.x_ = msg->pose.pose.position.x;
+  current_state.y_ = msg->pose.pose.position.y;
+  current_state.theta_ = tf2::getYaw(msg->pose.pose.orientation);
+}
 
 //==============================================================================
 

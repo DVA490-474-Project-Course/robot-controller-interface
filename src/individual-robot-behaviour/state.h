@@ -58,11 +58,26 @@ class Pose
 // Neither copyable nor move-only.
 class RobotState
 {
-public:
+ public:
     double x_;
     double y_;
     double theta_;
     bool ball_;
+};
+
+//==============================================================================
+
+// Odom Subscriber
+// Neither copyable nor move-only.
+class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
+{
+ public:
+  OdomSubscriber();
+
+ private:
+  void OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const;
+
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
 };
 
 //==============================================================================
