@@ -61,12 +61,12 @@ void DwbController::SendTargetPose(Pose target_pose)
   // Message contents (target pose)
   target_pose_.header.frame_id = "map"; // Change in the future?
   target_pose_.header.stamp = this->now();
-  target_pose_.pose.position.x = target_pose.x_;
-  target_pose_.pose.position.y = target_pose.y_;
+  target_pose_.pose.position.x = target_pose.GetX();
+  target_pose_.pose.position.y = target_pose.GetY();
   
   // Transform Euler angle to quaternion
   tf2::Quaternion quaternion_heading;
-  quaternion_heading.setRPY(0, 0, target_pose.theta_);
+  quaternion_heading.setRPY(0, 0, target_pose.GetTheta());
   target_pose_.pose.orientation = tf2::toMsg(quaternion_heading);
 
   nav2_msgs::action::NavigateToPose::Goal goal_msg;
@@ -159,9 +159,9 @@ void local_path_planning(Pose *target_pose)
     if(*target_pose != current_target)
     {
       // Store new target in local copy
-      current_target.x_ = (*target_pose).x_;
-      current_target.y_ = (*target_pose).y_;
-      current_target.theta_ = (*target_pose).theta_;
+      current_target.SetX((*target_pose).GetX());
+      current_target.SetY((*target_pose).GetY());
+      current_target.SetTheta((*target_pose).GetTheta());
       // Send new target pose
       // This will cancel the old one and retarget to the new one
       dwb_node.SendTargetPose(current_target);

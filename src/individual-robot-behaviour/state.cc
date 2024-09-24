@@ -48,9 +48,9 @@ OdomSubscriber::OdomSubscriber()
 void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
 {
   // Store globally
-  current_state.x_ = msg->pose.pose.position.x;
-  current_state.y_ = msg->pose.pose.position.y;
-  current_state.theta_ = tf2::getYaw(msg->pose.pose.orientation);
+  current_state.SetX(msg->pose.pose.position.x);
+  current_state.SetY(msg->pose.pose.position.y);
+  current_state.SetTheta(tf2::getYaw(msg->pose.pose.orientation));
 }
 
 //==============================================================================
