@@ -38,6 +38,13 @@ namespace individual_robot_behaviour
 
 //==============================================================================
 
+// Global flag used to indicate if target has been reached or not
+bool target_reached_flag;
+// Mutex to protect target_reached_flag
+std::mutex target_reached_mutex;
+
+//==============================================================================
+
 // DWB controller
 // Neither copyable nor move-only.
 DwbController::DwbController() : rclcpp::Node("dwb_controller")
