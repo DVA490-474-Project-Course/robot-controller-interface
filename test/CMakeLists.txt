@@ -18,6 +18,9 @@ add_executable(main_test_exe main_test.cc)
 target_link_libraries(
   main_test_exe
   GTest::gtest_main
+  path_planning_lib
+  state_lib
+  ball_lib
 )
 
 #===============================================================================
