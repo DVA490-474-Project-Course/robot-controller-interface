@@ -40,8 +40,10 @@ namespace individual_robot_behaviour
 
 // Global flag used to indicate if target has been reached or not
 bool target_reached_flag;
-// Mutex to protect target_reached_flag
+// Mutex to protect target_reached_flag (global)
 std::mutex target_reached_mutex;
+// Global mutex to protect target_pose (pointer)
+std::mutex target_pose_mutex;
 
 //==============================================================================
 
@@ -140,9 +142,9 @@ void local_path_planning(Pose *target_pose)
   // Local copy of most recent target pose, used to check if new target has 
   // been set.
   // Make it thread safe
-  target_mutex.lock();
+  target_pose_mutex.lock();
   Pose current_target = *target_pose;
-  target_mutex.unlock();
+  target_pose_mutex.unlock();
   
   // Create DWB node
   DwbController dwb_node;
@@ -161,7 +163,7 @@ void local_path_planning(Pose *target_pose)
     rclcpp::spin_some(dwb_node_ptr->get_node_base_interface());
 
     // Make it thread safe
-    target_mutex.lock();
+    target_pose_mutex.lock();
     // We have received a new target
     if(*target_pose != current_target)
     {
@@ -179,7 +181,7 @@ void local_path_planning(Pose *target_pose)
       target_reached_flag = false;
       target_reached_mutex.unlock();
     }
-    target_mutex.unlock();
+    target_pose_mutex.unlock();
 
     // Ensure 10 Hz is maintained
     rate.sleep();

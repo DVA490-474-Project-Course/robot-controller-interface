@@ -33,8 +33,8 @@ namespace individual_robot_behaviour
 // Needs to be global since its used between multiple threads to keep track
 // of current robot state.
 RobotState current_state;
-// Global mutex to protect target_pose
-std::mutex target_mutex;
+// Global mutex to protect current_state (global)
+std::mutex current_state_mutex;
 
 //==============================================================================
 // Class for a pose in 2D space.
@@ -147,10 +147,13 @@ OdomSubscriber::OdomSubscriber()
 void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr 
     msg) const
 {
+  // Make thread safe
+  current_state_mutex.lock();
   // Store globally
   current_state.SetX(msg->pose.pose.position.x);
   current_state.SetY(msg->pose.pose.position.y);
   current_state.SetTheta(tf2::getYaw(msg->pose.pose.orientation));
+  current_state_mutex.unlock();
 }
 
 //==============================================================================

@@ -86,6 +86,8 @@ void local_path_planning(Pose *target_pose);
 extern bool target_reached_flag;
 // Mutex to protect target_reached_flag
 extern std::mutex target_reached_mutex;
+// Global mutex to protect target_pose (pointer)
+extern std::mutex target_pose_mutex;
 
 //==============================================================================
 

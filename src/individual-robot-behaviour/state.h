@@ -123,8 +123,8 @@ class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
 // Needs to be global since its used between multiple threads to keep track
 // of current robot state.
 extern RobotState current_state;
-// Global mutex to protect target_pose
-extern std::mutex target_mutex;
+// Global mutex to protect current_state (global)
+extern std::mutex current_state_mutex;
 
 //==============================================================================
 
