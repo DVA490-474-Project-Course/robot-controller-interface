@@ -15,6 +15,7 @@ enable_testing()
 
 add_executable(main_test_exe main_test.cc)
 
+# !!! Add any libraries (MADE BY YOU!) that your tests use here !!!
 target_link_libraries(
   main_test_exe
   GTest::gtest_main
