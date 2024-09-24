@@ -26,17 +26,17 @@ namespace robot_controller_interface
 
 //==============================================================================
 
-// Enum class describing the playing field dimensions
-enum class PlayingField
+// Struct describing the playing field dimensions
+struct PlayingField
 {
-    kFrameX = 9600,
-    kFrameY = 6600,
-    kTouchLineX = 9000,
-    kGoalLineY = 6000,
-    kDefenseAreaX = 1000,
-    kDefenseAreaY = 2000,
-    kCenterCircleRadius = 500,
-    kGoalY = 1000
+    static constexpr double kFrameX = 9600.0;
+    static constexpr double kFrameY = 6600.0;
+    static constexpr double kTouchLineX = 9000.0;
+    static constexpr double kGoalLineY = 6000.0;
+    static constexpr double kDefenseAreaX = 1000.0;
+    static constexpr double kDefenseAreaY = 2000.0;
+    static constexpr double kCenterCircleRadius = 500.0;
+    static constexpr double kGoalY = 1000.0;
 };
 
 //==============================================================================
