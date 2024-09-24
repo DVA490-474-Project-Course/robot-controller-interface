@@ -100,7 +100,7 @@ class RobotState
 {
  public:
   // Default constructor
-  RobtoState() : x_(0.0), y_(0.0), theta_(0.0), ball_(false) {}
+  RobotState() : x_(0.0), y_(0.0), theta_(0.0), ball_(false) {}
 
   // Parameterized constructor
   RobotState(double x, double y, double theta, bool ball)
