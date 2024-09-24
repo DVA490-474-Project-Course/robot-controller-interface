@@ -106,7 +106,7 @@ class RobotState
 
 // Odom Subscriber
 // Neither copyable nor move-only.
-class OdomSubscriber : public rclcpp_lifecycle::LifecycleNode
+class OdomSubscriber : public rclcpp::Node
 {
  public:
   OdomSubscriber();

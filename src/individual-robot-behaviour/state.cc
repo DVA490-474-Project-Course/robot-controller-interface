@@ -18,6 +18,8 @@
 #include "nav2_controller/controller_server.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2/utils.h"
 
 // Project .h files
 
@@ -130,7 +132,7 @@ void RobotState::SetBall(bool ball)
 // Odom Subscriber
 // Neither copyable nor move-only.
 OdomSubscriber::OdomSubscriber()
-  : rclcpp_lifecycle::LifecycleNode("odom_subscriber")
+  : rclcpp::Node("odom_subscriber")
 {
   // Subscribe to odom topic
   odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
@@ -152,6 +154,7 @@ void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr
   // Store globally
   current_state.SetX(msg->pose.pose.position.x);
   current_state.SetY(msg->pose.pose.position.y);
+  // Transform from quaternion to euler angles
   current_state.SetTheta(tf2::getYaw(msg->pose.pose.orientation));
   current_state_mutex.unlock();
 }
