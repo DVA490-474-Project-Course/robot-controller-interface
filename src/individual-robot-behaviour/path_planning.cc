@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-19
-// Last modified: 2024-09-23 by Carl Larsson
+// Last modified: 2024-09-24 by Carl Larsson
 // Description: Path planning source file, global path planning is not
 // necessary, passing the desitnation position instantly and letting DWA (local
 // path planning) handle the rest is an acceptable simplification in the 

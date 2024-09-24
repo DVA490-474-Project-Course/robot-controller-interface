@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-22
-// Last modified: 2024-09-23 by Carl Larsson
+// Last modified: 2024-09-24 by Carl Larsson
 // Description: Robot state source file. Odometry, drift correction etc.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -134,7 +134,8 @@ OdomSubscriber::OdomSubscriber()
 {
   // Subscribe to odom topic
   odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, std::placeholders::_1));
+      "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, 
+          std::placeholders::_1));
 }
 
 // Description: Odometry callback function, stores current state in global
@@ -143,7 +144,8 @@ OdomSubscriber::OdomSubscriber()
 // Input: const shared pointer to msg containing odometry data. 
 // Output N/A
 // Return value: void
-void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) const
+void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr 
+    msg) const
 {
   // Store globally
   current_state.SetX(msg->pose.pose.position.x);
