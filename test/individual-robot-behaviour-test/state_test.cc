@@ -29,7 +29,7 @@ class PoseClassTest : public ::testing::Test {
  protected:
   // This will run before each test (TEST_F)
   void SetUp() override {
-    // Initialize Pose
+    // Create new
     robot_controller_interface::individual_robot_behaviour::Pose pose_;
   }
 
@@ -92,7 +92,7 @@ TEST_F(PoseClassTest, BoundaryValues)
 }
 
 // Test case for Pose class inequality operator
-// Doesn't have to be F but prefer all grouped together
+// Doesn't have to be TEST_F but I prefer all grouped together
 TEST_F(PoseClassTest, InequalityOperator)
 {
   robot_controller_interface::individual_robot_behaviour::Pose a;
@@ -124,5 +124,24 @@ TEST_F(PoseClassTest, InequalityOperator)
 
 //==============================================================================
 // Tests for RobotState class
+
+// Test fixture for RobotState class
+class RobotStateClassTest : public ::testing::Test {
+ protected:
+  // This will run before each test (TEST_F)
+  void SetUp() override {
+    // Create new
+    robot_controller_interface::individual_robot_behaviour::RobotState robot_state_;
+  }
+
+  // Test object
+  robot_controller_interface::individual_robot_behaviour::RobotState robot_state_;
+};
+
+// Dummy
+TEST_F(RobotStateClassTest, Dummy)
+{
+  EXPECT_FLOAT_EQ(0.0, 0.0);
+}
 
 //==============================================================================

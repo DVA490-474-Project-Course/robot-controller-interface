@@ -34,7 +34,8 @@ namespace individual_robot_behaviour
 
 //==============================================================================
 
-// Struct for a pose in 2D space.
+// Class for a pose in 2D space.
+// Neither copyable nor move-only.
 class Pose
 {
  public:
@@ -98,8 +99,11 @@ class Pose
 class RobotState
 {
  public:
-  // Initialize
-  RobotState(double x = 0.0, double y = 0.0, double theta = 0.0, bool ball = false)
+  // Default constructor
+  RobtoState() : x_(0.0), y_(0.0), theta_(0.0), ball_(false) {}
+
+  // Parameterized constructor
+  RobotState(double x, double y, double theta, bool ball)
   {
     SetX(x);
     SetY(y);
