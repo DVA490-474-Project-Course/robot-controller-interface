@@ -15,10 +15,11 @@ project(robot_controller_interface)
 
 if(Carl)
     find_package(ament_cmake REQUIRED)
-    find_package(rclcpp REQUIRED)
     find_package(dwb_core REQUIRED)
-    find_package(nav_msgs REQUIRED)
     find_package(GTest REQUIRED)
+    find_package(nav_msgs REQUIRED)
+    find_package(rclcpp REQUIRED)
+    find_package(tf2 REQUIRED)
 
 #-------------------------------------------------------------------------------
 
