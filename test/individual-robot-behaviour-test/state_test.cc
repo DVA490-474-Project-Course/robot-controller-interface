@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-23
-// Last modified: 2024-09-23 by Carl Larsson
+// Last modified: 2024-09-24 by Carl Larsson
 // Description: Test file for state source and header files.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -24,6 +24,8 @@
 //==============================================================================
 // Tests for Pose class
 
+//------------------------------------------------------------------------------
+
 // Test fixture for Pose class
 class PoseClassTest : public ::testing::Test {
  protected:
@@ -37,29 +39,54 @@ class PoseClassTest : public ::testing::Test {
   robot_controller_interface::individual_robot_behaviour::Pose pose_;
 };
 
+//------------------------------------------------------------------------------
+
 // Test case for Pose class, initial values (assuming default constructor was 
 // used) and GetX,GetY,GetTheta
-TEST_F(PoseClassTest, InitialValues)
+TEST_F(PoseClassTest, DefaultConstructor)
 {
-  EXPECT_FLOAT_EQ(pose_.GetX(), 0.0);
+  double default_value = 0.0;
 
-  EXPECT_FLOAT_EQ(pose_.GetY(), 0.0);
 
-  EXPECT_FLOAT_EQ(pose_.GetTheta(), 0.0);
+  EXPECT_FLOAT_EQ(pose_.GetX(), default_value);
+
+  EXPECT_FLOAT_EQ(pose_.GetY(), default_value);
+
+  EXPECT_FLOAT_EQ(pose_.GetTheta(), default_value);
+}
+
+// Test case for Pose class, initial values (assuming parameterized
+// constructor was used)
+TEST_F(PoseClassTest, ParameterizedConstructor)
+{
+  double x = 3.3;
+  double y = 5.0;
+  double theta = 1.11;
+  robot_controller_interface::individual_robot_behaviour::Pose 
+      param_pose_(x, y, theta);
+
+
+  EXPECT_FLOAT_EQ(param_pose_.GetX(), x);
+
+  EXPECT_FLOAT_EQ(param_pose_.GetY(), y);
+
+  EXPECT_FLOAT_EQ(param_pose_.GetTheta(), theta);
 }
 
 // Test case for Pose class, setting values inside boundary
 TEST_F(PoseClassTest, SettingValues)
 {
   double x = 2.0;
+  double y = 5.2;
+  double theta = 0.5;
+
+
   pose_.SetX(x);
   EXPECT_FLOAT_EQ(pose_.GetX(), x);
 
-  double y = 5.2;
   pose_.SetY(y);
   EXPECT_FLOAT_EQ(pose_.GetY(), y);
 
-  double theta = 0.5;
   pose_.SetTheta(theta);
   EXPECT_FLOAT_EQ(pose_.GetTheta(), theta);
 }
@@ -95,15 +122,17 @@ TEST_F(PoseClassTest, BoundaryValues)
 // Doesn't have to be TEST_F but I prefer all grouped together
 TEST_F(PoseClassTest, InequalityOperator)
 {
+  double val = 1.0;
+
   robot_controller_interface::individual_robot_behaviour::Pose a;
-  a.SetX(1.0);
-  a.SetY(1.0);
-  a.SetTheta(1.0);
+  a.SetX(val);
+  a.SetY(val);
+  a.SetTheta(val);
 
   robot_controller_interface::individual_robot_behaviour::Pose b;
-  b.SetX(1.0);
-  b.SetY(1.0);
-  b.SetTheta(1.0);
+  b.SetX(val);
+  b.SetY(val);
+  b.SetTheta(val);
 
   
   // Exactly equal
@@ -117,7 +146,7 @@ TEST_F(PoseClassTest, InequalityOperator)
   a.SetX(1.0 + 1e-5);
   EXPECT_TRUE(a != b);
 
-  // Difference slightly within tolerance
+  // Difference within tolerance
   a.SetX(1.0 + 1e-7);
   EXPECT_FALSE(a != b);
 }
@@ -125,23 +154,82 @@ TEST_F(PoseClassTest, InequalityOperator)
 //==============================================================================
 // Tests for RobotState class
 
+//------------------------------------------------------------------------------
+
 // Test fixture for RobotState class
 class RobotStateClassTest : public ::testing::Test {
  protected:
   // This will run before each test (TEST_F)
   void SetUp() override {
     // Create new
-    robot_controller_interface::individual_robot_behaviour::RobotState robot_state_;
+    robot_controller_interface::individual_robot_behaviour::RobotState 
+        robot_state_;
   }
 
   // Test object
-  robot_controller_interface::individual_robot_behaviour::RobotState robot_state_;
+  robot_controller_interface::individual_robot_behaviour::RobotState 
+      robot_state_;
 };
 
-// Dummy
-TEST_F(RobotStateClassTest, Dummy)
+//------------------------------------------------------------------------------
+
+// Test case for RobotState class, initial values (assuming default constructor 
+// was used) and GetX,GetY,GetTheta,GetBall
+TEST_F(RobotStateClassTest, DefaultConstructor)
 {
-  EXPECT_FLOAT_EQ(0.0, 0.0);
+  double default_value = 0.0;
+
+
+  EXPECT_FLOAT_EQ(robot_state_.GetX(), default_value);
+
+  EXPECT_FLOAT_EQ(robot_state_.GetY(), default_value);
+
+  EXPECT_FLOAT_EQ(robot_state_.GetTheta(), default_value);
+
+  EXPECT_FALSE(robot_state_.GetBall());
+}
+
+// Test case for RobotState class, initial values (assuming parameterized
+// constructor was used)
+TEST_F(RobotStateClassTest, ParameterizedConstructor)
+{
+  double x = 3.3;
+  double y = 5.0;
+  double theta = 1.11;
+  bool ball = true;
+  robot_controller_interface::individual_robot_behaviour::RobotState 
+      param_robot_state_(x, y, theta, ball);
+
+
+  EXPECT_FLOAT_EQ(param_robot_state_.GetX(), x);
+
+  EXPECT_FLOAT_EQ(param_robot_state_.GetY(), y);
+
+  EXPECT_FLOAT_EQ(param_robot_state_.GetTheta(), theta);
+
+  EXPECT_TRUE(param_robot_state_.GetBall());
+}
+
+// Test case for Pose class, setting values inside boundary
+TEST_F(RobotStateClassTest, SettingValues)
+{
+  double x = 2.0;
+  double y = 5.2;
+  double theta = 0.5;
+  bool ball = true;
+
+
+  robot_state_.SetX(x);
+  EXPECT_FLOAT_EQ(robot_state_.GetX(), x);
+
+  robot_state_.SetY(y);
+  EXPECT_FLOAT_EQ(robot_state_.GetY(), y);
+
+  robot_state_.SetTheta(theta);
+  EXPECT_FLOAT_EQ(robot_state_.GetTheta(), theta);
+
+  robot_state_.SetBall(ball);
+  EXPECT_TRUE(robot_state_.GetBall());
 }
 
 //==============================================================================
