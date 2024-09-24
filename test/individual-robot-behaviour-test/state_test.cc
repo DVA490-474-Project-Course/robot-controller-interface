@@ -16,6 +16,9 @@
 
 // Other .h files
 #include "gtest/gtest.h"
+#include "rclcpp/rclcpp.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2/utils.h"
 
 // Project .h files
 #include "../../src/common_types.h"
@@ -230,6 +233,76 @@ TEST_F(RobotStateClassTest, SettingValues)
 
   robot_state_.SetBall(ball);
   EXPECT_TRUE(robot_state_.GetBall());
+}
+
+//==============================================================================
+// Tests for OdomSubscriber
+
+//------------------------------------------------------------------------------
+
+// Test fixture for OdomSubscriber class test
+class OdomSubscriberTest : public ::testing::Test
+{
+ protected:
+  // Will be done before each test
+  void SetUp() override
+  {
+    // Initialize ROS2
+    rclcpp::init(0, nullptr);
+        
+    // Create OdomSubscriber node
+    odom_subscriber_ = std::make_shared<robot_controller_interface
+        ::individual_robot_behaviour::OdomSubscriber>();
+        
+    // Create a publisher to publish Odometry messages (since OdomCallback is 
+    // private so a mock can't be sent directly)
+    publisher_ = odom_subscriber_->create_publisher<nav_msgs::msg::Odometry>("odom", 10);
+        
+    // Create a mock Odometry message
+    odom_msg_ = std::make_shared<nav_msgs::msg::Odometry>();
+    // Modify the odom_msg_ fields
+    odom_msg_->pose.pose.position.x = 1.0;
+    odom_msg_->pose.pose.position.y = 2.0;
+    odom_msg_->pose.pose.position.z = 3.0;
+    odom_msg_->pose.pose.orientation.w = 1.0;
+    odom_msg_->pose.pose.orientation.w = 2.0;
+    odom_msg_->pose.pose.orientation.w = 3.0;
+    odom_msg_->pose.pose.orientation.w = 4.0;
+    // We have to transform orientation to yaw since that is how we store it in 
+    // current_state, so its the only way to check
+    theta_ = tf2::getYaw(odom_msg_->pose.pose.orientation);
+
+    // Clear global variable between each test
+    robot_controller_interface::individual_robot_behaviour::current_state.SetX(0.0);
+    robot_controller_interface::individual_robot_behaviour::current_state.SetY(0.0);
+    robot_controller_interface::individual_robot_behaviour::current_state.SetTheta(0.0);
+  }
+
+  void TearDown() override
+  {
+    rclcpp::shutdown();
+  }
+
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publisher_;
+  std::shared_ptr<robot_controller_interface::individual_robot_behaviour
+      ::OdomSubscriber> odom_subscriber_;
+  nav_msgs::msg::Odometry::SharedPtr odom_msg_;
+  double theta_;
+};
+
+//------------------------------------------------------------------------------
+
+TEST_F(OdomSubscriberTest, CallbackMockMessage)
+{
+  // Publish the test odometry message
+  publisher_->publish(*odom_msg_);
+
+  // Spin the node so the subscription can process the message
+  rclcpp::spin_some(odom_subscriber_);
+
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetX(), 1.0);
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetY(), 2.0);
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetTheta(), theta_);
 }
 
 //==============================================================================
