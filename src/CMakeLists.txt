@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 #===============================================================================
 # Add which modules/directories contains stuff that should be compiled
 
