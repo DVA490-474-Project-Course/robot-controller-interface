@@ -12,16 +12,27 @@
 #include <string>
 #include <chrono>
 #include <thread>
-#include "client.h"
+#include "simulation_interface.h"
 
 int main(int argc, char *argv[])
 {
-    // Demo the client
-    Client client;
-    while (true)
-    {
-        client.SendPacket();
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    }
-    return 0;
+  // example data to send
+  struct VelocityData velocity_data =
+  {
+    .id = 1,
+    .team = Team::kBlue,
+    .x_velocity = 10.0F,
+    .y_velocity = 0.0F,
+    .angular_velocity = 0.0F
+  };
+
+  // demo the simulation interface
+  SimulationInterface simulation_interface("127.0.0.1", 20011);
+  while (true)
+  {
+    simulation_interface.SendVelocityData(velocity_data);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  }
+
+  return 0;
 }
