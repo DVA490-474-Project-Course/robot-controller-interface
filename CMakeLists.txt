@@ -13,13 +13,14 @@ project(robot_controller_interface)
 #===============================================================================
 # find_package, include etc. Lastly add_subdirectory.
 
+find_package(ament_cmake REQUIRED)
+find_package(dwb_core REQUIRED)
+find_package(GTest REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2 REQUIRED)
+
 if(Carl)
-    find_package(ament_cmake REQUIRED)
-    find_package(dwb_core REQUIRED)
-    find_package(GTest REQUIRED)
-    find_package(nav_msgs REQUIRED)
-    find_package(rclcpp REQUIRED)
-    find_package(tf2 REQUIRED)
 
 #-------------------------------------------------------------------------------
 
@@ -28,13 +29,13 @@ else(Communication)
 
     # add .cc files to executable
     file(GLOB_RECURSE SRC_FILES src/simulation-interface/*.cc)
-    add_executable(client_demo ${SRC_FILES} src/main.cc)
+    add_executable(simulation_interface_demo ${SRC_FILES} src/main.cc)
 
     # include header files
-    target_include_directories(client_demo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
+    target_include_directories(simulation_interface_demo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
 
     # link libraries
-    target_link_libraries(client_demo client_lib)
+    target_link_libraries(simulation_interface_demo simulation_interface_lib)
 
     #____________________________________________________________
     # Google Test
@@ -60,7 +61,7 @@ else(Communication)
     target_include_directories(simulation_interface_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
 
     # Link GoogleTest and GoogleTest main library
-    target_link_libraries(simulation_interface_test gtest_main client_lib)
+    target_link_libraries(simulation_interface_test gtest_main simulation_interface_lib)
     # Enable testing
     enable_testing()
 
