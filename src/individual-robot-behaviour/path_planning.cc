@@ -39,7 +39,7 @@ namespace individual_robot_behaviour
 //==============================================================================
 
 // Global flag used to indicate if target has been reached or not
-bool target_reached_flag;
+bool target_reached_flag = false;
 // Mutex to protect target_reached_flag (global)
 std::mutex target_reached_mutex;
 // Global mutex to protect target_pose (pointer)
@@ -55,6 +55,13 @@ DwbController::DwbController() : rclcpp::Node("dwb_controller")
   navigate_to_pose_client_ =
       rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(
           this, "navigate_to_pose");
+
+  // Ensure the action server is available
+  if (!navigate_to_pose_client_->wait_for_action_server(std::chrono
+        ::seconds(10))) 
+  {
+    RCLCPP_ERROR(this->get_logger(), "Action server not available!");
+  }
 }
 
 // Description: Function for sending the target pose to DWB controller.
