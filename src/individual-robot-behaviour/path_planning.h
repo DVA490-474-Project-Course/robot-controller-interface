@@ -44,7 +44,7 @@ class DwbController : public rclcpp::Node
 {
  public:
   DwbController();
-  
+
   // Description: Function for sending the target pose to DWB controller.
   // This should automatically have DWB run in the background and publish
   // velocities on cmd_vel.
