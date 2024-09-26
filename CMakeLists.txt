@@ -18,6 +18,8 @@ find_package(GTest REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 if(Carl)
 
