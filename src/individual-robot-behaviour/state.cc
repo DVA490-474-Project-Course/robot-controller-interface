@@ -12,16 +12,18 @@
 #include "../individual-robot-behaviour/state.h"
 
 // C++ standard library headers
+#include <cmath>
+#include <mutex>
 
 // Other .h files
 #include "nav_msgs/msg/odometry.hpp"
-#include "nav2_controller/controller_server.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2/utils.h"
 
 // Project .h files
+#include "../common_types.h"
 
 
 namespace robot_controller_interface
