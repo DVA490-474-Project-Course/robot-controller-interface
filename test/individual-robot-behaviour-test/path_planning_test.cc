@@ -73,7 +73,12 @@ class DwbControllerTest : public ::testing::Test
 //------------------------------------------------------------------------------
 
 // Test case for SendTargetPose
-TEST_F(DwbControllerTest, SendTargetPoseTest)
+// To run this test you need odom, map and nav2 stack up and running beforehand.
+// Specify the following to run the test: 
+// ./main_test_exe --gtest_also_run_disabled_tests
+// or possibly:
+// ./main_test_exe --gtest_also_run_disabled_tests --gtest_filter=DwbControlletTest.DISABLED_SendTargetPoseTest
+TEST_F(DwbControllerTest, DISABLED_SendTargetPoseTest)
 {
   // Set target pose
   robot_controller_interface::individual_robot_behaviour::Pose 
@@ -96,5 +101,13 @@ TEST_F(DwbControllerTest, SendTargetPoseTest)
   // a target position
   SUCCEED();
 }
+
+//==============================================================================
+// local_path_planning function tests
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+
 
 //==============================================================================
