@@ -28,10 +28,6 @@ target_link_libraries(
 #===============================================================================
 # Dependencies
 
-# !!! Add packages that must be included here !!!
-ament_target_dependencies(main_test_exe rclcpp dwb_core nav_msgs)
-target_include_directories(main_test_exe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/test")
-
 # !!! This is where you add your source files which contain tests !!!
 target_sources(main_test_exe PRIVATE 
   main_test.cc 
@@ -39,6 +35,11 @@ target_sources(main_test_exe PRIVATE
   individual-robot-behaviour-test/state_test.cc
   individual-robot-behaviour-test/ball_test.cc
   )
+
+# !!! Add packages that must be included here !!!
+ament_target_dependencies(main_test_exe rclcpp dwb_core nav_msgs tf2)
+target_include_directories(main_test_exe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/test")
+
 
 #===============================================================================
 # Must be last (I think)
