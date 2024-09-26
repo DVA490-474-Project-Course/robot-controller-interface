@@ -24,7 +24,6 @@
 #include "nav2_controller/controller_server.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
