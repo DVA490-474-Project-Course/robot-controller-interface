@@ -82,10 +82,13 @@ void local_path_planning(Pose *target_pose);
 
 //==============================================================================
 
-// Global flag used to indicate if target has been reached or not
-extern bool target_reached_flag;
-// Mutex to protect target_reached_flag
-extern std::mutex target_reached_mutex;
+// Used to indicate if work is completed. 
+// 0 is false
+// 1 then work called by local path planner is completed
+// 2 then work called by shoot setup is completed
+extern std::atomic_int atomic_target_reached_flag;
+// Used to keep track of who has asked path planning to do work
+extern std::atomic_bool atomic_move_to_target;
 // Global mutex to protect target_pose (pointer)
 extern std::mutex target_pose_mutex;
 

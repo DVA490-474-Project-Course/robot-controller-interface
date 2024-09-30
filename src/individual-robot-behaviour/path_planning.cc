@@ -27,6 +27,7 @@
 #include "tf2/LinearMath/Quaternion.h"
 
 // Project .h files
+#include "../individual-robot-behaviour/ball.h"
 #include "../individual-robot-behaviour/state.h"
 
 
@@ -37,10 +38,13 @@ namespace individual_robot_behaviour
 
 //==============================================================================
 
-// Global flag used to indicate if target has been reached or not
-bool target_reached_flag = false;
-// Mutex to protect target_reached_flag (global)
-std::mutex target_reached_mutex;
+// Used to indicate if work is completed. 
+// 0 is false
+// 1 then work called by local path planner is completed
+// 2 then work called by shoot setup is completed
+std::atomic_int atomic_target_reached_flag = 0;
+// Used to keep track of who has asked path planning to do work
+std::atomic_bool atomic_move_to_target = false;
 // Global mutex to protect target_pose (pointer)
 std::mutex target_pose_mutex;
 
@@ -114,21 +118,41 @@ void DwbController::ResultCallback(
     case rclcpp_action::ResultCode::SUCCEEDED:
       RCLCPP_INFO(this->get_logger(), "Target position reached.");
       // Thread safe
-      target_reached_mutex.lock();
-      // Indicate that target has been reached
-      target_reached_flag = true;
-      target_reached_mutex.unlock();
+      // If local path planning called, indicate to it that target has been
+      // reached
+      if(atomic_move_to_target)
+      {
+        atomic_target_reached_flag = 1;
+        atomic_move_to_target = false;
+      }
+      // If shoot_setup called, indicate that task is complete and correct
+      // direction has been obtained
+      else if(atomic_shoot_setup_work) 
+      {
+        atomic_target_reached_flag = 2;
+        atomic_shoot_setup_work = false;
+      }
+      // Something is weird if we get here
+      else 
+      {
+        atomic_target_reached_flag = 0;
+        atomic_move_to_target = false;
+        atomic_shoot_setup_work = false;
+      }
       break;
     case rclcpp_action::ResultCode::ABORTED:
       RCLCPP_ERROR(this->get_logger(), 
           "ABORTED path planning to target position.");
+      atomic_target_reached_flag = 0;
       break;
     case rclcpp_action::ResultCode::CANCELED:
       RCLCPP_WARN(this->get_logger(), 
           "CANCELED path planning to target position.");
+      atomic_target_reached_flag = 0;
       break;
     default:
       RCLCPP_ERROR(this->get_logger(), "Unknown result code");
+      atomic_target_reached_flag = 0;
       break;
   }
 }
@@ -181,11 +205,8 @@ void local_path_planning(Pose *target_pose)
       // This will cancel the old one and retarget to the new one
       dwb_node.SendTargetPose(current_target);
 
-      // Thread safe
-      target_reached_mutex.lock();
       // Reset flag
-      target_reached_flag = false;
-      target_reached_mutex.unlock();
+      atomic_target_reached_flag = 0;
     }
     target_pose_mutex.unlock();
 
