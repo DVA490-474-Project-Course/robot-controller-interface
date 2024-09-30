@@ -36,7 +36,7 @@ SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
   socket = ::socket(AF_INET, SOCK_DGRAM, 0);
 }
 
-// Send a UDP packet for each robot
+// Send a UDP packet
 void SimulationInterface::SendRobotData(struct RobotData robot_data)
 {
   grSim_Packet packet;
