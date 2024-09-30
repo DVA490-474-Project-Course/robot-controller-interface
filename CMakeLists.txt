@@ -29,7 +29,7 @@ else(Communication)
 
     # add .cc files to executable
     file(GLOB_RECURSE SRC_FILES src/simulation-interface/*.cc)
-    add_executable(simulation_interface_demo ${SRC_FILES} src/main.cc)
+    add_executable(simulation_interface_demo ${SRC_FILES} src/simulation-interface/simulation_interface_demo.cc)
 
     # include header files
     target_include_directories(simulation_interface_demo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/simulation-interface)
