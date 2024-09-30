@@ -13,6 +13,7 @@
 // Related .h files
 
 // C++ standard library headers
+#include <atomic>
 
 // Other .h files
 
@@ -29,7 +30,7 @@ namespace individual_robot_behaviour
 
 // Initializes robot. Be provided with ID, initial pose, 
 // Must be done to be able to start running
-void initialize_robot(int *robot_id, Pose *target_position)
+void initialize_robot(std::atomic_int *robot_id, Pose *target_position)
 {
   /* TODO be provided ID for this robot */
 
