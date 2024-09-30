@@ -163,5 +163,20 @@ void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr
 
 //==============================================================================
 
+// Calculates angle between current and target pose assume a playing field which
+// follows unit circle coordinations with four quadrants
+double CalculateAngle(double current_x, double current_y, 
+    double target_x, double target_y)
+{
+  double delta_x = target_x - current_x;
+  double delta_y = target_y - current_y;
+
+  double theta = std::atan2(delta_y, delta_x);
+
+  return theta;
+}
+
+//==============================================================================
+
 } // namespace individual_robot_behaviour
 } // namesapce robot_controller_interface

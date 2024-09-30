@@ -120,6 +120,13 @@ class OdomSubscriber : public rclcpp::Node
 
 //==============================================================================
 
+// Calculates angle between current and target pose assume a playing field which
+// follows unit circle coordinations with four quadrants
+double CalculateAngle(double current_x, double current_y, 
+    double target_x, double target_y);
+
+//==============================================================================
+
 // Global variable for keeping track of current robot state
 // Needs to be global since its used between multiple threads to keep track
 // of current robot state.
