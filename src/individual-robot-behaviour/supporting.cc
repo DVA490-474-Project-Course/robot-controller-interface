@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-26
-// Last modified: 2024-09-26 by Carl Larsson
+// Last modified: 2024-09-30 by Carl Larsson
 // Description: Supporting functions source file. Everything that is required
 // to maintain and allow operation for the main tasks of the robots are 
 // considered supporting and can be found here.
