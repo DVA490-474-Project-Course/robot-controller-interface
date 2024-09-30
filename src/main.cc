@@ -14,6 +14,7 @@
 
 // C++ standard library headers
 #include <thread>
+#include <atomic>
 
 // Other .h files
 #include "rclcpp/rclcpp.hpp"
@@ -30,8 +31,10 @@
 int main(int argc, char **argv)
 {
   // Variables
-  robot_controller_interface::individual_robot_behaviour::Pose *target_position;
-  int *robot_id;
+  robot_controller_interface::individual_robot_behaviour::Pose *target_position = nullptr;
+  std::atomic_bool *shoot_ball = nullptr;
+  std::atomic_int *robot_id = nullptr;
+  std::atomic_bool *playing_left = nullptr;
 
   // Start rclcpp
   rclcpp::init(argc, argv);
