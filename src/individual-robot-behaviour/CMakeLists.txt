@@ -21,7 +21,7 @@ target_include_directories(state_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_library(ball_lib ball.cc)
 
-target_link_libraries(ball_lib state_lib)
+target_link_libraries(ball_lib state_lib path_planning_lib)
 
 target_include_directories(ball_lib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
