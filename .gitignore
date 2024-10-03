@@ -7,4 +7,5 @@
 /src/simulation-interface/generated/*
 /cmake-build-debug/*
 /build/*
+/docs/*/
 *.swp
