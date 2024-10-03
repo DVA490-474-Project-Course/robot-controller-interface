@@ -38,8 +38,6 @@ target_sources(main_test_exe PRIVATE
 
 # !!! Add packages that must be included here !!!
 ament_target_dependencies(main_test_exe rclcpp dwb_core nav_msgs tf2)
-target_include_directories(main_test_exe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/test")
-
 
 #===============================================================================
 # Must be last (I think)

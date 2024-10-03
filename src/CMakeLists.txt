@@ -18,6 +18,5 @@ target_link_libraries(main_exe
   supporting_lib)
 # !!! Add packages that must be included here !!!
 ament_target_dependencies(main_exe rclcpp)
-target_include_directories(main_exe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 #===============================================================================
