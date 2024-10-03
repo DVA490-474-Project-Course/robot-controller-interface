@@ -52,7 +52,7 @@ class Pose
   double GetTheta() const;
 
   // Set the members values
-  // Only allows values within playinfield
+  // Only allows values within playing field
   void SetX(double x);
   void SetY(double y);
   void SetTheta(double theta);
