@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-22
-// Last modified: 2024-09-30 by Carl Larsson
+// Last modified: 2024-10-03 by Carl Larsson
 // Description: Robot state source file. Odometry, drift correction etc.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -78,6 +78,21 @@ void Pose::SetTheta(double theta)
 {
   // Wrap angle to [-pi, pi]
   theta_ = atan2(sin(theta), cos(theta));
+}
+
+// = operator for this class
+Pose& Pose::operator=(const Pose& other)
+{
+  if(this == &other)
+  {
+    return *this;
+  }
+
+  (*this).SetX(other.GetX());
+  (*this).SetY(other.GetY());
+  (*this).SetTheta(other.GetTheta());
+
+  return *this;
 }
 
 // != operator for this class

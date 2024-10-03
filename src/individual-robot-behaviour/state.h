@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-22
-// Last modified: 2024-09-30 by Carl Larsson
+// Last modified: 2024-10-03 by Carl Larsson
 // Description: Robot state header file.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -56,6 +56,9 @@ class Pose
   void SetX(double x);
   void SetY(double y);
   void SetTheta(double theta);
+
+  // = operator for this class
+  Pose& operator=(const Pose& other);
 
   // != operator for this class
   bool operator!=(const Pose& other) const;
