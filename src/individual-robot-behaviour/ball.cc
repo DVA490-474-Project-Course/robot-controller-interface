@@ -14,6 +14,7 @@
 // C++ standard library headers
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 // Other .h files
 
@@ -31,6 +32,7 @@ namespace individual_robot_behaviour
 
 // Used to indicate who had dwb do work
 std::atomic_bool atomic_shoot_setup_work = false;
+std::mutex goalie_pose_mutex;
 
 //==============================================================================
 
@@ -67,7 +69,7 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 //==============================================================================
 
 // Ensure robot is setup for a shot, then shoots
-void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_ball, std::atomic_bool *playing_left)
+void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, std::atomic_bool *playing_left)
 {
   // Declare variables outside loop
   // Limit the loop speed to not take up to much CPU
@@ -88,11 +90,16 @@ void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_b
 
     // We are to shoot
     // If we have been signaled and we have ball
-    if((*shoot_ball) & (current_state.GetBall()))
+    if((*atomic_shoot_ball) & (current_state.GetBall()))
     {
       // Find where in goal to shoot based on goalie pose
+      // Make thread safe
+      goalie_pose_mutex.lock();
       shoot_target = FindShootTarget(*goalie_pose, *playing_left);
+      goalie_pose_mutex.unlock();
+      current_state_mutex.lock();
       theta = CalculateAngle(current_state.GetX(), current_state.GetY(), shoot_target.GetX(), shoot_target.GetY());
+      current_state_mutex.unlock();
 
       // Indicate who is calling for path planning work
       atomic_shoot_setup_work = true;
@@ -101,8 +108,10 @@ void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_b
       // target 
       target_pose_mutex.lock();
       // We do not want to move
+      current_state_mutex.lock();
       (*target_pose).SetX(current_state.GetX());
       (*target_pose).SetY(current_state.GetY());
+      current_state_mutex.unlock();
       // We only wanna angle correctly
       (*target_pose).SetTheta(theta);
       target_pose_mutex.unlock();
@@ -111,7 +120,7 @@ void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_b
       // Ensure we do not get stuck in while loop while waiting for getting 
       // correct direction, since this command could get abborted and a new 
       // command pursued instead, could also loose the ball.
-      while((*shoot_ball) & (current_state.GetBall()))
+      while((*atomic_shoot_ball) & (current_state.GetBall()))
       {
         // Wait for us to have correct direction
         if(atomic_target_reached_flag == 2)

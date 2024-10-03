@@ -31,6 +31,7 @@ namespace individual_robot_behaviour
 
 // Used to indicate who had dwb do work
 extern std::atomic_bool atomic_shoot_setup_work;
+extern std::mutex goalie_pose_mutex;
 
 //==============================================================================
 
