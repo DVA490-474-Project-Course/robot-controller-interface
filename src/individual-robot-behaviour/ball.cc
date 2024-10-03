@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Carl Larsson
 // Creation date: 2024-09-22
-// Last modified: 2024-09-30 by Carl Larsson
+// Last modified: 2024-10-03 by Carl Larsson
 // Description: Source file for all functions that relate to the ball.
 // License: See LICENSE file for license details.
 //==============================================================================
@@ -69,22 +69,30 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 // Ensure robot is setup for a shot, then shoots
 void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_ball, std::atomic_bool *playing_left)
 {
+  // Declare variables outside loop
   // Limit the loop speed to not take up to much CPU
   const int kLoopRateHz = 10;
   const std::chrono::milliseconds kLoopDuration(1000/kLoopRateHz);
 
+  std::chrono::steady_clock::time_point start_time;
+  std::chrono::steady_clock::time_point end_time;
+  std::chrono::milliseconds elapsed_time;
+
+  // Used for finding where to shoot
+  Pose shoot_target;
+  double theta;
+
   while(true)
   {
-    std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock
-        ::now();
+    start_time = std::chrono::steady_clock::now();
 
     // We are to shoot
     // If we have been signaled and we have ball
     if((*shoot_ball) & (current_state.GetBall()))
     {
       // Find where in goal to shoot based on goalie pose
-      Pose shoot_target = FindShootTarget(*goalie_pose, *playing_left);
-      double theta = CalculateAngle(current_state.GetX(), current_state.GetY(), shoot_target.GetX(), shoot_target.GetY());
+      shoot_target = FindShootTarget(*goalie_pose, *playing_left);
+      theta = CalculateAngle(current_state.GetX(), current_state.GetY(), shoot_target.GetX(), shoot_target.GetY());
 
       // Indicate who is calling for path planning work
       atomic_shoot_setup_work = true;
@@ -115,9 +123,8 @@ void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *shoot_b
       }
     }
 
-    std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock
-        ::now();
-    std::chrono::milliseconds elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    end_time = std::chrono::steady_clock::now();
+    elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
     if(elapsed_time < kLoopDuration)
     {
