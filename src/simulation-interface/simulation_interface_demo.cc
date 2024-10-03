@@ -17,10 +17,10 @@
 int main(int argc, char *argv[])
 {
   // example data to send
-  struct RobotData robot_data =
+  struct robot_controller_interface::simulation_interface::RobotData robot_data =
   {
     .id = 1,
-    .team = Team::kBlue,
+    .team = robot_controller_interface::simulation_interface::Team::kBlue,
     .x_velocity = 10.0F,
     .y_velocity = 0.0F,
     .angular_velocity = 0.0F,
@@ -29,7 +29,8 @@ int main(int argc, char *argv[])
   };
 
   // demo the simulation interface
-  SimulationInterface simulation_interface("127.0.0.1", 20011);
+  robot_controller_interface::simulation_interface::SimulationInterface simulation_interface(
+    "127.0.0.1", 20011);
   while (true)
   {
     simulation_interface.SendRobotData(robot_data);

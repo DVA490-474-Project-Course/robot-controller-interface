@@ -17,6 +17,11 @@
 // C++ standard library headers
 #include <string>
 
+namespace robot_controller_interface
+{
+namespace simulation_interface
+{
+
 enum class Team
 {
   kBlue = 0,
@@ -43,5 +48,8 @@ private:
   int socket;
   sockaddr_in destination;
 };
+
+} // namespace simulation_interface
+} // namesapce robot_controller_interface
 
 #endif // ROBOTCONTROLLERINTERFACE_SIMULATIONINTERFACE_SIMULATIONINTERFACE_H

@@ -24,10 +24,15 @@
 #include "grSim_Commands.pb.h"
 #include "grSim_Packet.pb.h"
 
+namespace robot_controller_interface
+{
+namespace simulation_interface
+{
+
 // Constructor
 SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
 {
-  // Define destination address'
+  // Define destination address
   destination.sin_family = AF_INET;
   destination.sin_port = htons(port);
   destination.sin_addr.s_addr = inet_addr(ip.c_str());
@@ -67,3 +72,6 @@ void SimulationInterface::SendRobotData(struct RobotData robot_data)
 
   free(buffer);
 }
+
+} // namespace simulation_interface
+} // namesapce robot_controller_interface
