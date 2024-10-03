@@ -1,7 +1,9 @@
 #===============================================================================
 # Setup
 
+# CMake version
 cmake_minimum_required(VERSION 3.20)
+# C++ standard
 # Requirement to use 20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED_ON)
