@@ -55,6 +55,7 @@ Pose::Pose(double x, double y, double theta)
   SetTheta(theta);
 }
 
+// Copy constructor
 Pose::Pose(const Pose& other)
   : x_(other.x_), y_(other.y_), theta_(other.theta_)
 {
@@ -62,26 +63,47 @@ Pose::Pose(const Pose& other)
 } 
 
 // Get the members value
-double Pose::GetX() const { return x_; }
-double Pose::GetY() const { return y_; }
-double Pose::GetTheta() const { return theta_; }
+double Pose::GetX() const 
+{ 
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  
+  return x_; 
+}
+double Pose::GetY() const 
+{ 
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  
+  return y_; 
+}
+double Pose::GetTheta() const 
+{ 
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  
+  return theta_; 
+}
 
 // Set the members values
 // Values must be within playing field
 void Pose::SetX(double x)
 {
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  
   x_ = (x > PlayingField::kFrameX / 2) ? PlayingField::kFrameX / 2 :
        (x < -PlayingField::kFrameX / 2) ? -PlayingField::kFrameX / 2 :
        x;
 }
 void Pose::SetY(double y) 
 {
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  
   y_ = (y > PlayingField::kFrameY / 2) ? PlayingField::kFrameY / 2 :
        (y < -PlayingField::kFrameY / 2) ? -PlayingField::kFrameY / 2 :
        y;
 }
 void Pose::SetTheta(double theta) 
 {
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+
   // Wrap angle to [-pi, pi]
   theta_ = atan2(sin(theta), cos(theta));
 }
@@ -108,6 +130,10 @@ Pose& Pose::operator=(const Pose& other)
 // != operator for this class
 bool Pose::operator!=(const Pose& other) const 
 {
+  // Lock both mutexes to prevent race conditions
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  std::lock_guard<std::mutex> other_lock(other.pose_mutex_);
+
   return (std::fabs(x_ - other.x_) > tolerance_) ||
          (std::fabs(y_ - other.y_) > tolerance_) ||
          (std::fabs(theta_ - other.theta_) > tolerance_);
