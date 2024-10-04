@@ -46,6 +46,9 @@ class Pose
   // Parameterized constructor
   Pose(double x, double y, double theta);
 
+  // Copy constructor
+  Pose(const Pose& other);
+
   // Get the members value
   double GetX() const;
   double GetY() const;
@@ -68,6 +71,7 @@ class Pose
   double x_;
   double y_;
   double theta_;
+  mutable std::mutex pose_mutex_;
 
   // Tolerance for != operation
   const double tolerance_ = 1e-6;
