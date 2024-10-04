@@ -50,13 +50,15 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * This function angles the robot towards the commanded target and then 
  * kicks the ball.
  *
- * @param[in] Pointer to goalies pose, can not be null.
- * @param[in] Pointer to atomic bool indicating if the command to shoot the 
- * ball has been given, can not be null.
- * @param[in] Pointer to atomic bool indicating if left side of field is
- * friendly side or not, can not be null.
+ * @param[in] goalie_pose Pointer to goalies pose, can not be null.
+ * @param[in] atomic_shoot_ball Pointer to atomic bool indicating if the command 
+ * to shoot the ball has been given, can not be null.
+ * @param[in] atomic_playing_left Pointer to atomic bool indicating if left side 
+ * of field is friendly side or not, can not be null.
+ * @param[in, out] target_pose Pointer to the target position for path planning
  */
-void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, std::atomic_bool *playing_left);
+void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
+    std::atomic_bool *playing_left, Pose *target_pose);
 
 /*============================================================================*/
 
