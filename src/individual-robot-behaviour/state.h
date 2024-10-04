@@ -90,6 +90,9 @@ class RobotState
   // Parameterized constructor
   RobotState(double x, double y, double theta, bool ball);
 
+  // Copy constructor
+  RobotState(const RobotState& other);
+
   // Get the members' value
   double GetX() const;
   double GetY() const;
@@ -108,6 +111,7 @@ class RobotState
   double y_;
   double theta_;
   bool ball_;
+  mutable std::mutex robot_state_mutex_;
 };
 
 //==============================================================================

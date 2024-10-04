@@ -155,28 +155,63 @@ RobotState::RobotState(double x, double y, double theta, bool ball)
   SetBall(ball);
 }
 
+// Copy constructor
+RobotState::RobotState(const RobotState& other)
+  : x_(other.x_), y_(other.y_), theta_(other.theta_), ball_(other.ball_)
+{
+
+} 
+
 // Get the members value
-double RobotState::GetX() const { return x_; }
-double RobotState::GetY() const { return y_; }
-double RobotState::GetTheta() const { return theta_; }
-bool RobotState::GetBall() const { return ball_; }
+double RobotState::GetX() const 
+{ 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
+  return x_; 
+}
+double RobotState::GetY() const 
+{ 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
+  return y_; 
+}
+double RobotState::GetTheta() const 
+{ 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
+  return theta_; 
+}
+bool RobotState::GetBall() const 
+{ 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+
+  return ball_; 
+}
 
 // Set the members values
 void RobotState::SetX(double x) 
 { 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
   x_ = x; 
 }
 void RobotState::SetY(double y) 
 { 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
   y_ = y; 
 }
 void RobotState::SetTheta(double theta)
 {
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
   // Wrap angle to [-pi, pi]
   theta_ = atan2(sin(theta), cos(theta));
 }
 void RobotState::SetBall(bool ball) 
 { 
+  std::lock_guard<std::mutex> lock(robot_state_mutex_);
+  
   ball_ = ball; 
 }
 
