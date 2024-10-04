@@ -72,7 +72,8 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 /*
  *  Ensure robot is setup for a shot, then shoots
  */
-void shoot_setup(Pose *target_pose, Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, std::atomic_bool *playing_left)
+void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
+    std::atomic_bool *playing_left, Pose *target_pose)
 {
   /* Declare variables outside loop */
   /* Limit the loop speed to not take up to much CPU */
