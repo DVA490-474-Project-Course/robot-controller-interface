@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-03 by Carl Larsson
+ * Last modified: 2024-10-04 by Carl Larsson
  * Description: Header file for everything that relates to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
