@@ -55,6 +55,12 @@ Pose::Pose(double x, double y, double theta)
   SetTheta(theta);
 }
 
+Pose::Pose(const Pose& other)
+  : x_(other.x_), y_(other.y_), theta_(other.theta_)
+{
+
+} 
+
 // Get the members value
 double Pose::GetX() const { return x_; }
 double Pose::GetY() const { return y_; }
@@ -62,7 +68,7 @@ double Pose::GetTheta() const { return theta_; }
 
 // Set the members values
 // Values must be within playing field
-void Pose::SetX(double x) 
+void Pose::SetX(double x)
 {
   x_ = (x > PlayingField::kFrameX / 2) ? PlayingField::kFrameX / 2 :
        (x < -PlayingField::kFrameX / 2) ? -PlayingField::kFrameX / 2 :
@@ -83,6 +89,10 @@ void Pose::SetTheta(double theta)
 // = operator for this class
 Pose& Pose::operator=(const Pose& other)
 {
+  // Lock both mutexes to prevent race conditions
+  std::lock_guard<std::mutex> lock(pose_mutex_);
+  std::lock_guard<std::mutex> other_lock(other.pose_mutex_);
+
   if(this == &other)
   {
     return *this;
