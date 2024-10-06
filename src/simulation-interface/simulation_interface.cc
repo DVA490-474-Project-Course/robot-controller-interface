@@ -24,10 +24,15 @@
 #include "grSim_Commands.pb.h"
 #include "grSim_Packet.pb.h"
 
+namespace robot_controller_interface
+{
+namespace simulation_interface
+{
+
 // Constructor
 SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
 {
-  // Define destination address'
+  // Define destination address
   destination.sin_family = AF_INET;
   destination.sin_port = htons(port);
   destination.sin_addr.s_addr = inet_addr(ip.c_str());
@@ -36,8 +41,8 @@ SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
   socket = ::socket(AF_INET, SOCK_DGRAM, 0);
 }
 
-// Send a UDP packet for each robot
-void SimulationInterface::SendVelocityData(struct VelocityData velocity_data)
+// Send a UDP packet
+void SimulationInterface::SendRobotData(struct RobotData robot_data)
 {
   grSim_Packet packet;
   grSim_Robot_Command* command;
@@ -45,17 +50,17 @@ void SimulationInterface::SendVelocityData(struct VelocityData velocity_data)
   void *buffer;
 
   // Write the data to the protobuf message
-  packet.mutable_commands()->set_isteamyellow(velocity_data.team == Team::kYellow);
+  packet.mutable_commands()->set_isteamyellow(robot_data.team == Team::kYellow);
   packet.mutable_commands()->set_timestamp(0.0L);
   command = packet.mutable_commands()->add_robot_commands();
-  command->set_id(velocity_data.id);
+  command->set_id(robot_data.id);
   command->set_wheelsspeed(false);
-  command->set_veltangent(velocity_data.x_velocity);
-  command->set_velnormal(velocity_data.y_velocity);
-  command->set_velangular(velocity_data.angular_velocity);
-  command->set_kickspeedx(0.0F);
+  command->set_veltangent(robot_data.x_velocity);
+  command->set_velnormal(robot_data.y_velocity);
+  command->set_velangular(robot_data.angular_velocity);
+  command->set_kickspeedx(robot_data.kick_speed);
   command->set_kickspeedz(0.0F);
-  command->set_spinner(false);
+  command->set_spinner(robot_data.spinner_on);
 
   // Serialize the protobuf message before sending
   size = packet.ByteSizeLong();
@@ -68,8 +73,5 @@ void SimulationInterface::SendVelocityData(struct VelocityData velocity_data)
   free(buffer);
 }
 
-// Activate the kicker
-void SimulationInterface::ActivateKicker()
-{
-  // TODO
-}
+} // namespace simulation_interface
+} // namesapce robot_controller_interface

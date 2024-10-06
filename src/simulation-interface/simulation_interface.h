@@ -17,30 +17,39 @@
 // C++ standard library headers
 #include <string>
 
+namespace robot_controller_interface
+{
+namespace simulation_interface
+{
+
 enum class Team
 {
   kBlue = 0,
   kYellow = 1
 };
 
-struct VelocityData
+struct RobotData
 {
   int id;
   enum Team team;
   float x_velocity;
   float y_velocity;
   float angular_velocity;
+  float kick_speed;
+  bool spinner_on;
 };
 
 class SimulationInterface
 {
 public:
   SimulationInterface(std::string ip, uint16_t port);
-  void SendVelocityData(struct VelocityData velocity_data);
-  void ActivateKicker();
+  void SendRobotData(struct RobotData robot_data);
 private:
   int socket;
   sockaddr_in destination;
 };
+
+} // namespace simulation_interface
+} // namesapce robot_controller_interface
 
 #endif // ROBOTCONTROLLERINTERFACE_SIMULATIONINTERFACE_SIMULATIONINTERFACE_H
