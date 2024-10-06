@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-09-30 by Carl Larsson
+ * Last modified: 2024-10-06 by Carl Larsson
  * Description: Path planning header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -39,66 +39,102 @@ namespace individual_robot_behaviour
 
 /*============================================================================*/
 
-/* DWB controller */
-/* Neither copyable nor move-only. */
+/*!
+ * @brief DWB controller class
+ * 
+ * Class for creating a DWB action node for controlling DWB, offers functions
+ * to send target position to DWB which DWB then will navigate to.
+ *
+ * @note Neither copyable nor move-only. 
+ * @note This class depends on external systems, including Nav2, this holds for
+ * all its members aswell unless state otherwise.
+ *
+ * @pre The following preconditions must be met before using this class:
+ * - Nav2 stack must be running. (https://docs.nav2.org/)
+ * - `rclcpp` must be initialized.
+ * - A valid `baselink -> odom` transform must be available.
+ * - A valid `baselink -> map` transform must be available.
+ *
+ * @warning Failure to launch Nav2, intializing rclcpp, not having a baselink to 
+ * odom transform or baselink to map transform before using this class may 
+ * result in the the class and its members failing to function as intended.
+ */
 class DwbController : public rclcpp::Node
 {
  public:
   DwbController();
 
-  /* Description: Function for sending the target pose to DWB controller.
-   * This should automatically have DWB run in the background and publish
-   * velocities on cmd_vel.
-   * Use: rclcpp must be initialized before function call
-   * Input: Target pose using class Pose
-   * Output: N/A
-   * Return value: void
+  /*!
+   * @brief Function for sending the target pose to DWB controller.
+   *
+   * Function for sending the target pose to DWB controller. This should 
+   * automatically have DWB run in the background and publish velocities on 
+   * cmd_vel. If a new target_pose is sent, then the old will be abandoned
+   * and the most recent will be the goal.
+   *
+   * @param[in] target_pose The target pose which the path planner should
+   * navigate to.
+   *
+   * @see DwbController for dependencies, requirements and preconditions
+   * to use this function.
    */
   void SendTargetPose(Pose target_pose);
 
  private:
-  /* Description: Callback function indicating if target position has been 
-   * reached.
-   * Use: Use as argument for option in async_send_goal.
-   * Input: See bellow 
-   * Output: N/A
-   * Return value: void
+  /*!
+   * @brief Callback function indicating if target position has been reached.
+   *
+   * @param[in] result TODO
    */
   void ResultCallback(
       const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>
           ::WrappedResult &result);
 
-  /* Client for sending target pose to DWB controller */
+  /*!
+   * @brief Client for sending target pose to DWB controller 
+   *
+   * TODO
+   */
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr 
       navigate_to_pose_client_;
 };
 
 /*============================================================================*/
 
-/* 
+/*!
  * @brief Performs local path planning using DWA.
  *
  * A loop which continously checks if a new target position has been set and 
- * sends the new target pose to the DWA if it has been updated
+ * sends the new target pose to the DWA if it has been updated.
  *
- * @param[in] target_pose Target position using class Pose
+ * @param[in] target_pose Target position using class Pose.
  *
- * @note Function call must be after rclcpp has been initialized
+ * @note This function depends on external systems, including Nav2.
+ *
+ * @pre The following preconditions must be met before calling this function:
+ * - Nav2 stack must be running. (https://docs.nav2.org/)
+ * - `rclcpp` must be initialized.
+ * - A valid `baselink -> odom` transform must be available.
+ * - A valid `baselink -> map` transform must be available.
+ *
+ * @warning Failure to launch Nav2, intializing rclcpp, not having a baselink to 
+ * odom transform or baselink to map transform before calling this function may 
+ * result in the function failing to function as intended.
  */
 void local_path_planning(Pose *target_pose);
 
 /*============================================================================*/
 
-/* 
+/*!
  * @brief Used to indicate if path planning work is completed.
  *
- * Indicates which callers work has been completed.
+ * Indicates which callers work has been completed:
  * 0 indicates work has not been completed
  * 1 then work called by local_path_planner is completed
  * 2 then work called by shoot_setup is completed
  */
 extern std::atomic_int atomic_target_reached_flag;
-/* 
+/*!
  * @brief Informs the path planner that we are commanded to move to a new target
  *
  * Informs the callback function for the DWB controller that it was a move
