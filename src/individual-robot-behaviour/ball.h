@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-04 by Carl Larsson
+ * Last modified: 2024-10-06 by Carl Larsson
  * Description: Header file for everything that relates to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -17,10 +17,14 @@
 
 /* C++ standard library headers */
 #include <atomic>
+#include <chrono>
+#include <thread>
+#include <mutex>
 
 /* Other .h files */
 
 /* Project .h files */
+#include "../individual-robot-behaviour/path_planning.h"
 #include "../individual-robot-behaviour/state.h"
 
 
@@ -41,7 +45,7 @@ namespace individual_robot_behaviour
  * @param[in] playing_left Whether the left side of the field is friendly or 
  * not.
  * @return The target position for the shot.
- * */
+ */
 Pose FindShootTarget(Pose goalie_pose, bool playing_left);
 
 /*!
@@ -55,7 +59,8 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * to shoot the ball has been given, can not be null.
  * @param[in] atomic_playing_left Pointer to atomic bool indicating if left side 
  * of field is friendly side or not, can not be null.
- * @param[in, out] target_pose Pointer to the target position for path planning
+ * @param[in, out] target_pose Pointer to the target position for path 
+ * planning, can not be null
  */
 void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
     std::atomic_bool *playing_left, Pose *target_pose);
@@ -64,15 +69,13 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
 
 /*! 
  * @brief Global atomic variable which indicates if shoot_setup function set
- * local_path_planning to work.
+ * path planning to work.
  *
  * This global atomic variable indicates whether the shoot_setup function set
  * local_path_planning to work so that the callback function knows which 
  * function it should tell that the task has been completed. 
- *
- * */
+ */
 extern std::atomic_bool atomic_shoot_setup_work;
-extern std::mutex goalie_pose_mutex;
 
 /*============================================================================*/
 

@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-04 by Carl Larsson
+ * Last modified: 2024-10-06 by Carl Larsson
  * Description: Source file for all functions that relate to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -13,6 +13,7 @@
 #include "../individual-robot-behaviour/ball.h"
 
 /* C++ standard library headers */
+#include <atomic>
 #include <chrono>
 #include <thread>
 #include <mutex>
@@ -20,8 +21,8 @@
 /* Other .h files */
 
 /* Project .h files */
-#include "../individual-robot-behaviour/state.h"
 #include "../individual-robot-behaviour/path_planning.h"
+#include "../individual-robot-behaviour/state.h"
 
 
 namespace robot_controller_interface
@@ -31,9 +32,8 @@ namespace individual_robot_behaviour
 
 /*============================================================================*/
 
-/* Used to indicate who had dwb do work */
+/* Indicates if shoot_setup function set path planning to work */
 std::atomic_bool atomic_shoot_setup_work = false;
-std::mutex goalie_pose_mutex;
 
 /*============================================================================*/
 
@@ -97,33 +97,30 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
     if((*atomic_shoot_ball) & (current_state.GetBall()))
     {
       /* Find where in goal to shoot based on goalie pose */
-      /* Make thread safe */
-      goalie_pose_mutex.lock();
       shoot_target = FindShootTarget(*goalie_pose, *playing_left);
-      goalie_pose_mutex.unlock();
-      current_state_mutex.lock();
-      theta = CalculateAngle(current_state.GetX(), current_state.GetY(), shoot_target.GetX(), shoot_target.GetY());
-      current_state_mutex.unlock();
+      theta = CalculateAngle(current_state.GetX(), current_state.GetY(), 
+		  shoot_target.GetX(), shoot_target.GetY());
 
       /* Indicate who is calling for path planning work */
       atomic_shoot_setup_work = true;
 
-      /* Setting target_pose will trigger path_planner to start angling towards */
+      /* 
+       * Setting target_pose will trigger path_planner to start angling 
+	   * towards 
+	   */
       /* target */
-      target_pose_mutex.lock();
       /* We do not want to move */
-      current_state_mutex.lock();
       (*target_pose).SetX(current_state.GetX());
       (*target_pose).SetY(current_state.GetY());
-      current_state_mutex.unlock();
       /* We only wanna angle correctly */
       (*target_pose).SetTheta(theta);
-      target_pose_mutex.unlock();
 
       /* TODO fix so while loop also has frequency */
-      /* Ensure we do not get stuck in while loop while waiting for getting */
-      /* correct direction, since this command could get abborted and a new */
-      /* command pursued instead, could also loose the ball. */
+      /* 
+	   * Ensure we do not get stuck in while loop while waiting for getting
+       * correct direction, since this command could get abborted and a new
+       * command pursued instead, could also loose the ball. 
+	   */
       while((*atomic_shoot_ball) & (current_state.GetBall()))
       {
         /* Wait for us to have correct direction */
@@ -137,8 +134,10 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
     }
 
     end_time = std::chrono::steady_clock::now();
-    elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    elapsed_time = std::chrono::duration_cast<std::chrono
+		::milliseconds>(end_time - start_time);
 
+	/* Sleep for remaining time to keep looping frequency */
     if(elapsed_time < kLoopDuration)
     {
       std::this_thread::sleep_for(kLoopDuration - elapsed_time);
