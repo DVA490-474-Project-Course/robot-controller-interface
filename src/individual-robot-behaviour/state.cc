@@ -1,28 +1,29 @@
-// state.cc
-//==============================================================================
-// Author: Carl Larsson
-// Creation date: 2024-09-22
-// Last modified: 2024-10-03 by Carl Larsson
-// Description: Robot state source file. Odometry, drift correction etc.
-// License: See LICENSE file for license details.
-//==============================================================================
+/* state.cc
+ *==============================================================================
+ * Author: Carl Larsson
+ * Creation date: 2024-09-22
+ * Last modified: 2024-10-06 by Carl Larsson
+ * Description: Robot state source file. Odometry, drift correction etc.
+ * License: See LICENSE file for license details.
+ *==============================================================================
+ */
 
 
-// Related .h files
+/* Related .h files */
 #include "../individual-robot-behaviour/state.h"
 
-// C++ standard library headers
+/* C++ standard library headers */
 #include <cmath>
 #include <mutex>
 
-// Other .h files
+/* Other .h files */
 #include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2/utils.h"
 
-// Project .h files
+/* Project .h files */
 #include "../common_types.h"
 
 
@@ -31,23 +32,25 @@ namespace robot_controller_interface
 namespace individual_robot_behaviour
 {
 
-//==============================================================================
+/*============================================================================*/
 
-// Global variable for keeping track of current robot state
-// Needs to be global since its used between multiple threads to keep track
-// of current robot state.
+/* 
+ * Global variable for keeping track of current robot state
+ * Needs to be global since its used between multiple threads to keep track
+ * of current robot state.
+ */
 RobotState current_state;
-// Global mutex to protect current_state (global)
-std::mutex current_state_mutex;
 
-//==============================================================================
-// Class for a pose in 2D space.
-// Neither copyable nor move-only.
+/*============================================================================*/
+/* 
+ * Class for a pose in 2D space.
+ * Neither copyable nor move-only.
+ */
 
-// Default constructor
+/* Default constructor */
 Pose::Pose() : x_(0.0), y_(0.0), theta_(0.0) {}
 
-// Parameterized constructor
+/* Parameterized constructor */
 Pose::Pose(double x, double y, double theta) 
 {
   SetX(x);
@@ -55,14 +58,14 @@ Pose::Pose(double x, double y, double theta)
   SetTheta(theta);
 }
 
-// Copy constructor
+/* Copy constructor */
 Pose::Pose(const Pose& other)
   : x_(other.x_), y_(other.y_), theta_(other.theta_)
 {
 
 } 
 
-// Get the members value
+/* Get the members value */
 double Pose::GetX() const 
 { 
   std::lock_guard<std::mutex> lock(pose_mutex_);
@@ -82,8 +85,10 @@ double Pose::GetTheta() const
   return theta_; 
 }
 
-// Set the members values
-// Values must be within playing field
+/*
+ * Set the members values
+ * Values must be within playing field
+ */
 void Pose::SetX(double x)
 {
   std::lock_guard<std::mutex> lock(pose_mutex_);
@@ -104,14 +109,14 @@ void Pose::SetTheta(double theta)
 {
   std::lock_guard<std::mutex> lock(pose_mutex_);
 
-  // Wrap angle to [-pi, pi]
+  /* Wrap angle to [-pi, pi] */
   theta_ = atan2(sin(theta), cos(theta));
 }
 
-// = operator for this class
+/* A = operator for this class */
 Pose& Pose::operator=(const Pose& other)
 {
-  // Lock both mutexes to prevent race conditions
+  /* Lock both mutexes to prevent race conditions */
   std::lock_guard<std::mutex> lock(pose_mutex_);
   std::lock_guard<std::mutex> other_lock(other.pose_mutex_);
 
@@ -127,10 +132,10 @@ Pose& Pose::operator=(const Pose& other)
   return *this;
 }
 
-// != operator for this class
+/* A != operator for this class */
 bool Pose::operator!=(const Pose& other) const 
 {
-  // Lock both mutexes to prevent race conditions
+  /* Lock both mutexes to prevent race conditions */
   std::lock_guard<std::mutex> lock(pose_mutex_);
   std::lock_guard<std::mutex> other_lock(other.pose_mutex_);
 
@@ -139,14 +144,16 @@ bool Pose::operator!=(const Pose& other) const
          (std::fabs(theta_ - other.theta_) > tolerance_);
 }
 
-//==============================================================================
-// Class describing the current state of the robot
-// Neither copyable nor move-only.
+/*============================================================================*/
+/* 
+ * Class describing the current state of the robot
+ * Neither copyable nor move-only.
+ */
 
-// Default constructor
+/* Default constructor */
 RobotState::RobotState() : x_(0.0), y_(0.0), theta_(0.0), ball_(false) {}
 
-// Parameterized constructor
+/* Parameterized constructor */
 RobotState::RobotState(double x, double y, double theta, bool ball) 
 {
   SetX(x);
@@ -155,14 +162,14 @@ RobotState::RobotState(double x, double y, double theta, bool ball)
   SetBall(ball);
 }
 
-// Copy constructor
+/* Copy constructor */
 RobotState::RobotState(const RobotState& other)
   : x_(other.x_), y_(other.y_), theta_(other.theta_), ball_(other.ball_)
 {
 
 } 
 
-// Get the members value
+/* Get the members value */
 double RobotState::GetX() const 
 { 
   std::lock_guard<std::mutex> lock(robot_state_mutex_);
@@ -188,7 +195,7 @@ bool RobotState::GetBall() const
   return ball_; 
 }
 
-// Set the members values
+/* Set the members values */
 void RobotState::SetX(double x) 
 { 
   std::lock_guard<std::mutex> lock(robot_state_mutex_);
@@ -205,7 +212,7 @@ void RobotState::SetTheta(double theta)
 {
   std::lock_guard<std::mutex> lock(robot_state_mutex_);
   
-  // Wrap angle to [-pi, pi]
+  /* Wrap angle to [-pi, pi] */
   theta_ = atan2(sin(theta), cos(theta));
 }
 void RobotState::SetBall(bool ball) 
@@ -217,40 +224,43 @@ void RobotState::SetBall(bool ball)
 
 //==============================================================================
 
-// Odom Subscriber
-// Neither copyable nor move-only.
+/* 
+ * Odom Subscriber
+ * Neither copyable nor move-only.
+ */
 OdomSubscriber::OdomSubscriber()
   : rclcpp::Node("odom_subscriber")
 {
-  // Subscribe to odom topic
+  /* Subscribe to odom topic */
   odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
       "/odom", 10, std::bind(&OdomSubscriber::OdomCallback, this, 
           std::placeholders::_1));
 }
 
-// Description: Odometry callback function, stores current state in global
-// variable current_state.
-// Use: use as argument when creating odometry subscriber.
-// Input: const shared pointer to msg containing odometry data. 
-// Output N/A
-// Return value: void
+/* 
+ * Description: Odometry callback function, stores current state in global
+ * variable current_state.
+ * Use: use as argument when creating odometry subscriber.
+ * Input: const shared pointer to msg containing odometry data. 
+ * Output N/A
+ * Return value: void
+ */
 void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr 
     msg) const
 {
-  // Make thread safe
-  current_state_mutex.lock();
-  // Store globally
+  /* Store globally */
   current_state.SetX(msg->pose.pose.position.x);
   current_state.SetY(msg->pose.pose.position.y);
-  // Transform from quaternion to euler angles
+  /* Transform from quaternion to euler angles */
   current_state.SetTheta(tf2::getYaw(msg->pose.pose.orientation));
-  current_state_mutex.unlock();
 }
 
-//==============================================================================
+/*============================================================================*/
 
-// Calculates angle between current and target pose assume a playing field which
-// follows unit circle coordinations with four quadrants
+/* 
+ * Calculates angle between current and target pose assume a playing field which
+ * follows unit circle coordinations with four quadrants
+ */
 double CalculateAngle(double current_x, double current_y, 
     double target_x, double target_y)
 {
@@ -262,7 +272,7 @@ double CalculateAngle(double current_x, double current_y,
   return theta;
 }
 
-//==============================================================================
+/*============================================================================*/
 
-} // namespace individual_robot_behaviour
-} // namesapce robot_controller_interface
+} /* namespace individual_robot_behaviour */
+} /* namesapce robot_controller_interface */
