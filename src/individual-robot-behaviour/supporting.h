@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-26
- * Last modified: 2024-10-04 by Carl Larsson
+ * Last modified: 2024-10-07 by Carl Larsson
  * Description: Supporting functions header file. Everything that is required
  * to maintain and allow operation for the main tasks of the robots are 
  * considered supporting and can be found here.
@@ -29,27 +29,34 @@ namespace individual_robot_behaviour
 
 /*============================================================================*/
 
-/* 
- * @brief
+/*!
+ * @brief Intializes robot.
  *
+ * Intializes robot by obtaining:
+ * - Robot ID
+ * - Starting pose
  *
+ * @param[in,out] robot_id Pointer to the robot ID. Can be nullptr before 
+ * initialization.
+ * @param[in,out] target_position Pointer to the target position for path 
+ * planning. Can be nullptr before initialization.
  *
- * @param[in,out]
- * @param[in,out]
+ * @warning Failing to run this prior to any robot commands could result in
+ * unintended behaviour.
  */
 void initialize_robot(std::atomic_int *robot_id, Pose *target_position);
 
 /*============================================================================*/
 
-/*
- * @brief
+/*!
+ * @brief Listens to central computer.
  */
 void listener();
 
 /*============================================================================*/
 
-/* 
- * @brief
+/*!
+ * @brief Sends to central computer.
  */
 void sender();
 

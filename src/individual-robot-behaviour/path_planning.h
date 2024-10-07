@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-06 by Carl Larsson
+ * Last modified: 2024-10-07 by Carl Larsson
  * Description: Path planning header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -62,6 +62,12 @@ namespace individual_robot_behaviour
 class DwbController : public rclcpp::Node
 {
  public:
+   /*!
+    * @brief Default constructor creating a action server node.
+    *
+    * TODO
+    *
+    */
   DwbController();
 
   /*!
@@ -91,7 +97,7 @@ class DwbController : public rclcpp::Node
           ::WrappedResult &result);
 
   /*!
-   * @brief Client for sending target pose to DWB controller 
+   * @brief Action client node for sending target pose to DWB controller 
    *
    * TODO
    */
