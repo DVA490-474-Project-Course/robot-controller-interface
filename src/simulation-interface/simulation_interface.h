@@ -2,7 +2,7 @@
 //==============================================================================
 // Author: Emil Åberg
 // Creation date: 2024-09-25
-// Last modified: 2024-09-25 by Emil Åberg
+// Last modified: 2024-10-07 by Shruthi
 // Description: Interface that can send UDP data to grSim to make robots move
 // and kick
 // License: See LICENSE file for license details.
@@ -44,6 +44,9 @@ class SimulationInterface
 public:
   SimulationInterface(std::string ip, uint16_t port);
   void SendRobotData(struct RobotData robot_data);
+
+  // Reset ball and all robots position and other attributes
+  void ResetRobotsAndBall(struct RobotData robot_data);
 private:
   int socket;
   sockaddr_in destination;
