@@ -270,7 +270,8 @@ double CalculateAngle(double current_x, double current_y,
   /* atan2 is not defined for atan2(0.0,0.0) */
   if((delta_x == 0.0) && (delta_y == 0.0)) 
   {
-    throw std::invalid_argument("Undefined angle: current and target positions are the same.");
+    throw std::invalid_argument(
+        "Undefined angle: current and target positions are the same.");
   }
 
   double theta = std::atan2(delta_y, delta_x);
