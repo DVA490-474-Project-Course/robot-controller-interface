@@ -336,18 +336,39 @@ TEST_F(OdomSubscriberTest, CallbackMockMessage)
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 
-/* Testing where answer is multiples of Pi */
-TEST(CalculateAngleTest, MultiplesOfPi)
+/* Test normal use cases */
+TEST(CalculateAngleTest, NormalCase)
 {
+  EXPECT_NEAR(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 1.0, 1.0), std::numbers::pi/4, 1e-6);
+}
+
+/* Testing where the resulting vector is aligned with an axis */
+TEST(CalculateAngleTest, VectorAlignAxis)
+{
+  /* X axis positive */
   EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0, 0.0, 1.0, 0.0), 0.0);
   EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0, 0.0, 140.0, 0.0), 0.0);
 
+  /* X axis negative */
   EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0, 0.0, -1.0, 0.0), std::numbers::pi);
   EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0, 0.0, -191.215, 0.0), std::numbers::pi);
+
+  /* Y axis positive */
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 0.0, 1.0), std::numbers::pi/2);
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 0.0, 52.84), std::numbers::pi/2);
+
+  /* Y axis negative */
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 0.0, -1.0), -std::numbers::pi/2);
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 0.0, -0.978), -std::numbers::pi/2);
 }
 
 /* Testing when current = target (atan2(0.0,0.0)) */
