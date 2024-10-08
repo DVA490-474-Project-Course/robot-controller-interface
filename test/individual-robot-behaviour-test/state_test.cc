@@ -14,6 +14,7 @@
 
 /* C++ standard library headers */
 #include <cmath>
+#include <numbers>
 
 /* Other .h files */
 #include "gtest/gtest.h"
@@ -270,7 +271,8 @@ class OdomSubscriberTest : public ::testing::Test
      * Create a publisher to publish Odometry messages (since OdomCallback is 
      * private so a mock can't be sent directly)
      */
-    publisher_ = odom_subscriber_->create_publisher<nav_msgs::msg::Odometry>("odom", 10);
+    publisher_ = odom_subscriber_->create_publisher<nav_msgs::msg
+        ::Odometry>("odom", 10);
         
     /* Create a mock Odometry message */
     odom_msg_ = std::make_shared<nav_msgs::msg::Odometry>();
@@ -289,9 +291,12 @@ class OdomSubscriberTest : public ::testing::Test
     theta_ = tf2::getYaw(odom_msg_->pose.pose.orientation);
 
     /* Clear global variable between each test */
-    robot_controller_interface::individual_robot_behaviour::current_state.SetX(0.0);
-    robot_controller_interface::individual_robot_behaviour::current_state.SetY(0.0);
-    robot_controller_interface::individual_robot_behaviour::current_state.SetTheta(0.0);
+    robot_controller_interface::individual_robot_behaviour
+        ::current_state.SetX(0.0);
+    robot_controller_interface::individual_robot_behaviour
+        ::current_state.SetY(0.0);
+    robot_controller_interface::individual_robot_behaviour
+        ::current_state.SetTheta(0.0);
   }
 
   void TearDown() override
@@ -308,6 +313,7 @@ class OdomSubscriberTest : public ::testing::Test
 
 /*----------------------------------------------------------------------------*/
 
+/* Test for checking callback function using mock */
 TEST_F(OdomSubscriberTest, CallbackMockMessage)
 {
   /* Publish the test odometry message */
@@ -316,10 +322,42 @@ TEST_F(OdomSubscriberTest, CallbackMockMessage)
   /* Spin the node so the subscription can process the message */
   rclcpp::spin_some(odom_subscriber_);
 
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetX(), 1.0);
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetY(), 2.0);
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour::current_state.GetTheta(), theta_);
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+      ::current_state.GetX(), 1.0);
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+      ::current_state.GetY(), 2.0);
+  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+      ::current_state.GetTheta(), theta_);
 }
 
 /*============================================================================*/
 /* Tests for CalculateAngle */
+
+/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
+
+/* Testing where answer is multiples of Pi */
+TEST(CalculateAngleTest, MultiplesOfPi)
+{
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 1.0, 0.0), 0.0);
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, 140.0, 0.0), 0.0);
+
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, -1.0, 0.0), std::numbers::pi);
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0, 0.0, -191.215, 0.0), std::numbers::pi);
+}
+
+/* Testing when current = target (atan2(0.0,0.0)) */
+TEST(CalculateAngleTest, CurrentEqualsTarget)
+{
+  EXPECT_THROW(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(0.0,0.0,0.0,0.0), std::invalid_argument);
+
+  EXPECT_THROW(robot_controller_interface::individual_robot_behaviour
+      ::CalculateAngle(2.3516,-100.01,2.3516,-100.01), std::invalid_argument);
+}
+
+/*============================================================================*/

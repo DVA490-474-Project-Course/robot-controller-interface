@@ -378,13 +378,22 @@ class OdomSubscriber : public rclcpp::Node
 /*!
  * @brief Calculates angle between current possition and target possition.
  *
- * Calculates angle between current and target position, assuming a playing 
- * field which follows unit circle coordinates with four quadrants.
+ * Calculates angle (radians) between current position (current_x, current_y) 
+ * and target position (target_x, target_y), assuming a playing field which 
+ * follows unit circle coordinates with four quadrants.
  *
  * @param[in] current_x Current position X coordinate.
  * @param[in] current_y Current position Y coordinate.
  * @param[in] target_x Target position X coordinate.
  * @param[in] target_y Target position Y coordinate.
+ *
+ * @return The angle in radians between the two points.
+ *
+ * @note current and target can not be the same since atan2 is undefined in 
+ * this case.
+ *
+ * @throws std::invalid_argument if the current and target positions are the 
+ * same.
  */
 double CalculateAngle(double current_x, double current_y, 
     double target_x, double target_y);
