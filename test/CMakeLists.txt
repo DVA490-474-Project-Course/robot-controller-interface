@@ -23,6 +23,7 @@ target_link_libraries(
   path_planning_lib
   state_lib
   ball_lib
+  supporting_lib
 )
 
 #===============================================================================
@@ -34,6 +35,7 @@ target_sources(main_test_exe PRIVATE
   individual-robot-behaviour-test/path_planning_test.cc
   individual-robot-behaviour-test/state_test.cc
   individual-robot-behaviour-test/ball_test.cc
+  individual-robot-behaviour-test/supporting_test.cc
   )
 
 # !!! Add packages that must be included here !!!
