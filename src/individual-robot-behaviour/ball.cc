@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-06 by Carl Larsson
+ * Last modified: 2024-10-09 by Carl Larsson
  * Description: Source file for all functions that relate to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -69,20 +69,16 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 
 /*============================================================================*/
 
-/*
- *  Ensure robot is setup for a shot, then shoots
- */
+/* Ensure robot is setup for a shot, then shoots */
 void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
     std::atomic_bool *playing_left, Pose *target_pose)
 {
   /* Declare variables outside loop */
   /* Limit the loop speed to not take up to much CPU */
-  const int kLoopRateHz = 10;
-  const std::chrono::milliseconds kLoopDuration(1000/kLoopRateHz);
-
-  std::chrono::steady_clock::time_point start_time;
-  std::chrono::steady_clock::time_point end_time;
-  std::chrono::milliseconds elapsed_time;
+  std::chrono::milliseconds outer_loop_duration(200);
+  std::chrono::milliseconds inner_loop_duration(20);
+  std::chrono::time_point<std::chrono::high_resolution_clock> outer_start;
+  std::chrono::time_point<std::chrono::high_resolution_clock> inner_start;
 
   /* Used for finding where to shoot */
   Pose shoot_target;
@@ -90,7 +86,8 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
 
   while(true)
   {
-    start_time = std::chrono::steady_clock::now();
+    /* Limit loop speed of outer loop */
+    outer_start = std::chrono::high_resolution_clock::now();
 
     /* We are to shoot */
     /* If we have been signaled and we have ball */
@@ -106,9 +103,8 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
 
       /* 
        * Setting target_pose will trigger path_planner to start angling 
-	   * towards 
-	   */
-      /* target */
+	     * towards target.
+       */
       /* We do not want to move */
       (*target_pose).SetX(current_state.GetX());
       (*target_pose).SetY(current_state.GetY());
@@ -117,12 +113,15 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
 
       /* TODO fix so while loop also has frequency */
       /* 
-	   * Ensure we do not get stuck in while loop while waiting for getting
+	     * Ensure we do not get stuck in while loop while waiting for getting
        * correct direction, since this command could get abborted and a new
        * command pursued instead, could also loose the ball. 
-	   */
+	     */
       while((*atomic_shoot_ball) & (current_state.GetBall()))
       {
+        /* Limit loop speed of inner loop */
+        inner_start = std::chrono::high_resolution_clock::now();
+
         /* Wait for us to have correct direction */
         if(atomic_target_reached_flag == 2)
         {
@@ -130,18 +129,14 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
 
           atomic_target_reached_flag = 0;
         }
+
+        /* Enforce inner loop frequency */
+        std::this_thread::sleep_until(inner_start + inner_loop_duration);
       }
     }
 
-    end_time = std::chrono::steady_clock::now();
-    elapsed_time = std::chrono::duration_cast<std::chrono
-		::milliseconds>(end_time - start_time);
-
-	/* Sleep for remaining time to keep looping frequency */
-    if(elapsed_time < kLoopDuration)
-    {
-      std::this_thread::sleep_for(kLoopDuration - elapsed_time);
-    }
+    /* Enforce outer loop frequency */
+    std::this_thread::sleep_until(outer_start + outer_loop_duration);
   }
 }
 
