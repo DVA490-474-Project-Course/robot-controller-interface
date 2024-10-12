@@ -127,7 +127,6 @@ class LocalPathPlanningTest : public ::testing::Test
     rclcpp::init(0, nullptr);
   }
 
-
   void TearDown() override
   {
     /* Shutdown rclcpp */
@@ -139,6 +138,7 @@ class LocalPathPlanningTest : public ::testing::Test
 
 /*----------------------------------------------------------------------------*/
 
+/* TODO fix this test */
 /* 
  * Test case for SendTargetPose.
  * To run this test you need baselink to odom transform, baselink to map 

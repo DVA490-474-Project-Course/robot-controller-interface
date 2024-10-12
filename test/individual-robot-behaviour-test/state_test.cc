@@ -83,6 +83,8 @@ TEST_F(PoseClassTest, ParameterizedConstructor)
   EXPECT_FLOAT_EQ(param_pose_.GetTheta(), theta);
 }
 
+/* TODO fix test for copy constructor */
+
 /* Test case for Pose class, setting values inside boundary */
 TEST_F(PoseClassTest, SettingValues)
 {
@@ -127,6 +129,8 @@ TEST_F(PoseClassTest, BoundaryValues)
   pose_.SetTheta(theta);
   EXPECT_FLOAT_EQ(pose_.GetTheta(), atan2(sin(theta), cos(theta)));
 }
+
+/* TODO fix test case for assignment operator */
 
 /* 
  * Test case for Pose class inequality operator
@@ -226,7 +230,9 @@ TEST_F(RobotStateClassTest, ParameterizedConstructor)
   EXPECT_TRUE(param_robot_state_.GetBall());
 }
 
-/* Test case for Pose class, setting values inside boundary */
+/* TODO fix test case for copy constructor */
+
+/* Test case for RobotState class, setting values */
 TEST_F(RobotStateClassTest, SettingValues)
 {
   double x = 2.0;
