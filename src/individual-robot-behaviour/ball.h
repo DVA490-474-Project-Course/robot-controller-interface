@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-06 by Carl Larsson
+ * Last modified: 2024-10-12 by Carl Larsson
  * Description: Header file for everything that relates to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -19,7 +19,6 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
-#include <mutex>
 
 /* Other .h files */
 
@@ -48,6 +47,8 @@ namespace individual_robot_behaviour
  */
 Pose FindShootTarget(Pose goalie_pose, bool playing_left);
 
+/*============================================================================*/
+
 /*!
  * @brief Direct robot towards target and kicks the ball.
  *
@@ -61,9 +62,19 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * of field is friendly side or not, can not be null.
  * @param[in, out] target_pose Pointer to the target position for path 
  * planning, can not be null
+ *
+ * @note This function is dependent on other functions running on seperate 
+ * threads.
+ *
+ * @pre This function requires the following before use:
+ * - InitializeRobot must have been called prior to use 
+ * - LocalPathPlanning must run in another thread
+ *
+ * @warning The function is not guaranteed to work as intended if the 
+ * preconditions are not met.
  */
-void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
-    std::atomic_bool *playing_left, Pose *target_pose);
+void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
+    std::atomic_bool *atomic_playing_left, Pose *target_pose);
 
 /*============================================================================*/
 
