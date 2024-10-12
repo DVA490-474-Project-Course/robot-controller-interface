@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-26
- * Last modified: 2024-10-04 by Carl Larsson
+ * Last modified: 2024-10-12 by Carl Larsson
  * Description: Supporting functions source file. Everything that is required
  * to maintain and allow operation for the main tasks of the robots are 
  * considered supporting and can be found here.
@@ -31,7 +31,7 @@ namespace individual_robot_behaviour
 
 /* Initializes robot. Be provided with ID, initial pose, */
 /* Must be done to be able to start running */
-void initialize_robot(std::atomic_int *robot_id, Pose *target_position)
+void InitializeRobot(std::atomic_int *robot_id, Pose *target_position)
 {
   /* TODO be provided ID for this robot */
 
@@ -49,7 +49,7 @@ void initialize_robot(std::atomic_int *robot_id, Pose *target_position)
 /*============================================================================*/
 
 /* Listens to centralized computer. Gets commands and correction data. */
-void listener()
+void Listener()
 {
   /* TODO get commands*/
 
@@ -59,7 +59,7 @@ void listener()
 /*============================================================================*/
 
 /* Sends data to centralized computer. Sends sensor data and robot status. */
-void sender()
+void Sender()
 {
   /* TODO send sensor data and robot status information (cpu temp etc) to 
    * centralized computer */
