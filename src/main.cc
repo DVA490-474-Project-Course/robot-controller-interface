@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson, Emil Åberg
  * Creation date: 2024-09-16
- * Last modified: 2024-10-03 by Carl Larsson
+ * Last modified: 2024-10-12 by Carl Larsson
  * Description: Main, the executable instance for one robot. Does 
  * initialization, path thread planning, shooting setup and calling shoot 
  * thread, centralized AI listener thread, and finally shutdown.
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 
   /* Initialize robot */
   /* Gain robot ID and initial pose */
-  robot_controller_interface::individual_robot_behaviour::initialize_robot(robot_id, target_position);
+  robot_controller_interface::individual_robot_behaviour::InitializeRobot(robot_id, target_position);
 
   /* TODO Complete the functions the threads are to run */
   /*
