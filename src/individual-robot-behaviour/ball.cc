@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-09 by Carl Larsson
+ * Last modified: 2024-10-12 by Carl Larsson
  * Description: Source file for all functions that relate to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -16,7 +16,6 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
-#include <mutex>
 
 /* Other .h files */
 
@@ -70,8 +69,8 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 /*============================================================================*/
 
 /* Ensure robot is setup for a shot, then shoots */
-void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
-    std::atomic_bool *playing_left, Pose *target_pose)
+void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
+    std::atomic_bool *atomic_playing_left, Pose *target_pose)
 {
   /* Declare variables outside loop */
   /* Limit the loop speed to not take up to much CPU */
@@ -94,12 +93,9 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
     if((*atomic_shoot_ball) & (current_state.GetBall()))
     {
       /* Find where in goal to shoot based on goalie pose */
-      shoot_target = FindShootTarget(*goalie_pose, *playing_left);
+      shoot_target = FindShootTarget(*goalie_pose, *atomic_playing_left);
       theta = CalculateAngle(current_state.GetX(), current_state.GetY(), 
 		  shoot_target.GetX(), shoot_target.GetY());
-
-      /* Indicate who is calling for path planning work */
-      atomic_shoot_setup_work = true;
 
       /* 
        * Setting target_pose will trigger path_planner to start angling 
@@ -111,7 +107,9 @@ void shoot_setup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
       /* We only wanna angle correctly */
       (*target_pose).SetTheta(theta);
 
-      /* TODO fix so while loop also has frequency */
+      /* Indicate who is calling for path planning work */
+      atomic_shoot_setup_work = true;
+
       /* 
 	     * Ensure we do not get stuck in while loop while waiting for getting
        * correct direction, since this command could get abborted and a new
