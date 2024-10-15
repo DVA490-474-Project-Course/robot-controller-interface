@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-07 by Carl Larsson
+ * Last modified: 2024-10-15 by Emil Åberg
  * Description: Common types used by the individual robot behaviour program.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -24,6 +24,17 @@
 
 namespace robot_controller_interface
 {
+
+/*============================================================================*/
+
+/*! 
+ * @brief Enum indicating player team.
+ */
+enum class Team
+{
+  kBlue = 0,
+  kYellow = 1
+};
 
 /*============================================================================*/
 
