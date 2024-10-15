@@ -33,7 +33,7 @@ public:
   /* Constructor */
   SimulationInterface(std::string ip, uint16_t port);
 
-  /* Functions to set robot command */
+  /* Functions to send robot command to grSim */
   void SendRobotCommand(int id, enum Team team, bool spinner_on, float kicker_speed,
     float x_speed, float y_speed, float angular_speed);
   void SendRobotCommand(int id, enum Team team, bool spinner_on, float kicker_speed,
