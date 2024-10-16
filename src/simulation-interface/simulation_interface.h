@@ -27,24 +27,120 @@ namespace robot_controller_interface
 namespace simulation_interface
 {
 
+/*!
+ * @brief Class for interfacíng to grSim .
+ * 
+ * Class that allows communication with grSim and methods to control one robot
+ * in the simulation. Multiple robots can be controlled with multiple instantiations
+ * of this class.
+ */
 class SimulationInterface
 {
 public:
-  /* Constructor */
+  /*!
+    * @brief Constructor that sets up connection to grSim for one robot.
+    *
+    * @param[in] ip Ip address of the computer that is running grSim. When running
+    * grSim on the same computer that the simulation interface is running on this
+    * value should be localhost i.e. "127.0.0.1".
+    *
+    * @param[in] port The command listen port of grSim. This should
+    * be set to the same value as that which is set in the grSim configuration
+    * in Communication->Command listen port.
+    * 
+    * @param[in] id Id number of the robot that is conntrolled in grSim.
+    * 
+    * @param[in] team Team color of the robot that is controlled in grSim.
+    */
   SimulationInterface(std::string ip, uint16_t port, int id, enum Team team);
 
-  /* Functions to set the robot properties*/
-  void SetId(int id);
-  void SetTeam(enum Team team);
-  void SetKickerSpeed(float kicker_speed);
-  void SetSpinnerOn(bool spinner_on);
-  void SetVelocity(float x_speed, float y_speed, float angular_speed);
-  void SetVelocity(float wheel1, float wheel2, float wheel3, float wheel4);
+  /*!
+    * @brief Method to change robot to control with the class instance.
+    *
+    * @param[in] id ID of the robot in grSim that is to be controlled.
+    *
+    * @param[in] team Team color of the robot that is to be controlled.
+    */
+  void SetRobot(int id, enum Team team);
 
-  /* Send a UDP packet carrying the robot command */
+  /*!
+    * @brief Method to set the velocity of the kicker.
+    *
+    * @param[in] kicker_speed Set the speed of the kicker in m/s.
+    * 
+    * @pre In order for robot commands to take effect, UDP packets need
+    * to be sent periodica by calling SendPacket().
+    * 
+    * @see SendPacket for sending UDP packets.
+    */
+  void SetKickerSpeed(float kicker_speed);
+
+  /*!
+    * @brief Method to control the spinner.
+    *
+    * @param[in] kicker_speed Set the speed of the kicker in m/s.
+    * 
+    * @pre In order for robot commands to take effect, UDP packets need
+    * to be send continuously by calling SendPacket()
+    * 
+    * @see SendPacket() for sending UDP packets.
+    */
+  void SetSpinnerOn(bool spinner_on);
+
+  /*!
+    * @brief Method to set the robot velocity in terms of x, y and angular speeds.
+    *
+    * @param[in] x_speed The speed of the robot along the x axis in m/s.
+    * 
+    * @param[in] y_speed The speed of the robot along the y axis in m/s.
+    * 
+    * @param[in] angular_speed The angular speed of the robot in radians/s.
+    * 
+    * @note The velocity can either be set in terms of x, y and theta using this method,
+    * or alternatively by setting the speed of the individual wheels by using
+    * SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed, float back_right_wheel_speed, float front_right_wheel_speed).
+    * 
+    * @pre In order for robot commands to take effect, UDP packets need
+    * to be sent continuously by calling SendPacket().
+    */
+  void SetVelocity(float x_speed, float y_speed, float angular_speed);
+
+  /*!
+    * @brief Method to set the robot velocity by setting the speeds of the individual wheels.
+    *
+    * @param[in] front_left_wheel_speed The speed of the front left wheel in m/s.
+    * 
+    * @param[in] back_left_wheel_speed The speed of the back left wheel in m/s.
+    * 
+    * @param[in] back_right_wheel_speed The speed of the back right wheel in m/s.
+    * 
+    * @param[in] front_right_wheel_speed The speed of the front right wheel in m/s.
+    * 
+    * @note the velocity can either be set in terms of setting the individual wheel speeds
+    * using this method, ot by setting the velocity in terms of x, y and theta by using
+    * SetVelocity(float x_speed, float y_speed, float angular_speed).
+    * 
+    * @pre In order for robot commands to take effect, UDP packets need
+    * to be sent continuously by calling SendPacket().
+    */
+  void SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed,
+    float back_right_wheel_speed, float front_right_wheel_speed);
+
+  /*!
+    * @brief Sends a UDP packet to grSim, carrying the robot command
+    * 
+    * Sends a UDP packet to grSim, needs to be called periodically
+    * in order for communication to be maintained, recommended minimum rate
+    * of 50Hz.
+    * 
+    * @warning A robot that is not continously receiving commands will just
+    * stand still.
+    */
   void SendPacket();
 
-  /* Reset ball and all robots position and other attributes */
+  /*!
+    * @brief Reset all robots and the ball to their initial position.
+    */
   void ResetRobotsAndBall();
 
 private:

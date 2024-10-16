@@ -43,20 +43,15 @@ SimulationInterface::SimulationInterface(std::string ip, uint16_t port, int id, 
   socket = ::socket(AF_INET, SOCK_DGRAM, 0);
 
   /* Set initial values for robot */
-  SetId(id);
-  SetTeam(team);
+  SetRobot(id, team);
   SetVelocity(0.0F, 0.0F, 0.0F);
   SetKickerSpeed(0.0F);
   SetSpinnerOn(false);
 }
 
-void SimulationInterface::SetId(int id)
+void SimulationInterface::SetRobot(int id, enum Team team)
 {
   this->id = id;
-}
-
-void SimulationInterface::SetTeam(enum Team team)
-{
   this->team = team;
 }
 
@@ -68,13 +63,14 @@ void SimulationInterface::SetVelocity(float x_speed, float y_speed, float angula
   this->angular_speed = angular_speed;
 }
 
-void SimulationInterface::SetVelocity(float wheel1, float wheel2,float wheel3, float wheel4)
+void SimulationInterface::SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed,
+    float back_right_wheel_speed, float front_right_wheel_speed)
 {
   this->using_wheel_speed = true;
-  this->wheel1 = wheel1;
-  this->wheel2 = wheel2;
-  this->wheel3 = wheel3;
-  this->wheel4 = wheel4;
+  this->wheel1 = -front_left_wheel_speed;
+  this->wheel2 = -back_left_wheel_speed;
+  this->wheel3 = back_right_wheel_speed;
+  this->wheel4 = front_right_wheel_speed;
 }
 
 void SimulationInterface::SetKickerSpeed(float kicker_speed)
@@ -102,19 +98,13 @@ void SimulationInterface::SendPacket()
   command->set_kickspeedz(0.0F);
   command->set_spinner(spinner_on);
   command->set_wheelsspeed(using_wheel_speed);
-  if (using_wheel_speed)
-  {
-    command->set_wheel1(wheel1);
-    command->set_wheel1(wheel2);
-    command->set_wheel1(wheel3);
-    command->set_wheel1(wheel4);
-  }
-  else
-  {
-    command->set_veltangent(x_speed);
-    command->set_velnormal(y_speed);
-    command->set_velangular(angular_speed);
-  }
+  command->set_wheel1(wheel1);
+  command->set_wheel2(wheel2);
+  command->set_wheel3(wheel3);
+  command->set_wheel4(wheel4);
+  command->set_veltangent(x_speed);
+  command->set_velnormal(y_speed);
+  command->set_velangular(angular_speed);
 
   /* Send the packet */
   SendPacket(packet);
