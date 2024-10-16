@@ -31,24 +31,44 @@ class SimulationInterface
 {
 public:
   /* Constructor */
-  SimulationInterface(std::string ip, uint16_t port);
+  SimulationInterface(std::string ip, uint16_t port, int id, enum Team team);
 
-  /* Functions to send robot command to grSim */
-  void SendRobotCommand(int id, enum Team team, bool spinner_on, float kicker_speed,
-    float x_speed, float y_speed, float angular_speed);
-  void SendRobotCommand(int id, enum Team team, bool spinner_on, float kicker_speed,
-    float wheel1, float wheel2,float wheel3, float wheel4);
+  /* Functions to set the robot properties*/
+  void SetId(int id);
+  void SetTeam(enum Team team);
+  void SetKickerSpeed(float kicker_speed);
+  void SetSpinnerOn(bool spinner_on);
+  void SetVelocity(float x_speed, float y_speed, float angular_speed);
+  void SetVelocity(float wheel1, float wheel2, float wheel3, float wheel4);
+
+  /* Send a UDP packet carrying the robot command */
+  void SendPacket();
 
   /* Reset ball and all robots position and other attributes */
   void ResetRobotsAndBall();
+
 private:
   /* Network variables */
   int socket;
   sockaddr_in destination;
 
-  /* initial position of yellow robots, for blue x values will have opposite sign */
+  /* Initial position of yellow robots, for blue x values will have opposite sign */
   double initial_position_x[6] = {1.50, 1.50, 1.50, 0.55, 2.50, 3.60};
   double initial_position_y[6] = {1.12, 0.0, -1.12, 0.00, 0.00, 0.00};
+
+  /* Robot variables */
+  int id;
+  enum Team team;
+  bool spinner_on;
+  float kicker_speed;
+  float x_speed;
+  float y_speed;
+  float angular_speed;
+  float wheel1;
+  float wheel2;
+  float wheel3;
+  float wheel4;
+  bool using_wheel_speed;
 
   /* Helper functions */
   void SendPacket(grSim_Packet packet);

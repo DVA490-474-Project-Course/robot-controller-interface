@@ -18,14 +18,14 @@
 int main(int argc, char *argv[])
 {
   robot_controller_interface::simulation_interface::SimulationInterface simulation_interface(
-    "127.0.0.1", 20011);
+    "127.0.0.1", 20011, 3, robot_controller_interface::Team::kBlue);
+  simulation_interface.SetVelocity(10.0F, 0.0F, 0.0F);
 
   /* Run a loop to send commands and then reset the robot after 600 iterations */
   int count = 0;
   while (true)
   {
-    simulation_interface.SendRobotCommand(
-      3, robot_controller_interface::Team::kBlue, false, 10.0F, 0.0F, 0.0F, 0.0F);
+    simulation_interface.SendPacket();
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
     /* Reset blue and yellow team robots and ball every 6 seconds */
@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
       std::cout << "Resetting robots and ball..." << std::endl;
       simulation_interface.ResetRobotsAndBall();
       count = 0; /* Reset the counter after the reset */
-      std::this_thread::sleep_for(std::chrono::seconds(10)); /* Pause for a short period after reset */
+      std::this_thread::sleep_for(std::chrono::seconds(1)); /* Pause for a short period after reset */
+      simulation_interface.SetVelocity(10.0F, 0.0F, 0.0F);
     }
 
     count++;

@@ -32,7 +32,7 @@ namespace simulation_interface
 {
 
 /* Constructor */
-SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
+SimulationInterface::SimulationInterface(std::string ip, uint16_t port, int id, enum Team team)
 {
   /* Define destination address */
   destination.sin_family = AF_INET;
@@ -41,12 +41,54 @@ SimulationInterface::SimulationInterface(std::string ip, uint16_t port)
 
   /* Create the client socket */
   socket = ::socket(AF_INET, SOCK_DGRAM, 0);
+
+  /* Set initial values for robot */
+  SetId(id);
+  SetTeam(team);
+  SetVelocity(0.0F, 0.0F, 0.0F);
+  SetKickerSpeed(0.0F);
+  SetSpinnerOn(false);
+}
+
+void SimulationInterface::SetId(int id)
+{
+  this->id = id;
+}
+
+void SimulationInterface::SetTeam(enum Team team)
+{
+  this->team = team;
+}
+
+void SimulationInterface::SetVelocity(float x_speed, float y_speed, float angular_speed)
+{
+  this->using_wheel_speed = false;
+  this->x_speed = x_speed;
+  this->y_speed = y_speed;
+  this->angular_speed = angular_speed;
+}
+
+void SimulationInterface::SetVelocity(float wheel1, float wheel2,float wheel3, float wheel4)
+{
+  this->using_wheel_speed = true;
+  this->wheel1 = wheel1;
+  this->wheel2 = wheel2;
+  this->wheel3 = wheel3;
+  this->wheel4 = wheel4;
+}
+
+void SimulationInterface::SetKickerSpeed(float kicker_speed)
+{
+  this->kicker_speed = kicker_speed;
+}
+
+void SimulationInterface::SetSpinnerOn(bool spinner_on)
+{
+  this->spinner_on = spinner_on;
 }
 
 /* Send a UDP packet with the robot command */
-void SimulationInterface::SendRobotCommand(
-  int id, enum Team team, bool spinner_on, float kicker_speed,
-  float x_speed, float y_speed, float angular_speed)
+void SimulationInterface::SendPacket()
 {
   grSim_Packet packet;
   grSim_Robot_Command *command;
@@ -56,43 +98,29 @@ void SimulationInterface::SendRobotCommand(
   packet.mutable_commands()->set_timestamp(0.0L);
   command = packet.mutable_commands()->add_robot_commands();
   command->set_id(id);
-  command->set_wheelsspeed(false);
-  command->set_veltangent(x_speed);
-  command->set_velnormal(y_speed);
-  command->set_velangular(angular_speed);
   command->set_kickspeedx(kicker_speed);
   command->set_kickspeedz(0.0F);
   command->set_spinner(spinner_on);
+  command->set_wheelsspeed(using_wheel_speed);
+  if (using_wheel_speed)
+  {
+    command->set_wheel1(wheel1);
+    command->set_wheel1(wheel2);
+    command->set_wheel1(wheel3);
+    command->set_wheel1(wheel4);
+  }
+  else
+  {
+    command->set_veltangent(x_speed);
+    command->set_velnormal(y_speed);
+    command->set_velangular(angular_speed);
+  }
 
   /* Send the packet */
   SendPacket(packet);
 }
 
-/* Send a UDP packet with the robot command */
-void SimulationInterface::SendRobotCommand(
-  int id, enum Team team, bool spinner_on, float kicker_speed,
-  float wheel1, float wheel2,float wheel3, float wheel4)
-{
-  grSim_Packet packet;
-  grSim_Robot_Command *command;
-
-  /* Write the data to the protobuf message */
-  packet.mutable_commands()->set_isteamyellow(team == Team::kYellow);
-  packet.mutable_commands()->set_timestamp(0.0L);
-  command = packet.mutable_commands()->add_robot_commands();
-  command->set_id(id);
-  command->set_wheelsspeed(true);
-  command->set_wheel1(wheel1);
-  command->set_wheel1(wheel2);
-  command->set_wheel1(wheel3);
-  command->set_wheel1(wheel4);
-  command->set_kickspeedz(0.0F);
-  command->set_spinner(spinner_on);
-
-  /* Send the packet */
-  SendPacket(packet);
-}
-
+/* Reset ball and all robots position and other attributes */
 void SimulationInterface::ResetRobotsAndBall()
 {
   grSim_Packet packet;
