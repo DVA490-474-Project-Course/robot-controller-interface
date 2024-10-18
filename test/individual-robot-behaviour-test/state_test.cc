@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-08 by Carl Larsson
+ * Last modified: 2024-10-18 by Carl Larsson
  * Description: Test file for state source and header files.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -55,9 +55,9 @@ TEST_F(PoseClassTest, DefaultConstructor)
 {
   double default_value = 0.0;
 
-  EXPECT_FLOAT_EQ(pose_.GetX(), default_value);
-  EXPECT_FLOAT_EQ(pose_.GetY(), default_value);
-  EXPECT_FLOAT_EQ(pose_.GetTheta(), default_value);
+  EXPECT_DOUBLE_EQ(pose_.GetX(), default_value);
+  EXPECT_DOUBLE_EQ(pose_.GetY(), default_value);
+  EXPECT_DOUBLE_EQ(pose_.GetTheta(), default_value);
 }
 
 /* 
@@ -72,9 +72,9 @@ TEST_F(PoseClassTest, ParameterizedConstructor)
   robot_controller_interface::individual_robot_behaviour::Pose 
       param_pose(x, y, theta);
 
-  EXPECT_FLOAT_EQ(param_pose.GetX(), x);
-  EXPECT_FLOAT_EQ(param_pose.GetY(), y);
-  EXPECT_FLOAT_EQ(param_pose.GetTheta(), theta);
+  EXPECT_DOUBLE_EQ(param_pose.GetX(), x);
+  EXPECT_DOUBLE_EQ(param_pose.GetY(), y);
+  EXPECT_DOUBLE_EQ(param_pose.GetTheta(), theta);
 }
 
 /* Test case for RobotState class, testing copy constructor */
@@ -91,9 +91,9 @@ TEST_F(PoseClassTest, CopyConstructor)
       copy_pose(param_pose);
 
   /* Make sure everything has been copied */
-  EXPECT_FLOAT_EQ(copy_pose.GetX(), param_pose.GetX());
-  EXPECT_FLOAT_EQ(copy_pose.GetY(), param_pose.GetY());
-  EXPECT_FLOAT_EQ(copy_pose.GetTheta(), param_pose.GetTheta());
+  EXPECT_DOUBLE_EQ(copy_pose.GetX(), param_pose.GetX());
+  EXPECT_DOUBLE_EQ(copy_pose.GetY(), param_pose.GetY());
+  EXPECT_DOUBLE_EQ(copy_pose.GetTheta(), param_pose.GetTheta());
 
   /* Make sure they are different objects */
   EXPECT_NE(&copy_pose, &param_pose);
@@ -108,11 +108,11 @@ TEST_F(PoseClassTest, SettingValues)
 
   /* Make sure the values are set correctly */
   pose_.SetX(x);
-  EXPECT_FLOAT_EQ(pose_.GetX(), x);
+  EXPECT_DOUBLE_EQ(pose_.GetX(), x);
   pose_.SetY(y);
-  EXPECT_FLOAT_EQ(pose_.GetY(), y);
+  EXPECT_DOUBLE_EQ(pose_.GetY(), y);
   pose_.SetTheta(theta);
-  EXPECT_FLOAT_EQ(pose_.GetTheta(), theta);
+  EXPECT_DOUBLE_EQ(pose_.GetTheta(), theta);
 }
 
 /* Test case for Pose class, setting values outside boundary */
@@ -121,25 +121,25 @@ TEST_F(PoseClassTest, BoundaryValues)
   /* Positive */
   double x = robot_controller_interface::PlayingField::kFrameX/2;
   pose_.SetX(x + 10);
-  EXPECT_FLOAT_EQ(pose_.GetX(), x);
+  EXPECT_DOUBLE_EQ(pose_.GetX(), x);
 
   double y = robot_controller_interface::PlayingField::kFrameY/2;
   pose_.SetY(y + 10);
-  EXPECT_FLOAT_EQ(pose_.GetY(), y);
+  EXPECT_DOUBLE_EQ(pose_.GetY(), y);
 
   /* Negative */
   x = -(robot_controller_interface::PlayingField::kFrameX/2);
   pose_.SetX(x - 10);
-  EXPECT_FLOAT_EQ(pose_.GetX(), x);
+  EXPECT_DOUBLE_EQ(pose_.GetX(), x);
 
   y = -(robot_controller_interface::PlayingField::kFrameY/2);
   pose_.SetY(y - 10);
-  EXPECT_FLOAT_EQ(pose_.GetY(), y);
+  EXPECT_DOUBLE_EQ(pose_.GetY(), y);
 
   /* Wrap */
   double theta = 24.6;
   pose_.SetTheta(theta);
-  EXPECT_FLOAT_EQ(pose_.GetTheta(), atan2(sin(theta), cos(theta)));
+  EXPECT_DOUBLE_EQ(pose_.GetTheta(), atan2(sin(theta), cos(theta)));
 }
 
 /* 
@@ -162,9 +162,9 @@ TEST_F(PoseClassTest, AssignmentOperator)
   robot_controller_interface::individual_robot_behaviour::Pose b = a;
 
   /* Make sure it has been assigned the correct values */
-  EXPECT_FLOAT_EQ(b.GetX(), val);
-  EXPECT_FLOAT_EQ(b.GetY(), val);
-  EXPECT_FLOAT_EQ(b.GetTheta(), val);
+  EXPECT_DOUBLE_EQ(b.GetX(), val);
+  EXPECT_DOUBLE_EQ(b.GetY(), val);
+  EXPECT_DOUBLE_EQ(b.GetTheta(), val);
 }
 
 /* 
@@ -233,9 +233,9 @@ TEST_F(RobotStateClassTest, DefaultConstructor)
   double default_value = 0.0;
 
   /* Make sure the members have the default values they should have */
-  EXPECT_FLOAT_EQ(robot_state_.GetX(), default_value);
-  EXPECT_FLOAT_EQ(robot_state_.GetY(), default_value);
-  EXPECT_FLOAT_EQ(robot_state_.GetTheta(), default_value);
+  EXPECT_DOUBLE_EQ(robot_state_.GetX(), default_value);
+  EXPECT_DOUBLE_EQ(robot_state_.GetY(), default_value);
+  EXPECT_DOUBLE_EQ(robot_state_.GetTheta(), default_value);
   EXPECT_FALSE(robot_state_.GetBall());
 }
 
@@ -255,9 +255,9 @@ TEST_F(RobotStateClassTest, ParameterizedConstructor)
   /* 
    * Make sure that the parameterized constructor has set the members correctly
    */
-  EXPECT_FLOAT_EQ(param_robot_state.GetX(), x);
-  EXPECT_FLOAT_EQ(param_robot_state.GetY(), y);
-  EXPECT_FLOAT_EQ(param_robot_state.GetTheta(), theta);
+  EXPECT_DOUBLE_EQ(param_robot_state.GetX(), x);
+  EXPECT_DOUBLE_EQ(param_robot_state.GetY(), y);
+  EXPECT_DOUBLE_EQ(param_robot_state.GetTheta(), theta);
   EXPECT_TRUE(param_robot_state.GetBall());
 }
 
@@ -276,9 +276,9 @@ TEST_F(RobotStateClassTest, CopyConstructor)
       copy_robot_state(param_robot_state);
 
   /* Make sure everything has been copied */
-  EXPECT_FLOAT_EQ(copy_robot_state.GetX(), param_robot_state.GetX());
-  EXPECT_FLOAT_EQ(copy_robot_state.GetY(), param_robot_state.GetY());
-  EXPECT_FLOAT_EQ(copy_robot_state.GetTheta(), param_robot_state.GetTheta());
+  EXPECT_DOUBLE_EQ(copy_robot_state.GetX(), param_robot_state.GetX());
+  EXPECT_DOUBLE_EQ(copy_robot_state.GetY(), param_robot_state.GetY());
+  EXPECT_DOUBLE_EQ(copy_robot_state.GetTheta(), param_robot_state.GetTheta());
   EXPECT_EQ(copy_robot_state.GetBall(), param_robot_state.GetBall());
 
   /* Make sure they are different objects */
@@ -295,11 +295,11 @@ TEST_F(RobotStateClassTest, SettingValues)
 
   /* Ensure that values that are set are stored correctly */
   robot_state_.SetX(x);
-  EXPECT_FLOAT_EQ(robot_state_.GetX(), x);
+  EXPECT_DOUBLE_EQ(robot_state_.GetX(), x);
   robot_state_.SetY(y);
-  EXPECT_FLOAT_EQ(robot_state_.GetY(), y);
+  EXPECT_DOUBLE_EQ(robot_state_.GetY(), y);
   robot_state_.SetTheta(theta);
-  EXPECT_FLOAT_EQ(robot_state_.GetTheta(), theta);
+  EXPECT_DOUBLE_EQ(robot_state_.GetTheta(), theta);
   robot_state_.SetBall(ball);
   EXPECT_TRUE(robot_state_.GetBall());
 }
@@ -379,11 +379,11 @@ TEST_F(OdomSubscriberTest, CallbackMockMessage)
   rclcpp::spin_some(odom_subscriber_);
 
   /* Check that message values has been stored in current_state */
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::current_state.GetX(), 1.0);
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::current_state.GetY(), 2.0);
-  EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
+  EXPECT_DOUBLE_EQ(robot_controller_interface::individual_robot_behaviour
       ::current_state.GetTheta(), theta_);
 }
 
