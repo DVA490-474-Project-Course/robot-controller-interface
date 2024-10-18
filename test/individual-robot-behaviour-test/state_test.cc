@@ -197,13 +197,10 @@ TEST_F(RobotStateClassTest, DefaultConstructor)
 {
   double default_value = 0.0;
 
-
+  /* Make sure the members have the default values they should have */
   EXPECT_FLOAT_EQ(robot_state_.GetX(), default_value);
-
   EXPECT_FLOAT_EQ(robot_state_.GetY(), default_value);
-
   EXPECT_FLOAT_EQ(robot_state_.GetTheta(), default_value);
-
   EXPECT_FALSE(robot_state_.GetBall());
 }
 
@@ -218,19 +215,40 @@ TEST_F(RobotStateClassTest, ParameterizedConstructor)
   double theta = 1.11;
   bool ball = true;
   robot_controller_interface::individual_robot_behaviour::RobotState 
-      param_robot_state_(x, y, theta, ball);
+      param_robot_state(x, y, theta, ball);
 
-
-  EXPECT_FLOAT_EQ(param_robot_state_.GetX(), x);
-
-  EXPECT_FLOAT_EQ(param_robot_state_.GetY(), y);
-
-  EXPECT_FLOAT_EQ(param_robot_state_.GetTheta(), theta);
-
-  EXPECT_TRUE(param_robot_state_.GetBall());
+  /* 
+   * Make sure that the parameterized constructor has set the members correctly
+   */
+  EXPECT_FLOAT_EQ(param_robot_state.GetX(), x);
+  EXPECT_FLOAT_EQ(param_robot_state.GetY(), y);
+  EXPECT_FLOAT_EQ(param_robot_state.GetTheta(), theta);
+  EXPECT_TRUE(param_robot_state.GetBall());
 }
 
-/* TODO fix test case for copy constructor */
+/* Test case for RobotState class, testing copy constructor */
+TEST_F(RobotStateClassTest, CopyConstructor)
+{
+  double x = -0.3;
+  double y = 50.0;
+  double theta = -1.11;
+  bool ball = true;
+  /* The one we will copy */
+  robot_controller_interface::individual_robot_behaviour::RobotState 
+      param_robot_state(x, y, theta, ball);
+  /* Copy */
+  robot_controller_interface::individual_robot_behaviour::RobotState 
+      copy_robot_state(param_robot_state);
+
+  /* Make sure everything has been copied */
+  EXPECT_FLOAT_EQ(copy_robot_state.GetX(), param_robot_state.GetX());
+  EXPECT_FLOAT_EQ(copy_robot_state.GetY(), param_robot_state.GetY());
+  EXPECT_FLOAT_EQ(copy_robot_state.GetTheta(), param_robot_state.GetTheta());
+  EXPECT_EQ(copy_robot_state.GetBall(), param_robot_state.GetBall());
+
+  /* Make sure they are different objects */
+  EXPECT_NE(&copy_robot_state, &param_robot_state);
+}
 
 /* Test case for RobotState class, setting values */
 TEST_F(RobotStateClassTest, SettingValues)
@@ -240,16 +258,13 @@ TEST_F(RobotStateClassTest, SettingValues)
   double theta = 0.5;
   bool ball = true;
 
-
+  /* Ensure that values that are set are stored correctly */
   robot_state_.SetX(x);
   EXPECT_FLOAT_EQ(robot_state_.GetX(), x);
-
   robot_state_.SetY(y);
   EXPECT_FLOAT_EQ(robot_state_.GetY(), y);
-
   robot_state_.SetTheta(theta);
   EXPECT_FLOAT_EQ(robot_state_.GetTheta(), theta);
-
   robot_state_.SetBall(ball);
   EXPECT_TRUE(robot_state_.GetBall());
 }
@@ -328,6 +343,7 @@ TEST_F(OdomSubscriberTest, CallbackMockMessage)
   /* Spin the node so the subscription can process the message */
   rclcpp::spin_some(odom_subscriber_);
 
+  /* Check that message values has been stored in current_state */
   EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
       ::current_state.GetX(), 1.0);
   EXPECT_FLOAT_EQ(robot_controller_interface::individual_robot_behaviour
@@ -345,6 +361,7 @@ TEST_F(OdomSubscriberTest, CallbackMockMessage)
 /* Test normal use cases */
 TEST(CalculateAngleTest, NormalCase)
 {
+  /* Simple locations with known angle */
   EXPECT_NEAR(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0, 0.0, 1.0, 1.0), std::numbers::pi/4, 1e-6);
 }
