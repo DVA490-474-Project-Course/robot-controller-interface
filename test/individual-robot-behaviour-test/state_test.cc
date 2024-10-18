@@ -55,11 +55,8 @@ TEST_F(PoseClassTest, DefaultConstructor)
 {
   double default_value = 0.0;
 
-
   EXPECT_FLOAT_EQ(pose_.GetX(), default_value);
-
   EXPECT_FLOAT_EQ(pose_.GetY(), default_value);
-
   EXPECT_FLOAT_EQ(pose_.GetTheta(), default_value);
 }
 
@@ -75,11 +72,8 @@ TEST_F(PoseClassTest, ParameterizedConstructor)
   robot_controller_interface::individual_robot_behaviour::Pose 
       param_pose_(x, y, theta);
 
-
   EXPECT_FLOAT_EQ(param_pose_.GetX(), x);
-
   EXPECT_FLOAT_EQ(param_pose_.GetY(), y);
-
   EXPECT_FLOAT_EQ(param_pose_.GetTheta(), theta);
 }
 
@@ -92,13 +86,11 @@ TEST_F(PoseClassTest, SettingValues)
   double y = 5.2;
   double theta = 0.5;
 
-
+  /* Make sure the values are set correctly */
   pose_.SetX(x);
   EXPECT_FLOAT_EQ(pose_.GetX(), x);
-
   pose_.SetY(y);
   EXPECT_FLOAT_EQ(pose_.GetY(), y);
-
   pose_.SetTheta(theta);
   EXPECT_FLOAT_EQ(pose_.GetTheta(), theta);
 }
@@ -130,7 +122,30 @@ TEST_F(PoseClassTest, BoundaryValues)
   EXPECT_FLOAT_EQ(pose_.GetTheta(), atan2(sin(theta), cos(theta)));
 }
 
-/* TODO fix test case for assignment operator */
+/* 
+ * Test case for Pose class assignment operator
+ * Doesn't have to be TEST_F but I prefer all grouped together
+ */
+TEST_F(PoseClassTest, AssignmentOperator)
+{
+  double default_value = 0.0;
+  double val = 2.0;
+
+
+  /* The one to assign from */
+  robot_controller_interface::individual_robot_behaviour::Pose a;
+  a.SetX(val);
+  a.SetY(val);
+  a.SetTheta(val);
+
+  /* The one which will be assigned */
+  robot_controller_interface::individual_robot_behaviour::Pose b = a;
+
+  /* Make sure it has been assigned the correct values */
+  EXPECT_FLOAT_EQ(b.GetX(), val);
+  EXPECT_FLOAT_EQ(b.GetY(), val);
+  EXPECT_FLOAT_EQ(b.GetTheta(), val);
+}
 
 /* 
  * Test case for Pose class inequality operator
