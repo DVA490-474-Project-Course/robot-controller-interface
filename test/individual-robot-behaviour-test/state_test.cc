@@ -70,14 +70,34 @@ TEST_F(PoseClassTest, ParameterizedConstructor)
   double y = 5.0;
   double theta = 1.11;
   robot_controller_interface::individual_robot_behaviour::Pose 
-      param_pose_(x, y, theta);
+      param_pose(x, y, theta);
 
-  EXPECT_FLOAT_EQ(param_pose_.GetX(), x);
-  EXPECT_FLOAT_EQ(param_pose_.GetY(), y);
-  EXPECT_FLOAT_EQ(param_pose_.GetTheta(), theta);
+  EXPECT_FLOAT_EQ(param_pose.GetX(), x);
+  EXPECT_FLOAT_EQ(param_pose.GetY(), y);
+  EXPECT_FLOAT_EQ(param_pose.GetTheta(), theta);
 }
 
-/* TODO fix test for copy constructor */
+/* Test case for RobotState class, testing copy constructor */
+TEST_F(PoseClassTest, CopyConstructor)
+{
+  double x = 33.4;
+  double y = -0.05;
+  double theta = -1.00;
+  /* The one we will copy */
+  robot_controller_interface::individual_robot_behaviour::Pose
+      param_pose(x, y, theta);
+  /* Copy */
+  robot_controller_interface::individual_robot_behaviour::Pose
+      copy_pose(param_pose);
+
+  /* Make sure everything has been copied */
+  EXPECT_FLOAT_EQ(copy_pose.GetX(), param_pose.GetX());
+  EXPECT_FLOAT_EQ(copy_pose.GetY(), param_pose.GetY());
+  EXPECT_FLOAT_EQ(copy_pose.GetTheta(), param_pose.GetTheta());
+
+  /* Make sure they are different objects */
+  EXPECT_NE(&copy_pose, &param_pose);
+}
 
 /* Test case for Pose class, setting values inside boundary */
 TEST_F(PoseClassTest, SettingValues)
