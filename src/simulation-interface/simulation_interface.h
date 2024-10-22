@@ -138,19 +138,10 @@ public:
     */
   void SendPacket();
 
-  /*!
-    * @brief Reset all robots and the ball to their initial position.
-    */
-  void ResetRobotsAndBall();
-
 private:
   /* Network variables */
   int socket;
   sockaddr_in destination;
-
-  /* Initial position of yellow robots, for blue x values will have opposite sign */
-  double initial_position_x[6] = {1.50, 1.50, 1.50, 0.55, 2.50, 3.60};
-  double initial_position_y[6] = {1.12, 0.0, -1.12, 0.00, 0.00, 0.00};
 
   /* Robot variables */
   int id;

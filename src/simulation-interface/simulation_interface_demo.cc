@@ -27,18 +27,6 @@ int main(int argc, char *argv[])
   {
     simulation_interface.SendPacket();
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
-
-    /* Reset blue and yellow team robots and ball every 6 seconds */
-    if (count >= 600)
-    {
-      std::cout << "Resetting robots and ball..." << std::endl;
-      simulation_interface.ResetRobotsAndBall();
-      count = 0; /* Reset the counter after the reset */
-      std::this_thread::sleep_for(std::chrono::seconds(1)); /* Pause for a short period after reset */
-      simulation_interface.SetVelocity(10.0F, 0.0F, 0.0F);
-    }
-
-    count++;
   }
 
   return 0;
