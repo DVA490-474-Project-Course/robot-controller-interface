@@ -80,9 +80,10 @@ class DwbControllerTest : public ::testing::Test
  * To run this test you need baselink to odom transform, baselink to map 
  * transform and nav2 stack up and running beforehand.
  * Easiest way to do this:
- * 1. ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
- * 2. ros2 launch slam_toolbox online_async_launch.py
- * 3. ros2 launch nav2_bringup navigation_launch.py
+ * 1. export TURTLEBOT3_MODEL=burger
+ * 2. ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+ * 3. ros2 launch slam_toolbox online_async_launch.py
+ * 4. ros2 launch nav2_bringup navigation_launch.py
  * Specify the following to run the test: 
  * ./main_test_exe --gtest_also_run_disabled_tests
  * or possibly:
@@ -92,7 +93,7 @@ TEST_F(DwbControllerTest, DISABLED_SendTargetPoseTest)
 {
   /* Set target pose */
   robot_controller_interface::individual_robot_behaviour::Pose 
-      target_pose(1.0, 2.0, 2.42);
+      target_pose(-2.0, 0.5, 2.42);
 
   /* Send the target_pose using SendTargetPose */
   dwb_controller_->SendTargetPose(target_pose);
