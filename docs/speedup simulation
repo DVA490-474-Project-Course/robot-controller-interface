@@ -1,0 +1,20 @@
+in grSim repo
+
+-----------------------------------
+To speedup timer by 100
+---------------------------------------
+goto src>>physics>>pworld.cpp
+after line 55 add this line
+ delta_time = dt;
+ delta_time *= 100;
+ and goto src>>sslworld.cpp
+after line 437 write this line
+else last_dt = dt;
+last_dt *= 100;
+
+-------------------------------------------------
+To speedup robots by 100
+-------------------------------------------------
+goto src>>physics..pworld.cpp
+in line 171 multiply by 100
+dWorldStep(world,(dt<0) ? (delta_time*100) : dt*100);
