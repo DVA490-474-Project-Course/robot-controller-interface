@@ -139,25 +139,92 @@ public:
   void SendPacket();
 
 private:
+  /*********************/
   /* Network variables */
+  /*********************/
+
+  /*!
+   * @brief socket file descriptor.
+   */
   int socket;
+
+  /*!
+   * @brief Address of grSim.
+   */
   sockaddr_in destination;
 
+  /*******************/
   /* Robot variables */
+  /*******************/
+
+  /*!
+   * @brief Robot id.
+   */
   int id;
+
+  /*!
+   * @brief Team of the robot.
+   */
   enum Team team;
+
+  /*!
+   * @brief Flag indicating wheter spinner is on.
+   */
   bool spinner_on;
+
+  /*!
+   * @brief Kicker speed in m/s.
+   */
   float kicker_speed;
+
+  /*!
+   * @brief Speed in x direction in m/s.
+   */
   float x_speed;
+
+  /*!
+   * @brief Speed in y direction in m/s.
+   */
   float y_speed;
+
+  /*!
+   * @brief Angular speed of the robot in radians/s.
+   */
   float angular_speed;
+
+  /*!
+   * @brief Speed of front left wheel in m/s.
+   */
   float wheel1;
+
+  /*!
+   * @brief Speed of back left wheel in m/s.
+   */
   float wheel2;
+
+  /*!
+   * @brief Speed of back right wheel in m/s.
+   */
   float wheel3;
+
+  /*!
+   * @brief Speed of front right wheel in m/s.
+   */
   float wheel4;
+
+  /*!
+   * @brief Flag indicating whether individual wheel speeds are set or if
+   * velocity is determined by setting the x, y, theta speeds of the entire robot.
+   */
   bool using_wheel_speed;
 
+  /********************/
   /* Helper functions */
+  /********************/
+
+  /*!
+   * @brief Send a grSim protobuf packet.
+   */
   void SendPacket(grSim_Packet packet);
 };
 
