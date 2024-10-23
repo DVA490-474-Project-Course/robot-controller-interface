@@ -28,6 +28,7 @@ def generate_launch_description():
     log_level = LaunchConfiguration('log_level')
 
     lifecycle_nodes = ['map_server',
+                       #'static_transform_publisher',
                        'controller_server',
                        'planner_server',
                        'behavior_server',
@@ -110,6 +111,16 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+            #Node(
+            #    package='tf2_ros',
+            #    executable='static_transform_publisher',
+            #    name='static_transform_publisher',
+            #    output='screen',
+            #    respawn=use_respawn,
+            #    respawn_delay=2.0,
+            #    parameters=[configured_params],
+            #    arguments=['0','0','0','0','0','0','1','map','odom'],
+            #    remappings=remappings),
             Node(
                 package='nav2_controller',
                 executable='controller_server',
@@ -181,6 +192,12 @@ def generate_launch_description():
                 name='map_server',
                 parameters=[configured_params],
                 remappings=remappings),
+            #ComposableNode(
+            #    package='tf2_ros',
+            #    plugin='tf2_ros::StaticTransformBroadcasterNode',
+            #    name='static_transform_publisher',
+            #    parameters=[configured_params],
+            #    remappings=remappings),
             ComposableNode(
                 package='nav2_controller',
                 plugin='nav2_controller::ControllerServer',
