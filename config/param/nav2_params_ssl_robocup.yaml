@@ -220,7 +220,7 @@ local_costmap:
         scan:
           topic: /scan
           # ???
-          #sensor_frame: base_footprint
+          sensor_frame: base_footprint
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -264,7 +264,7 @@ global_costmap:
         scan:
           topic: /scan
           # ???
-          #sensor_frame: base_footprint
+          sensor_frame: base_footprint
           max_obstacle_height: 2.0
           clearing: True
           marking: True
