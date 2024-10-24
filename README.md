@@ -3,13 +3,13 @@ Robot Controller Interface
 
 About
 -----------------------
-This repository contains the executable code intended for running on the individual robots (on the raspberry pi), and the accompanying API Simulation Interface and Hardware Interface.
+This repository contains the executable code intended for running on the individual robots (on the raspberry pi), termed Individual Robot Behaviour, and the accompanying API Simulation Interface and Hardware Interface.
 
 ### Built with
 The Robot Controller Interface is built with the following:
 
 - [Protobuf 3](https://protobuf.dev/)
-- [ros2 humble](https://docs.ros.org/en/humble/index.html)
+- [ROS2 Humble](https://docs.ros.org/en/humble/index.html)
 - [nav2](https://docs.nav2.org/)
 
 Getting started
