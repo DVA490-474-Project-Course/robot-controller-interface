@@ -1,9 +1,10 @@
 **/cmake-build-debug/*
-**/bin/*
 **/CMakeFiles/*
 **/generated/*
+**/bin/*
 **/build/*
 **/html/*
 *.swp*
 *.idea*
 *.vscode*
+*pycache*

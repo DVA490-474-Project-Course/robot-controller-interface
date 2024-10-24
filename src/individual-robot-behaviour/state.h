@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-07 by Carl Larsson
+ * Last modified: 2024-10-19 by Carl Larsson
  * Description: Robot state header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -45,7 +45,7 @@ namespace individual_robot_behaviour
  * Pose in 2D space consists of:
  * - x coordinate
  * - y coordinate
- * - angle theta (also known as yaw) 
+ * - angle theta (also known as yaw) in radians
  *
  * @note Copyable, not moveable.
  */
@@ -70,7 +70,8 @@ class Pose
   /*! 
    * @brief Copy constructor 
    *
-   * TODO
+   * Creates a Pose, copying the x_, y_ and theta_ values from another Pose.
+   * Does not copy the mutex.
    */
   Pose(const Pose& other);
 
@@ -134,6 +135,8 @@ class Pose
    * A thread safe assignment operator for the class.
    *
    * @note Thread safe.
+   * @note Does not seem to be able to assign already defined/declared 
+   * variables.
    */
   Pose& operator=(const Pose& other);
 
@@ -217,7 +220,8 @@ class RobotState
   /*! 
    * @brief Copy constructor.
    *
-   * TODO
+   * Creates a RobotState, copying the x_, y_, theta_ and ball_ values from 
+   * another RobotState. Does not copy the mutex.
    */
   RobotState(const RobotState& other);
 
@@ -348,7 +352,10 @@ class OdomSubscriber : public rclcpp::Node
    /*!
     * @brief Default constructor creating a odom subscriber node.
     *
-    * TODO
+    * Default constructor, creates an odom subscriber node and binds a
+    * callback function to it.
+    *
+    * @see OdomCallback for the callback function.
     */
   OdomSubscriber();
 
@@ -357,9 +364,10 @@ class OdomSubscriber : public rclcpp::Node
    * @brief Odometry subscriber callback function storing odom in 
    * current_state.
    *
-   * @param[in] msg TODO
+   * @param[in] msg nav2 message contain Cartesian 3D positional data, orientation data 
+   * expressed in quaternion system, linear velocity and angular velocity. 
    *
-   * @note TODO can msg be a nullptr?
+   * @note TODO uncertain if msg can be a nullptr.
    *
    * @see OdomSubscriber for dependencies, requirements and preconditions.
    */
@@ -368,7 +376,8 @@ class OdomSubscriber : public rclcpp::Node
   /*!
    * @brief Pointer to odom subscriber node.
    *
-   * TODO
+   * Pointer to odom subscriber node. It is private and cannot be accessed.
+   * It is not intended to be accessed.
    */
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
 };

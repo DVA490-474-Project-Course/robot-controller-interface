@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-06 by Carl Larsson
+ * Last modified: 2024-10-20 by Carl Larsson
  * Description: Robot state source file. Odometry, drift correction etc.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -44,7 +44,7 @@ RobotState current_state;
 /*============================================================================*/
 /* 
  * Class for a pose in 2D space.
- * Neither copyable nor move-only.
+ * Copyable but not movable.
  */
 
 /* Default constructor */
@@ -60,10 +60,7 @@ Pose::Pose(double x, double y, double theta)
 
 /* Copy constructor */
 Pose::Pose(const Pose& other)
-  : x_(other.x_), y_(other.y_), theta_(other.theta_)
-{
-
-} 
+  : x_(other.x_), y_(other.y_), theta_(other.theta_) {} 
 
 /* Get the members value */
 double Pose::GetX() const 
@@ -147,7 +144,7 @@ bool Pose::operator!=(const Pose& other) const
 /*============================================================================*/
 /* 
  * Class describing the current state of the robot
- * Neither copyable nor move-only.
+ * Copyable, not movable.
  */
 
 /* Default constructor */
@@ -164,10 +161,7 @@ RobotState::RobotState(double x, double y, double theta, bool ball)
 
 /* Copy constructor */
 RobotState::RobotState(const RobotState& other)
-  : x_(other.x_), y_(other.y_), theta_(other.theta_), ball_(other.ball_)
-{
-
-} 
+  : x_(other.x_), y_(other.y_), theta_(other.theta_), ball_(other.ball_) {} 
 
 /* Get the members value */
 double RobotState::GetX() const 
