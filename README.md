@@ -22,6 +22,7 @@ sudo apt install build-essential cmake libprotobuf-dev protobuf-compiler
 ```
 
 For ros2 humble see: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+
 For nav2 see: https://docs.nav2.org/getting_started/index.html#installation
 
 ### Installation
@@ -29,7 +30,7 @@ For nav2 see: https://docs.nav2.org/getting_started/index.html#installation
 ```sh
 git clone https://github.com/DVA490-474-Project-Course/robot-controller-interface.git
 ```
-2. Locate to the project directory:
+2. Navigate to the project directory:
 ```
 cd robot-controller-interface
 ```
@@ -41,10 +42,11 @@ mkdir build & cd build
 ```
 cmake ..
 ```
-5. Run the binaries located in bin:
+5. Locate the binaries which should be stored in bin:
 ```
 cd ../bin
 ```
+6. Execute the desired binaries.
 
 Usage
 -----------------------
@@ -66,14 +68,14 @@ Individual Robot Behaviour (executable):
 
 Design diagrams
 -----------------------
-Design diagrams/files can be found in the docs directory. Additionally they are available on:
+Design diagrams/files can be found in the [docs](/docs) directory. Additionally they are available on:
 - [Simulation Interface](https://www.mermaidchart.com/raw/16fc3609-d826-440a-bef5-40a7a39f1140?theme=dark&version=v0.1&format=svg)
 - [Hardware Interface]()
 - [Individual Robot Behaviour](https://www.mermaidchart.com/raw/dc459e07-4c98-46b8-8ac0-41c56aa6950f?theme=dark&version=v0.1&format=svg)
 
 License
 -----------------------
-Distributed under the MIT License. See [License](/License) for more information.
+Distributed under the MIT License. See [License](/LICENSE) for more information.
 
 Contributors and contact
 -----------------------
