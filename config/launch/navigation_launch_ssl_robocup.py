@@ -27,13 +27,14 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
-    lifecycle_nodes = ['map_server',
+    lifecycle_nodes = ['controller_server',
                        #'static_transform_publisher',
-                       'controller_server',
                        'planner_server',
                        'behavior_server',
                        'bt_navigator',
-                       'amcl']
+                       'amcl',
+                       # map_server must be last
+                       'map_server']
 
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
     # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
@@ -102,15 +103,14 @@ def generate_launch_description():
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
             Node(
-                package='nav2_map_server',
-                executable='map_server',
-                name='map_server',
+                package='nav2_controller',
+                executable='controller_server',
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             #Node(
             #    package='tf2_ros',
             #    executable='static_transform_publisher',
@@ -121,15 +121,6 @@ def generate_launch_description():
             #    parameters=[configured_params],
             #    arguments=['0','0','0','0','0','0','1','map','odom'],
             #    remappings=remappings),
-            Node(
-                package='nav2_controller',
-                executable='controller_server',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             Node(
                 package='nav2_planner',
                 executable='planner_server',
@@ -171,6 +162,16 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(
+                package='nav2_map_server',
+                executable='map_server',
+                name='map_server',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
+            Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
                 name='lifecycle_manager_navigation',
@@ -187,23 +188,17 @@ def generate_launch_description():
         target_container=container_name_full,
         composable_node_descriptions=[
             ComposableNode(
-                package='nav2_map_server',
-                plugin='nav2_map_server::MapServer',
-                name='map_server',
+                package='nav2_controller',
+                plugin='nav2_controller::ControllerServer',
+                name='controller_server',
                 parameters=[configured_params],
-                remappings=remappings),
+                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             #ComposableNode(
             #    package='tf2_ros',
             #    plugin='tf2_ros::StaticTransformBroadcasterNode',
             #    name='static_transform_publisher',
             #    parameters=[configured_params],
             #    remappings=remappings),
-            ComposableNode(
-                package='nav2_controller',
-                plugin='nav2_controller::ControllerServer',
-                name='controller_server',
-                parameters=[configured_params],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             ComposableNode(
                 package='nav2_planner',
                 plugin='nav2_planner::PlannerServer',
@@ -226,6 +221,12 @@ def generate_launch_description():
                 package='nav2_amcl',
                 plugin='nav2_amcl::AmclNode',
                 name='amcl',
+                parameters=[configured_params],
+                remappings=remappings),
+            ComposableNode(
+                package='nav2_map_server',
+                plugin='nav2_map_server::MapServer',
+                name='map_server',
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
