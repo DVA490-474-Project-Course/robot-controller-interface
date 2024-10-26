@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-19 by Carl Larsson
+ * Last modified: 2024-10-26 by Carl Larsson
  * Description: Robot state header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -80,6 +80,8 @@ class Pose
    *
    * Gets the x_ value of the class. Thread safe.
    *
+   * @return Returns the value of the private member x_.
+   *
    * @note Thread safe.
    */
   double GetX() const;
@@ -88,6 +90,8 @@ class Pose
    *
    * Gets the y_ value of the class. Thread safe.
    *
+   * @return Returns the value of the private member y_.
+   *
    * @note Thread safe.
    */
   double GetY() const;
@@ -95,6 +99,8 @@ class Pose
    * @brief Get class theta_ value.
    *
    * Gets the theta_ value of the class. Thread safe.
+   *
+   * @return Returns the value of the private member theta_.
    *
    * @note Thread safe.
    */
@@ -144,6 +150,8 @@ class Pose
    * @brief A != (inequality) operator for this class.
    *
    * A thread safe inequality operator for the class.
+   *
+   * @return Returns True if not equal. Returns False if equal.
    *
    * @note Thread safe.
    */
@@ -230,6 +238,8 @@ class RobotState
    *
    * Gets the x_ value of the class. Thread safe.
    *
+   * @return Returns the value of the private member x_.
+   *
    * @note Thread safe.
    */
   double GetX() const;
@@ -238,6 +248,8 @@ class RobotState
    *
    * Gets the y_ value of the class. Thread safe.
    *
+   * @return Returns the value of the private member y_.
+   *
    * @note Thread safe.
    */
   double GetY() const;
@@ -245,6 +257,8 @@ class RobotState
    * @brief Get class theta_ value.
    *
    * Gets the theta_ value of the class. Thread safe.
+   *
+   * @return Returns the value of the private member theta_.
    *
    * @note Thread safe.
    */
@@ -255,6 +269,8 @@ class RobotState
    * Indicates whether the robot has the ball or not. If true then robot
    * has the ball such that activating the kicker will hit and launch the
    * ball.
+   *
+   * @return Returns the value of the private member ball_.
    *
    * @note Thread safe.
    */
