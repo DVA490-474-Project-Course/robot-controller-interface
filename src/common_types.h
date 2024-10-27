@@ -59,7 +59,7 @@ struct PlayingField
    */
   static constexpr double kTouchLineX = 9000.0;
   /*!
-   * @brief the total length of the goal line in the Y dimension, in 
+   * @brief The total length of the goal line in the Y dimension, in 
    * millimeters (mm).
    */
   static constexpr double kGoalLineY = 6000.0;

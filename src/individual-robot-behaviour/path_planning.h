@@ -68,6 +68,9 @@ class DwbController : public rclcpp::Node
     * Default constructor which creates an NavigateToPose action server node 
     * and then waits until the action server is ready.
     *
+    * @throws RCLCPP_ERROR if the action server does not become ready within 
+    * 10 seconds.
+    *
     * @pre The following preconditions are necessary for the action server to 
     * become ready:
     * - Nav2 stack must be running. (https://docs.nav2.org/)
@@ -75,9 +78,6 @@ class DwbController : public rclcpp::Node
     * - A valid `baselink -> odom` transform must be available.
     * - A valid `baselink -> map` transform must be available. If a map is 
     *   used (this is the case unless global costmap, planner is disabled).
-    *
-    * @throws RCLCPP_ERROR if the action server does not become ready within 
-    * 10 seconds.
     */
   DwbController();
 

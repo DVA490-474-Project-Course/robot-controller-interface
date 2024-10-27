@@ -462,13 +462,13 @@ class OdomSubscriber : public rclcpp::Node
  * @param[in] target_x Target position x coordinate.
  * @param[in] target_y Target position y coordinate.
  *
+ * @throws std::invalid_argument if the current and target positions are the 
+ * same, since atan2 is undefined for this case.
+ *
  * @return The angle in radians between the two points wrapped to [-pi, pi].
  *
  * @note current and target can not be the same since atan2 is undefined in 
  * this case.
- *
- * @throws std::invalid_argument if the current and target positions are the 
- * same, since atan2 is undefined for this case.
  */
 double CalculateAngle(double current_x, double current_y, 
     double target_x, double target_y);
