@@ -63,6 +63,9 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * @param[in, out] target_pose Pointer to the target position for path 
  * planning, not allowed to be nullptr.
  *
+ * @throws std::invalid_argument when arguments are nullptr (robot has not 
+ * been initialized correctly)
+ *
  * @note This function is dependent on other functions running on seperate 
  * threads.
  *
@@ -72,7 +75,8 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  *
  * @warning The function is not guaranteed to work as intended if the 
  * preconditions are not met.
- * @warning If the pointer arguments are null, then TODO
+ * @warning If the pointer arguments are null, then robot has not been 
+ * initialized and an exception will be thrown.
  */
 void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
     std::atomic_bool *atomic_playing_left, Pose *target_pose);

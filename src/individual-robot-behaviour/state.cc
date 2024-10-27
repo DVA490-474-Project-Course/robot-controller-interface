@@ -238,7 +238,11 @@ OdomSubscriber::OdomSubscriber()
 void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr 
     msg) const
 {
-  /* TODO if msg is null then skip */
+  /* If msg is null then skip */
+  if(msg == nullptr)
+  {
+    return;
+  }
 
   /* Store globally */
   current_state.SetX(msg->pose.pose.position.x);

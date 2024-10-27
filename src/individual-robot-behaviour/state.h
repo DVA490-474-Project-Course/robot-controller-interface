@@ -432,7 +432,8 @@ class OdomSubscriber : public rclcpp::Node
    * orientation data expressed in quaternion system, linear velocity and 
    * angular velocity. 
    *
-   * @note TODO uncertain if msg can be a nullptr.
+   * @note If msg is nullptr then the callback returns and does not store 
+   * anything.
    *
    * @see OdomSubscriber for dependencies, requirements and preconditions.
    */

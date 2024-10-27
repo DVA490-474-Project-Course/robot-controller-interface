@@ -130,6 +130,9 @@ class DwbController : public rclcpp::Node
  *
  * @param[in] target_pose Target position using class Pose. Can not be nullptr.
  *
+ * @throws std::invalid_argument if argument is nullptr. Robot has not been 
+ * initialized correctly if argument is nullptr.
+ *
  * @note This function depends on external systems, including Nav2.
  *
  * @pre The following preconditions must be met before calling this function:

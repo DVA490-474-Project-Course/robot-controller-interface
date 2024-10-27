@@ -72,7 +72,13 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
     std::atomic_bool *atomic_playing_left, Pose *target_pose)
 {
-  /* TODO Add checks incase arguments are null */
+  /* These should only be null when the robot has not been initialized */
+  if(goalie_pose == nullptr || atomic_shoot_ball == nullptr ||
+      atomic_playing_left == nullptr || target_pose == nullptr)
+  {
+    throw std::invalid_argument(
+        "ShootSetup can not run with uninitialized arguments (nullptr)");
+  }
 
   /* Declare variables outside loop */
   /* Limit the loop speed to not take up to much CPU */
