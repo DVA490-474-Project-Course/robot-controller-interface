@@ -55,6 +55,7 @@ TEST_F(PoseClassTest, DefaultConstructor)
 {
   double default_value = 0.0;
 
+  /* Expect everything to have the default value */
   EXPECT_DOUBLE_EQ(pose_.GetX(), default_value);
   EXPECT_DOUBLE_EQ(pose_.GetY(), default_value);
   EXPECT_DOUBLE_EQ(pose_.GetTheta(), default_value);
@@ -72,6 +73,7 @@ TEST_F(PoseClassTest, ParameterizedConstructor)
   robot_controller_interface::individual_robot_behaviour::Pose 
       param_pose(x, y, theta);
 
+  /* Expect to have the parameterized values provided */
   EXPECT_DOUBLE_EQ(param_pose.GetX(), x);
   EXPECT_DOUBLE_EQ(param_pose.GetY(), y);
   EXPECT_DOUBLE_EQ(param_pose.GetTheta(), theta);
@@ -316,7 +318,7 @@ class OdomSubscriberTest : public ::testing::Test
   /* Will be done before each test */
   void SetUp() override
   {
-    /* Initialize ROS2 */
+    /* Initialize rclcpp */
     rclcpp::init(0, nullptr);
         
     /* Create OdomSubscriber node */
@@ -357,6 +359,7 @@ class OdomSubscriberTest : public ::testing::Test
 
   void TearDown() override
   {
+    /* Shutdown rclcpp */
     rclcpp::shutdown();
   }
 
@@ -432,9 +435,11 @@ TEST(CalculateAngleTest, VectorAlignAxis)
 /* Testing when current = target (atan2(0.0,0.0)) */
 TEST(CalculateAngleTest, CurrentEqualsTarget)
 {
+  /* Expect exception since atan2 is undefined for this */
   EXPECT_THROW(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(0.0,0.0,0.0,0.0), std::invalid_argument);
 
+  /* Expect exception since atan2 is undefined for this */
   EXPECT_THROW(robot_controller_interface::individual_robot_behaviour
       ::CalculateAngle(2.3516,-100.01,2.3516,-100.01), std::invalid_argument);
 }

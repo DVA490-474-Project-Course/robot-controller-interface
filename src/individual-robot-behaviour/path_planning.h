@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-20 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Path planning header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -47,7 +47,7 @@ namespace individual_robot_behaviour
  *
  * @note Neither copyable nor move-only. 
  * @note This class depends on external systems, including Nav2, this holds for
- * all its members aswell unless state otherwise.
+ * all its members aswell unless stated otherwise.
  *
  * @pre The following preconditions must be met before using this class:
  * - Nav2 stack must be running. (https://docs.nav2.org/)
@@ -128,7 +128,7 @@ class DwbController : public rclcpp::Node
  * A loop which continously checks if a new target position has been set and 
  * sends the new target pose to the DWA if it has been updated.
  *
- * @param[in] target_pose Target position using class Pose.
+ * @param[in] target_pose Target position using class Pose. Can not be nullptr.
  *
  * @note This function depends on external systems, including Nav2.
  *

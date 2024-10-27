@@ -10,12 +10,16 @@ add_subdirectory(simulation-interface)
 #===============================================================================
 # Dependencies
 
-# !!! Add any libraries (MADE BY YOU!) that you use in main here !!!
-target_link_libraries(main_exe 
+# !!! Add any libraries which is used by main here (link in necessary 
+# includes) !!!
+target_link_libraries(
+  main_exe 
   path_planning_lib 
   state_lib 
   ball_lib 
-  supporting_lib)
+  supporting_lib
+)
+
 # !!! Add packages that must be included here !!!
 ament_target_dependencies(main_exe rclcpp)
 

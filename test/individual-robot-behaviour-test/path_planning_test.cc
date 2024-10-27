@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-09 by Carl Larsson
+ * Last modified: 2024-10-26 by Carl Larsson
  * Description: Test file for path planning.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -52,6 +52,10 @@ class DwbControllerTest : public ::testing::Test
     message_received_ = false;
   }
 
+  /* 
+   * Callback function for whenever we receive a message. Set flag to True 
+   * and store message 
+   */
   void CmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
   {
     /* Store the message and set the flag */
@@ -61,6 +65,7 @@ class DwbControllerTest : public ::testing::Test
 
   void TearDown() override
   {
+    /* Shutdown rclcpp */
     rclcpp::shutdown();
   }
 

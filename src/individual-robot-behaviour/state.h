@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-26 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Robot state header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -38,11 +38,11 @@ namespace individual_robot_behaviour
 /*============================================================================*/
 
 /*!
- * @brief Class for a pose in 2D space. 
+ * @brief Class for a pose in 2D Cartesian space. 
  * 
  * Class containing a pose in 2D space and methods for accessing and setting
  * these values in a thread safe way. 
- * Pose in 2D space consists of:
+ * Pose in 2D Cartesian space consists of:
  * - x coordinate
  * - y coordinate
  * - angle theta (also known as yaw) in radians
@@ -64,6 +64,11 @@ class Pose
    * 
    * The parametrized constructor sets x_, y_ and theta_ to the provided 
    * values.
+   *
+   * @param[in] x The x value to be assigned to the classes x_ member.
+   * @param[in] y The y value to be assigned to the classes y_ member.
+   * @param[in] theta The theta value to be assigned to the classes theta_ 
+   * member.
    */
   Pose(double x, double y, double theta);
 
@@ -72,6 +77,11 @@ class Pose
    *
    * Creates a Pose, copying the x_, y_ and theta_ values from another Pose.
    * Does not copy the mutex.
+   *
+   * @param[in] other A const pointer to another Pose which we are to copy all 
+   * member values from to create the new Pose.
+   *
+   * @note Mutex is not copied.
    */
   Pose(const Pose& other);
 
@@ -107,29 +117,36 @@ class Pose
   double GetTheta() const;
 
   /*!
-   * @brief Set the x_ value of this class. Thread safe.
+   * @brief Set the x_ value of this class.
    *
    * Sets the x_ value of the class, value must be within the playing field,
    * if it is outside then it is set to the closest limit (negative or 
    * positive).
    *
+   * @param[in] x The x value that is to be assigned to the classes x_ member.
+   *
    * @note Thread safe.
    */
   void SetX(double x);
   /*!
-   * @brief Set the y_ value of this class. Thread safe.
+   * @brief Set the y_ value of this class.
    *
    * Sets the y_ value of the class, value must be within the playing field,
    * if it is outside then it is set to the closest limit (negative or 
    * positive).
    *
+   * @param[in] y The y value that is to be assigned to the classes y_ member.
+   *
    * @note Thread safe.
    */
   void SetY(double y);
   /*!
-   * @brief Set the theta_ value of this class. Thread safe.
+   * @brief Set the theta_ value of this class.
    *
    * Sets the theta angle and wraps it to [-pi, pi].
+   *
+   * @param[in] theta The theta value that is to be assigned to the classes 
+   * theta_ member.
    *
    * @note Thread safe.
    */
@@ -140,7 +157,13 @@ class Pose
    *
    * A thread safe assignment operator for the class.
    *
-   * @note Thread safe.
+   * @param[in] other Another Pose which member values we are to assigned to 
+   * "our own" Pose.
+   * @return Returns address to "our own" Pose with its member values set to 
+   * the same as the other Pose member values.
+   *
+   * @note Thread safe, both Poses mutexes are locked.
+   * @note The classes mutex member value is NOT set to the others mutex value.
    * @note Does not seem to be able to assign already defined/declared 
    * variables.
    */
@@ -151,9 +174,12 @@ class Pose
    *
    * A thread safe inequality operator for the class.
    *
-   * @return Returns True if not equal. Returns False if equal.
+   * @param[in] other The other Pose which we are to compare with.
+   * @return Returns True if any member values are not equal (with a difference 
+   * greater than the tolerance value). Returns False if all member values are 
+   * equal (within the tolerance value).
    *
-   * @note Thread safe.
+   * @note Thread safe, both classes mutexes are locked.
    */
   bool operator!=(const Pose& other) const;
 
@@ -198,10 +224,10 @@ class Pose
 /*============================================================================*/
 
 /*! 
- * @brief Class describing the current state of the robot 
+ * @brief Class describing the current state of a robot. 
  *
- * Class containing the robot state, including X and Y coordinates, theta (or 
- * yaw) and whether it has the ball or not. Additionally it contains thread 
+ * Class containing the robot state, including x and y coordinates, theta (or 
+ * yaw) (in radians) and whether it has the ball or not. Additionally it contains thread 
  * safe ways of accessing and setting these values.
  *
  * @note Copyable, not moveable.
@@ -222,6 +248,13 @@ class RobotState
    *
    * Parametrized constructor setting x_ ,y_ ,theta_ and ball_ to the provided
    * values.
+   *
+   * @param[in] x The x value which is to be assigned to the classes x_ member.
+   * @param[in] y The y value which is to be assigned to the classes y_ member.
+   * @param[in] theta The theta value which is to be assigned to the classes 
+   * theta_ member.
+   * @param[in] ball The ball value which is to be assigned to the classes 
+   * ball_ member.
    */
   RobotState(double x, double y, double theta, bool ball);
 
@@ -230,6 +263,11 @@ class RobotState
    *
    * Creates a RobotState, copying the x_, y_, theta_ and ball_ values from 
    * another RobotState. Does not copy the mutex.
+   *
+   * @param[in] other Another RobotState from which we copy the member values 
+   * to the new RobotState (except mutex).
+   *
+   * @note Mutex value is not copied to new Pose.
    */
   RobotState(const RobotState& other);
 
@@ -279,11 +317,15 @@ class RobotState
   /*!
    * @brief Set the x_ value of this class. Thread safe.
    *
+   * @param[in] x The x value that is to be assigned to the classes x_ member.
+   *
    * @note Thread safe.
    */
   void SetX(double x);
   /*!
    * @brief Set the y_ value of this class. Thread safe.
+   *
+   * @param[in] y The y value that is to be assigned to the classes y_ member.
    *
    * @note Thread safe.
    */
@@ -292,6 +334,9 @@ class RobotState
    * @brief Set the theta_ value of this class. Thread safe.
    *
    * Sets the theta_ value and wraps it to [-pi, pi].
+   *
+   * @param[in] theta The theta value that is to be assigned to the classes 
+   * theta_ member.
    * 
    * @note thread safe.
    */
@@ -299,6 +344,9 @@ class RobotState
   /*!
    * @brief Set the status of whether the robot has the ball or not. Thread 
    * safe.
+   *
+   * @param[in] ball The ball value that is to be assigned to the classes 
+   * ball_ member.
    *
    * @note Thread safe.
    */
@@ -380,8 +428,9 @@ class OdomSubscriber : public rclcpp::Node
    * @brief Odometry subscriber callback function storing odom in 
    * current_state.
    *
-   * @param[in] msg nav2 message contain Cartesian 3D positional data, orientation data 
-   * expressed in quaternion system, linear velocity and angular velocity. 
+   * @param[in] msg nav2 message contain Cartesian 3D positional data, 
+   * orientation data expressed in quaternion system, linear velocity and 
+   * angular velocity. 
    *
    * @note TODO uncertain if msg can be a nullptr.
    *
@@ -407,18 +456,18 @@ class OdomSubscriber : public rclcpp::Node
  * and target position (target_x, target_y), assuming a playing field which 
  * follows unit circle coordinates with four quadrants.
  *
- * @param[in] current_x Current position X coordinate.
- * @param[in] current_y Current position Y coordinate.
- * @param[in] target_x Target position X coordinate.
- * @param[in] target_y Target position Y coordinate.
+ * @param[in] current_x Current position x coordinate.
+ * @param[in] current_y Current position y coordinate.
+ * @param[in] target_x Target position x coordinate.
+ * @param[in] target_y Target position y coordinate.
  *
- * @return The angle in radians between the two points.
+ * @return The angle in radians between the two points wrapped to [-pi, pi].
  *
  * @note current and target can not be the same since atan2 is undefined in 
  * this case.
  *
  * @throws std::invalid_argument if the current and target positions are the 
- * same.
+ * same, since atan2 is undefined for this case.
  */
 double CalculateAngle(double current_x, double current_y, 
     double target_x, double target_y);

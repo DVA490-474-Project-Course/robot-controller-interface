@@ -159,6 +159,8 @@ void LocalPathPlanning(Pose *target_pose)
 {
   /* Initialize rclcpp in main */
 
+  /* TODO fix if target_pose is null */
+
   /* 
    * Local copy of most recent target pose, used to check if new target has 
    * been set.

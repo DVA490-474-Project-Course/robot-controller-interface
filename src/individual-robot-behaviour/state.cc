@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-20 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Robot state source file. Odometry, drift correction etc.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -43,7 +43,7 @@ RobotState current_state;
 
 /*============================================================================*/
 /* 
- * Class for a pose in 2D space.
+ * Class for a pose in 2D Cartesian space.
  * Copyable but not movable.
  */
 
@@ -232,16 +232,14 @@ OdomSubscriber::OdomSubscriber()
 }
 
 /* 
- * Description: Odometry callback function, stores current state in global
+ * Odometry callback function, stores current state in global
  * variable current_state.
- * Use: use as argument when creating odometry subscriber.
- * Input: const shared pointer to msg containing odometry data. 
- * Output N/A
- * Return value: void
  */
 void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr 
     msg) const
 {
+  /* TODO if msg is null then skip */
+
   /* Store globally */
   current_state.SetX(msg->pose.pose.position.x);
   current_state.SetY(msg->pose.pose.position.y);
@@ -252,8 +250,8 @@ void OdomSubscriber::OdomCallback(const nav_msgs::msg::Odometry::SharedPtr
 /*============================================================================*/
 
 /* 
- * Calculates angle between current and target pose assume a playing field which
- * follows unit circle coordinations with four quadrants
+ * Calculates angle between current and target pose, assuming a playing field 
+ * which follows unit circle coordinations with four quadrants.
  */
 double CalculateAngle(double current_x, double current_y, 
     double target_x, double target_y)
