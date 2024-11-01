@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-11 by Carl Larsson
+ * Last modified: 2024-10-26 by Carl Larsson
  * Description: Test file for ball source and header files.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -39,12 +39,14 @@ TEST(FindShootTargetTest, PlayingLeftTop)
   /* Irrelevant */
   double theta = 1.356;
 
+  /* Create goalie pose with the given position */
   robot_controller_interface::individual_robot_behaviour::Pose 
       goalie_pose(x, y, theta);
   robot_controller_interface::individual_robot_behaviour::Pose target = 
       robot_controller_interface::individual_robot_behaviour
       ::FindShootTarget(goalie_pose, playing_left);
   EXPECT_DOUBLE_EQ(target.GetX(), x);
+  /* We expect to aim in opposite corner of the goal to where the goalie is */
   EXPECT_DOUBLE_EQ(target.GetY(), -y);
 }
 
@@ -59,12 +61,14 @@ TEST(FindShootTargetTest, PlayingLeftBottom)
   /* Irrelevant */
   double theta = -2.0;
 
+  /* Create goalie pose with the given position */
   robot_controller_interface::individual_robot_behaviour::Pose 
       goalie_pose(x, y, theta);
   robot_controller_interface::individual_robot_behaviour::Pose target = 
       robot_controller_interface::individual_robot_behaviour
       ::FindShootTarget(goalie_pose, playing_left);
   EXPECT_DOUBLE_EQ(target.GetX(), x);
+  /* We expect to aim in opposite corner of the goal to where the goalie is */
   EXPECT_DOUBLE_EQ(target.GetY(), -y);
 }
 
@@ -79,12 +83,14 @@ TEST(FindShootTargetTest, PlayingRightTop)
   /* Irrelevant */
   double theta = -0.9112;
 
+  /* Create goalie pose with the given position */
   robot_controller_interface::individual_robot_behaviour::Pose 
       goalie_pose(x, y, theta);
   robot_controller_interface::individual_robot_behaviour::Pose target = 
       robot_controller_interface::individual_robot_behaviour
       ::FindShootTarget(goalie_pose, playing_left);
   EXPECT_DOUBLE_EQ(target.GetX(), x);
+  /* We expect to aim in opposite corner of the goal to where the goalie is */
   EXPECT_DOUBLE_EQ(target.GetY(), -y);
 
 }
@@ -100,12 +106,14 @@ TEST(FindShootTargetTest, PlayingRightBottom)
   /* Irrelevant */
   double theta = 1.780;
 
+  /* Create goalie pose with the given position */
   robot_controller_interface::individual_robot_behaviour::Pose 
       goalie_pose(x, y, theta);
   robot_controller_interface::individual_robot_behaviour::Pose target = 
       robot_controller_interface::individual_robot_behaviour
       ::FindShootTarget(goalie_pose, playing_left);
   EXPECT_DOUBLE_EQ(target.GetX(), x);
+  /* We expect to aim in opposite corner of the goal to where the goalie is */
   EXPECT_DOUBLE_EQ(target.GetY(), -y);
 }
 

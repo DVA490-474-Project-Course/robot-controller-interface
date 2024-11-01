@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-12 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Source file for all functions that relate to the ball.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -72,6 +72,14 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
     std::atomic_bool *atomic_playing_left, Pose *target_pose)
 {
+  /* These should only be null when the robot has not been initialized */
+  if(goalie_pose == nullptr || atomic_shoot_ball == nullptr ||
+      atomic_playing_left == nullptr || target_pose == nullptr)
+  {
+    throw std::invalid_argument(
+        "ShootSetup can not run with uninitialized arguments (nullptr)");
+  }
+
   /* Declare variables outside loop */
   /* Limit the loop speed to not take up to much CPU */
   std::chrono::milliseconds outer_loop_duration(200);
@@ -95,7 +103,7 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
       /* Find where in goal to shoot based on goalie pose */
       shoot_target = FindShootTarget(*goalie_pose, *atomic_playing_left);
       theta = CalculateAngle(current_state.GetX(), current_state.GetY(), 
-		  shoot_target.GetX(), shoot_target.GetY());
+		      shoot_target.GetX(), shoot_target.GetY());
 
       /* 
        * Setting target_pose will trigger path_planner to start angling 

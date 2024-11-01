@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-09 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Path planning header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -47,7 +47,7 @@ namespace individual_robot_behaviour
  *
  * @note Neither copyable nor move-only. 
  * @note This class depends on external systems, including Nav2, this holds for
- * all its members aswell unless state otherwise.
+ * all its members aswell unless stated otherwise.
  *
  * @pre The following preconditions must be met before using this class:
  * - Nav2 stack must be running. (https://docs.nav2.org/)
@@ -63,10 +63,21 @@ class DwbController : public rclcpp::Node
 {
  public:
    /*!
-    * @brief Default constructor creating a action server node.
+    * @brief Default constructor creating an action server node.
     *
-    * TODO
+    * Default constructor which creates an NavigateToPose action server node 
+    * and then waits until the action server is ready.
     *
+    * @throws RCLCPP_ERROR if the action server does not become ready within 
+    * 10 seconds.
+    *
+    * @pre The following preconditions are necessary for the action server to 
+    * become ready:
+    * - Nav2 stack must be running. (https://docs.nav2.org/)
+    * - `rclcpp` must be initialized.
+    * - A valid `baselink -> odom` transform must be available.
+    * - A valid `baselink -> map` transform must be available. If a map is 
+    *   used (this is the case unless global costmap, planner is disabled).
     */
   DwbController();
 
@@ -90,7 +101,10 @@ class DwbController : public rclcpp::Node
   /*!
    * @brief Callback function indicating if target position has been reached.
    *
-   * @param[in] result TODO
+   * Callback function which indicates if the target pose was reached, aborted,
+   * canceled or encounters some unknown error.
+   *
+   * @param[in] result Contains result code describing the status of the task.
    */
   void ResultCallback(
       const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>
@@ -99,7 +113,8 @@ class DwbController : public rclcpp::Node
   /*!
    * @brief Action client node for sending target pose to DWB controller 
    *
-   * TODO
+   * NavigateToPose action client node object. The object is private and is not
+   * intended to be accessed.
    */
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr 
       navigate_to_pose_client_;
@@ -113,7 +128,10 @@ class DwbController : public rclcpp::Node
  * A loop which continously checks if a new target position has been set and 
  * sends the new target pose to the DWA if it has been updated.
  *
- * @param[in] target_pose Target position using class Pose.
+ * @param[in] target_pose Target position using class Pose. Can not be nullptr.
+ *
+ * @throws std::invalid_argument if argument is nullptr. Robot has not been 
+ * initialized correctly if argument is nullptr.
  *
  * @note This function depends on external systems, including Nav2.
  *

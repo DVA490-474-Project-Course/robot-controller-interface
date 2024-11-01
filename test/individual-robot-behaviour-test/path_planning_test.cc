@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-09 by Carl Larsson
+ * Last modified: 2024-10-26 by Carl Larsson
  * Description: Test file for path planning.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -52,6 +52,10 @@ class DwbControllerTest : public ::testing::Test
     message_received_ = false;
   }
 
+  /* 
+   * Callback function for whenever we receive a message. Set flag to True 
+   * and store message 
+   */
   void CmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
   {
     /* Store the message and set the flag */
@@ -61,6 +65,7 @@ class DwbControllerTest : public ::testing::Test
 
   void TearDown() override
   {
+    /* Shutdown rclcpp */
     rclcpp::shutdown();
   }
 
@@ -79,16 +84,21 @@ class DwbControllerTest : public ::testing::Test
  * Test case for SendTargetPose.
  * To run this test you need baselink to odom transform, baselink to map 
  * transform and nav2 stack up and running beforehand.
+ * Easiest way to do this:
+ * 1. export TURTLEBOT3_MODEL=burger
+ * 2. ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+ * 3. ros2 launch slam_toolbox online_async_launch.py
+ * 4. ros2 launch nav2_bringup navigation_launch.py
  * Specify the following to run the test: 
  * ./main_test_exe --gtest_also_run_disabled_tests
  * or possibly:
- * ./main_test_exe --gtest_also_run_disabled_tests --gtest_filter=DwbControlletTest.DISABLED_SendTargetPoseTest
+ * ./main_test_exe --gtest_also_run_disabled_tests --gtest_filter=DwbControllerTest.DISABLED_SendTargetPoseTest
  */
 TEST_F(DwbControllerTest, DISABLED_SendTargetPoseTest)
 {
   /* Set target pose */
   robot_controller_interface::individual_robot_behaviour::Pose 
-      target_pose(1.0, 2.0, 2.42);
+      target_pose(-2.0, 0.5, 2.42);
 
   /* Send the target_pose using SendTargetPose */
   dwb_controller_->SendTargetPose(target_pose);

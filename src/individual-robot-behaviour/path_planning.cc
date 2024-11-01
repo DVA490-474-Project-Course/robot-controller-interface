@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-09 by Carl Larsson
+ * Last modified: 2024-10-27 by Carl Larsson
  * Description: Path planning source file, global path planning is not
  * necessary, passing the desitnation position instantly and letting DWA (local
  * path planning) handle the rest is an acceptable simplification in the 
@@ -158,6 +158,13 @@ void DwbController::ResultCallback(
 void LocalPathPlanning(Pose *target_pose)
 {
   /* Initialize rclcpp in main */
+
+  /* target_pose can not be nullptr */
+  if(target_pose == nullptr)
+  {
+    throw std::invalid_argument(
+        "Robot has not been initialized correctly (argument is nullptr)");
+  }
 
   /* 
    * Local copy of most recent target pose, used to check if new target has 
