@@ -1,4 +1,12 @@
-// test/simulation_interface_test.cc
+/* simulation_interface_test.cc
+ *==============================================================================
+ * Author: Aaiza Aziz Khan and Shruthi Puthiya Kunnon
+ * Creation date: 2024-11-01
+ * Last modified: 2024-11-01 by Aaiza Aziz Khan
+ * Description: Test suite for simulation interface
+ * License: See LICENSE file for license details.
+ *==============================================================================
+ */
 #include <gtest/gtest.h>
 #include "../../src/simulation-interface/simulation_interface.h" // Adjust the include path as necessary
 

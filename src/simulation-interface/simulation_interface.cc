@@ -87,6 +87,17 @@ void SimulationInterface::SetSpinnerOn(bool spinner_on)
 void SimulationInterface::SendPacket()
 {
   grSim_Packet packet;
+
+  /* Write the data to the protobuf message */
+  packet = CreateProtoPacket();
+
+  /* Send the packet */
+  SendPacket(packet);
+}
+
+grSim_Packet SimulationInterface::CreateProtoPacket()
+{
+  grSim_Packet packet;
   grSim_Robot_Command *command;
 
   /* Write the data to the protobuf message */
@@ -106,8 +117,7 @@ void SimulationInterface::SendPacket()
   command->set_velnormal(y_speed);
   command->set_velangular(angular_speed);
 
-  /* Send the packet */
-  SendPacket(packet);
+  return packet;
 }
 
 /* Send a grSim packet with UDP */
