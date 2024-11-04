@@ -136,9 +136,9 @@ public:
     * @warning A robot that is not continously receiving commands will just
     * stand still.
     */
-  void SendPacket();
+  virtual void SendPacket();
 
-private:
+protected:
   /*********************/
   /* Network variables */
   /*********************/
@@ -226,6 +226,11 @@ private:
    * @brief Send a grSim protobuf packet.
    */
   void SendPacket(grSim_Packet packet);
+
+  /*!
+   * @brief Structure robot command into a grSim Protobuf packet.
+   */
+  grSim_Packet CreateProtoPacket();
 };
 
 } /* namespace simulation_interface */
