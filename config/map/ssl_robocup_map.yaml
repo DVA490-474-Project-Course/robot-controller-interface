@@ -1,4 +1,4 @@
-image: temp_map.pgm
+image: "/home/carl/dev/dva490/robot-controller-interface/config/map/temp_map.pgm"
 resolution: 0.050000
 origin: [0.000000, 0.000000, 0.000000]
 negate: 0
