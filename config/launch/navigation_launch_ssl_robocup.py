@@ -29,7 +29,7 @@ def generate_launch_description():
 
     lifecycle_nodes = ['controller_server',
                        #'static_transform_publisher',
-                       #'ekf_node',
+                       'ekf_node',
                        'planner_server',
                        'behavior_server',
                        'bt_navigator',
@@ -42,8 +42,8 @@ def generate_launch_description():
     # https://github.com/ros/geometry2/issues/32
     # https://github.com/ros/robot_state_publisher/pull/30
     remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
-                  #              ('/odometry/filtered', '/odom')]
+                  ('/tf_static', 'tf_static'),
+                  ('/odometry/filtered', '/odom')]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
@@ -123,16 +123,16 @@ def generate_launch_description():
             #    parameters=[configured_params],
             #    arguments=['0','0','0','0','0','0','1','map','odom'],
             #    remappings=remappings),
-            #Node(
-            #    package='robot_localization',
-            #    executable='ekf_node',
-            #    name='ekf_node',
-            #    output='screen',
-            #    respawn=use_respawn,
-            #    respawn_delay=2.0,
-            #    parameters=[configured_params],
-            #    arguments=['--ros-args', '--log-level', log_level],
-            #    remappings=remappings),
+            Node(
+                package='robot_localization',
+                executable='ekf_node',
+                name='ekf_node',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
             Node(
                 package='nav2_planner',
                 executable='planner_server',
@@ -211,12 +211,12 @@ def generate_launch_description():
             #    name='static_transform_publisher',
             #    parameters=[configured_params],
             #    remappings=remappings),
-            #ComposableNode(
-            #    package='robot_localization',
-            #    plugin='robot_localization::EkfNode',
-            #    name='ekf_node',
-            #    parameters=[configured_params],
-            #    remappings=remappings),
+            ComposableNode(
+                package='robot_localization',
+                plugin='robot_localization::EkfNode',
+                name='ekf_node',
+                parameters=[configured_params],
+                remappings=remappings),
             ComposableNode(
                 package='nav2_planner',
                 plugin='nav2_planner::PlannerServer',
