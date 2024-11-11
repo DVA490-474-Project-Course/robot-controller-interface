@@ -52,6 +52,36 @@ amcl:
       yaw: 0.0
 
 
+      #ekf_node:
+      #ros__parameters:
+      #frequency: 30.0
+      #two_d_mode: True
+
+    # Odometry from wheel encoders
+    #odom0: /odom  # Wheel encoder-based odometry topic
+    #odom0_config: [False, False, False,
+    #               True, True, False, 
+    #               False, False, False, 
+    #               True, True, False]
+    #odom0_queue_size: 10
+
+    # IMU data for orientation
+    #imu0: /imu/data
+    #imu0_config: [False, False, False,
+    #              True, True, False,
+    #              False, False, False,
+    #              True, True, False]
+    #imu0_queue_size: 10
+    #imu0_differential: False
+    #imu0_relative: True
+
+    # Output frames
+    #map_frame: "map"
+    #odom_frame: "odom"
+    #base_link_frame: "base_footprint"
+    #world_frame: "map"
+
+
 bt_navigator:
   ros__parameters:
     use_sim_time: False
