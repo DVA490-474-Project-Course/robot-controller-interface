@@ -1,0 +1,33 @@
+!SESSION 2024-11-07 15:04:45.345 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-07 15:05:12.359
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-07 15:05:12.360
+!MESSAGE Log4j2 initialized with config file /home/aaiza/Desktop/projectrepo/robot-controller-interface/src/.metadata/.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-07 15:05:14.625
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-11-07 15:06:22.959
+!MESSAGE Indexed 'robosoccer-stm32' (28 sources, 200 headers) in 11.1 sec: 23,636 declarations; 108,985 references; 3 unresolved inclusions; 46 syntax errors; 791 unresolved names (0.59%)
+!SESSION 2024-11-08 09:35:21.673 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-08 09:35:32.111
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-08 09:35:32.112
+!MESSAGE Log4j2 initialized with config file /home/aaiza/Desktop/projectrepo/robot-controller-interface/src/.metadata/.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-08 09:35:37.405
+!MESSAGE Started RMI Server, listening on port 41337

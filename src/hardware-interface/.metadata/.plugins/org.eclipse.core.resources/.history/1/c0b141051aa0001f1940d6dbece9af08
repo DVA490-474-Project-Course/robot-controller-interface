@@ -1,0 +1,33 @@
+/* rasp_communicator.cc
+ *==============================================================================
+ * Author: Aaiza A. Khan and Shruthi P. Kunnon
+ * Creation date: 2024-11-11
+ * Last modified: 2024-11-11 by Aaiza A. Khan
+ * Description: Communicator between STM32 ans Raspberry pi.
+ * License: See LICENSE file for license details.
+ *==============================================================================
+ */
+
+/* Related .h files */
+#include "rasp_communicator.h"
+
+/* C++ standard library headers */
+#include <string.h>
+#include <stdio.h>
+
+/* Project .h files */
+#include "../stm32h7xx_hal.h"
+
+namespace stm32_code
+{
+namespace raspberrypi_communicator
+{
+void TransmitToRaspberryPi(UART_HandleTypeDef &huart)
+{
+    const char* message = "Hello from STM32!\r\n";
+    HAL_UART_Transmit(&huart, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
+}
+
+
+} /* namespace raspberrypi_communicator */
+} /* namespace stm32_code */
