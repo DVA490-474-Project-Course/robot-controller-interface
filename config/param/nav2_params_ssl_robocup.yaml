@@ -1,4 +1,11 @@
-# nav2 params for SSL-RoboCup robot
+# nav2_params_ssl_robocup.yaml
+#===============================================================================
+# Author: Carl Larsson
+# Creation date: -
+# Last modified: 2024-11-15 by Carl Larsson
+# Description: nav2 stack params file, used by launch file. (DEPRICATED)
+# License: See LICENSE file for license details.
+#===============================================================================
 
 
 amcl:

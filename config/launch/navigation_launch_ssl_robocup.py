@@ -1,4 +1,11 @@
-# SSL RoboCup nav2 launch file
+# navigation_launch_ssl_robocup.py
+#===============================================================================
+# Author: Carl Larsson
+# Creation date: -
+# Last modified: 2024-11-15 by Carl Larsson
+# Description: SSL RoboCup nav2 stack launch file. (DEPRICATED)
+# License: See LICENSE file for license details.
+#===============================================================================
 
 
 import os
