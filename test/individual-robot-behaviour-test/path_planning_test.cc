@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-26 by Carl Larsson
+ * Last modified: 2024-11-16 by Carl Larsson
  * Description: Test file for path planning.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -80,6 +80,8 @@ class DwbControllerTest : public ::testing::Test
 
 /*----------------------------------------------------------------------------*/
 
+/* TODO Make the test pass once target has been reached */
+
 /* 
  * Test case for SendTargetPose.
  * To run this test you need baselink to odom transform, baselink to map 
@@ -126,46 +128,12 @@ TEST_F(DwbControllerTest, DISABLED_SendTargetPoseTest)
 /* LocalPathPlanning function tests */
 
 /*----------------------------------------------------------------------------*/
-
-/* Test Fixture for LocalPathPlanning */
-class LocalPathPlanningTest : public ::testing::Test
-{
- protected:
-  void SetUp() override
-  {
-    /* Initialize rclcpp */
-    rclcpp::init(0, nullptr);
-  }
-
-  void TearDown() override
-  {
-    /* Shutdown rclcpp */
-    rclcpp::shutdown();
-  }
-
-  robot_controller_interface::individual_robot_behaviour::Pose target_pose_;
-};
-
 /*----------------------------------------------------------------------------*/
 
-/* TODO fix this test */
 /* 
- * Test case for SendTargetPose.
- * To run this test you need baselink to odom transform, baselink to map 
- * transform and nav2 stack up and running beforehand.
- * Specify the following to run the test: 
- * ./main_test_exe --gtest_also_run_disabled_tests
- * or possibly:
- * ./main_test_exe --gtest_also_run_disabled_tests --gtest_filter=LocalPathPlanningTest.DISABLED_SendTargetPoseTest
+ * TODO fix test.
+ * Contains forever while loop, not certain if it can be tested using google 
+ * test.
  */
-TEST_F(LocalPathPlanningTest, DISABLED_SimpleTargetPose)
-{
-  target_pose_.SetX(1.0);
-  target_pose_.SetY(2.0);
-  target_pose_.SetTheta(1.2);
-
-  robot_controller_interface::individual_robot_behaviour
-      ::LocalPathPlanning(&target_pose_);
-}
 
 /*============================================================================*/
