@@ -5,6 +5,6 @@
 **/build/*
 **/html/*
 *.swp*
-*.idea*
+**/.idea/*
 *.vscode*
 *pycache*
