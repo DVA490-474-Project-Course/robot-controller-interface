@@ -39,42 +39,44 @@ std::atomic_bool atomic_shoot_setup_work = false;
 /* Find where in goal we should shoot, we shoot where goalie is not */
 Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 {
-  Pose shoot_target;
+  Pose shoot_target_pose;
   /* If friendly half is left (then enemy is right, or 0 rad), otherwise if */
   /* friendly half is right (then enemy is left, or pi rad) */
   if(playing_left)
   {
-    shoot_target.SetX(PlayingField::kTouchLineX/2);
+    shoot_target_pose.SetX(PlayingField::kTouchLineX/2);
   }
   else
   {
-    shoot_target.SetX(-PlayingField::kTouchLineX/2);
+    shoot_target_pose.SetX(-PlayingField::kTouchLineX/2);
   }
 
   /* 0 is middle of goal */
   if(goalie_pose.GetY() < 0)
   {
     /* kGoalY is entire size of goal in y */
-    shoot_target.SetY(PlayingField::kGoalY * 3/8);
+    shoot_target_pose.SetY(PlayingField::kGoalY * 3/8);
   }
   else 
   {
     /* kGoalY is entire size of goal in y */
-    shoot_target.SetY(-PlayingField::kGoalY * 3/8);
+    shoot_target_pose.SetY(-PlayingField::kGoalY * 3/8);
   }
 
-  return shoot_target;
+  return shoot_target_pose;
 }
 
 /*============================================================================*/
 
 /* Ensure robot is setup for a shot, then shoots */
-void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
-    std::atomic_bool *atomic_playing_left, Pose *target_pose)
+void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target, 
+    std::atomic_bool *atomic_shoot_ball, std::atomic_bool *atomic_playing_left, 
+    Pose *atomic_shoot_target, Pose *target_pose)
 {
   /* These should only be null when the robot has not been initialized */
-  if(goalie_pose == nullptr || atomic_shoot_ball == nullptr ||
-      atomic_playing_left == nullptr || target_pose == nullptr)
+  if(goalie_pose == nullptr || atomic_goal_target == nullptr || 
+      atomic_shoot_ball == nullptr || atomic_playing_left == nullptr || 
+      atomic_shoot_target == nullptr || target_pose == nullptr)
   {
     throw std::invalid_argument(
         "ShootSetup can not run with uninitialized arguments (nullptr)");
@@ -88,7 +90,7 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
   std::chrono::time_point<std::chrono::high_resolution_clock> inner_start;
 
   /* Used for finding where to shoot */
-  Pose shoot_target;
+  Pose shoot_target_pose;
   double theta;
 
   while(true)
@@ -100,10 +102,18 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
     /* If we have been signaled and we have ball */
     if((*atomic_shoot_ball) & (current_state.GetBall()))
     {
-      /* Find where in goal to shoot based on goalie pose */
-      shoot_target = FindShootTarget(*goalie_pose, *atomic_playing_left);
+      /* Store local copy of shoot target */
+      shoot_target_pose = *atomic_shoot_target;
+
+      /* If we are to shoot towards goal */
+      if(*atomic_goal_target)
+      {
+        /* Find where in goal to shoot based on goalie pose */
+        shoot_target_pose = FindShootTarget(*goalie_pose, *atomic_playing_left);
+      }
+      /* Find the correct angle to shoot at target */
       theta = CalculateAngle(current_state.GetX(), current_state.GetY(), 
-		      shoot_target.GetX(), shoot_target.GetY());
+          shoot_target_pose.GetX(), shoot_target_pose.GetY());
 
       /* 
        * Setting target_pose will trigger path_planner to start angling 
@@ -133,6 +143,7 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball,
         {
           /* TODO call function which activates kicker */
 
+          *atomic_shoot_ball = false;
           atomic_target_reached_flag = 0;
         }
 

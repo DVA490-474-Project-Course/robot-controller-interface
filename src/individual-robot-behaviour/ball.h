@@ -56,10 +56,14 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * kicks the ball.
  *
  * @param[in] goalie_pose Pointer to goalies pose, not allowed to be nullptr.
+ * @param[in] atomic_goal_target Pointer to atomic bool indicating if the
+ * target is to shoot at the goal, not allowed to be nullptr.
  * @param[in] atomic_shoot_ball Pointer to atomic bool indicating if the command 
  * to shoot the ball has been given, not allowed to be nullptr.
  * @param[in] atomic_playing_left Pointer to atomic bool indicating if left side 
  * of field is friendly side or not, not allowed to be nullptr.
+ * @param[in] atomic_shoot_target Pointer to the shoot target pose, this is 
+ * where we aim to shoot, not allowed to be nullptr.
  * @param[in, out] target_pose Pointer to the target position for path 
  * planning, not allowed to be nullptr.
  *
@@ -78,8 +82,9 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  * @warning If the pointer arguments are null, then robot has not been 
  * initialized and an exception will be thrown.
  */
-void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_shoot_ball, 
-    std::atomic_bool *atomic_playing_left, Pose *target_pose);
+void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target, 
+    std::atomic_bool *atomic_shoot_ball, std::atomic_bool *atomic_playing_left, 
+    Pose *atomic_shoot_target, Pose *target_pose);
 
 /*============================================================================*/
 
