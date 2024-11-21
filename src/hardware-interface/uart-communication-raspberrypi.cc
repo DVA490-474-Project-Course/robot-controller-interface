@@ -18,7 +18,7 @@ int setup_uart(const char* device) {
     struct termios options;
     tcgetattr(fd, &options);
 
-    // Set baud rate to 9600
+    // Set baud rate to 115200
     cfsetispeed(&options, B115200);
     cfsetospeed(&options, B115200);
 
@@ -27,6 +27,7 @@ int setup_uart(const char* device) {
     options.c_cflag &= ~CSTOPB;
     options.c_cflag &= ~CSIZE;
     options.c_cflag |= CS8;
+    options.c_cflag &= ~CRTSCTS;   // Disable hardware flow control
 
     // Enable receiver, disable modem control lines
     options.c_cflag |= (CLOCAL | CREAD);
@@ -41,12 +42,16 @@ int setup_uart(const char* device) {
     // Apply the settings
     tcsetattr(fd, TCSANOW, &options);
 
+    // Flush the UART buffer
+    tcflush(fd, TCIOFLUSH); // Clear both input and output buffers
+
     return fd;
 }
 
 void transmit_data(int fd, const char* message) {
     write(fd, message, strlen(message));
 }
+
 void receive_data(int fd) {
     fd_set readfds;
     struct timeval timeout;
@@ -56,7 +61,7 @@ void receive_data(int fd) {
         FD_ZERO(&readfds);
         FD_SET(fd, &readfds);
 
-        timeout.tv_sec = 2;  // 1 second timeout
+        timeout.tv_sec =5;  // 2-second timeout
         timeout.tv_usec = 0;
 
         int ret = select(fd + 1, &readfds, nullptr, nullptr, &timeout);
@@ -85,7 +90,6 @@ int main() {
     }
 
     // Launch separate thread/process for receiving data
-    // We will use a simple loop in this example to simulate full-duplex I/O
     std::thread receiver_thread(receive_data, uart_fd);
 
     // Main loop: Transmitting data
@@ -94,11 +98,10 @@ int main() {
         transmit_data(uart_fd, message);
         cout << "Sent: " << message << endl;
         sleep(1);  // Transmit data every 1 second
-}
+    }
 
     receiver_thread.join();  // Wait for receiver thread to finish (optional in this case)
     close(uart_fd);  // Close UART file descriptor when done
 
     return 0;
 }
-
