@@ -41,17 +41,17 @@ TEST(SimulationInterfaceTest, CreateProtoPacketTest) {
 
   /* Check the values in the packet */
   EXPECT_EQ(
-      packet.commands().isteamyellow(), true);
+      packet.commands().is_team_yellow(), true);
   EXPECT_FLOAT_EQ(
-      packet.commands().robot_commands(0).kickspeedx(), 5.0f);
+      packet.commands().robot_commands(0).kick_speed_x(), 5.0f);
   EXPECT_FLOAT_EQ(
-      packet.commands().robot_commands(0).kickspeedz(), 0.0f);
+      packet.commands().robot_commands(0).kick_speed_z(), 0.0f);
   EXPECT_EQ(
       packet.commands().robot_commands(0).spinner(), true);
   EXPECT_FLOAT_EQ(
-      packet.commands().robot_commands(0).veltangent(), 2.0f);
+      packet.commands().robot_commands(0).vel_tangent(), 2.0f);
   EXPECT_FLOAT_EQ(
-      packet.commands().robot_commands(0).velnormal(), 3.0f);
+      packet.commands().robot_commands(0).vel_normal(), 3.0f);
   EXPECT_FLOAT_EQ(
-      packet.commands().robot_commands(0).velangular(), 1.0f);
+      packet.commands().robot_commands(0).vel_angular(), 1.0f);
 }

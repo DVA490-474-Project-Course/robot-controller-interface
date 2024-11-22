@@ -21,8 +21,7 @@ int main(int argc, char *argv[])
     "127.0.0.1", 20011, 3, robot_controller_interface::Team::kBlue);
   simulation_interface.SetVelocity(10.0F, 0.0F, 0.0F);
 
-  /* Run a loop to send commands and then reset the robot after 600 iterations */
-  int count = 0;
+  /* Run a loop to send commands*/
   while (true)
   {
     simulation_interface.SendPacket();

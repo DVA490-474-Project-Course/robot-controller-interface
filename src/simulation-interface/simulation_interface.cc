@@ -10,7 +10,7 @@
  */
 
 /* Related .h files */
-#include "simulation_interface.h"
+#include "../simulation-interface/simulation_interface.h"
 
 /* C system headers */
 #include <arpa/inet.h>
@@ -22,8 +22,8 @@
 #include <string>
 
 /* Project .h files */
-#include "grSim_Commands.pb.h"
-#include "grSim_Packet.pb.h"
+#include "../simulation-interface/generated/grsim_commands.pb.h"
+#include "../simulation-interface/generated/grsim_packet.pb.h"
 #include "../common_types.h"
 
 namespace robot_controller_interface
@@ -98,24 +98,24 @@ void SimulationInterface::SendPacket()
 GrSimPacket SimulationInterface::CreateProtoPacket()
 {
   GrSimPacket packet;
-  grSim_Robot_Command *command;
+  GrSimRobotCommand *command;
 
   /* Write the data to the protobuf message */
-  packet.mutable_commands()->set_isteamyellow(team == Team::kYellow);
+  packet.mutable_commands()->set_is_team_yellow(team == Team::kYellow);
   packet.mutable_commands()->set_timestamp(0.0L);
   command = packet.mutable_commands()->add_robot_commands();
   command->set_id(id);
-  command->set_kickspeedx(kicker_speed);
-  command->set_kickspeedz(0.0F);
+  command->set_kick_speed_x(kicker_speed);
+  command->set_kick_speed_z(0.0F);
   command->set_spinner(spinner_on);
-  command->set_wheelsspeed(using_wheel_speed);
+  command->set_wheels_speed(using_wheel_speed);
   command->set_wheel1(wheel1);
   command->set_wheel2(wheel2);
   command->set_wheel3(wheel3);
   command->set_wheel4(wheel4);
-  command->set_veltangent(x_speed);
-  command->set_velnormal(y_speed);
-  command->set_velangular(angular_speed);
+  command->set_vel_tangent(x_speed);
+  command->set_vel_normal(y_speed);
+  command->set_vel_angular(angular_speed);
 
   return packet;
 }
