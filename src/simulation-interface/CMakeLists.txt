@@ -1,8 +1,5 @@
 set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/generated)
 
-find_package(Protobuf REQUIRED)
-find_package(Threads REQUIRED)
-
 file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
 
 # Generate Protobuf files
