@@ -20,7 +20,7 @@
         TestableSimulationInterface(std::string ip, uint16_t port, int id, 
             robot_controller_interface::Team team)
                 : SimulationInterface(ip, port, id, team) {}
-          grSim_Packet CallCreateProtoPacket() {
+          GrSimPacket CallCreateProtoPacket() {
           return CreateProtoPacket();
           }
 
@@ -37,7 +37,7 @@ TEST(SimulationInterfaceTest, CreateProtoPacketTest) {
   sim_interface.SetVelocity(2.0f, 3.0f, 1.0f);
 
   /* Call CreateProtoPacket */
-  grSim_Packet packet = sim_interface.CallCreateProtoPacket();
+  GrSimPacket packet = sim_interface.CallCreateProtoPacket();
 
   /* Check the values in the packet */
   EXPECT_EQ(

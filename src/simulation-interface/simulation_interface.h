@@ -225,12 +225,12 @@ protected:
   /*!
    * @brief Send a grSim protobuf packet.
    */
-  void SendPacket(grSim_Packet packet);
+  void SendPacket(GrSimPacket packet);
 
   /*!
    * @brief Structure robot command into a grSim Protobuf packet.
    */
-  grSim_Packet CreateProtoPacket();
+  GrSimPacket CreateProtoPacket();
 };
 
 } /* namespace simulation_interface */

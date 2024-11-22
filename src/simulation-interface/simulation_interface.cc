@@ -86,7 +86,7 @@ void SimulationInterface::SetSpinnerOn(bool spinner_on)
 /* Send a UDP packet with the robot command */
 void SimulationInterface::SendPacket()
 {
-  grSim_Packet packet;
+  GrSimPacket packet;
 
   /* Write the data to the protobuf message */
   packet = CreateProtoPacket();
@@ -95,9 +95,9 @@ void SimulationInterface::SendPacket()
   SendPacket(packet);
 }
 
-grSim_Packet SimulationInterface::CreateProtoPacket()
+GrSimPacket SimulationInterface::CreateProtoPacket()
 {
-  grSim_Packet packet;
+  GrSimPacket packet;
   grSim_Robot_Command *command;
 
   /* Write the data to the protobuf message */
@@ -121,7 +121,7 @@ grSim_Packet SimulationInterface::CreateProtoPacket()
 }
 
 /* Send a grSim packet with UDP */
-void SimulationInterface::SendPacket(grSim_Packet packet)
+void SimulationInterface::SendPacket(GrSimPacket packet)
 {
   size_t size;
   void *buffer;
