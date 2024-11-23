@@ -8,9 +8,5 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H ${PROTO_FILES} PROTOC_OUT_DIR ${PROTO_GE
 
 add_library(simulation_interface_lib simulation_interface.cc ${PROTO_CPP})
 
-# add executable for simulation interface demo
-add_executable(simulation_interface_demo simulation_interface_demo.cc)
-
-# link libraries
+# link Protobuf libraries
 target_link_libraries(simulation_interface_lib ${Protobuf_LIBRARIES})
-target_link_libraries(simulation_interface_demo simulation_interface_lib)
