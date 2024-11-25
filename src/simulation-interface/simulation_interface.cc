@@ -13,13 +13,13 @@
 #include "../simulation-interface/simulation_interface.h"
 
 /* C system headers */
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "arpa/inet.h"
+#include "netinet/in.h"
+#include "sys/socket.h"
 
 /* C++ standard library headers */
-#include <memory>
-#include <string>
+#include "memory"
+#include "string"
 
 /* Project .h files */
 #include "../simulation-interface/generated/grsim_commands.pb.h"
@@ -32,7 +32,8 @@ namespace simulation_interface
 {
 
 /* Constructor */
-SimulationInterface::SimulationInterface(std::string ip, uint16_t port, int id, enum Team team)
+SimulationInterface::SimulationInterface(std::string ip, uint16_t port,
+    int id, enum Team team)
 {
   /* Define destination address */
   destination.sin_family = AF_INET;
@@ -49,13 +50,16 @@ SimulationInterface::SimulationInterface(std::string ip, uint16_t port, int id, 
   SetSpinnerOn(false);
 }
 
+ /* Function for setting robot through robot id and team */
 void SimulationInterface::SetRobot(int id, enum Team team)
 {
   this->id = id;
   this->team = team;
 }
 
-void SimulationInterface::SetVelocity(float x_speed, float y_speed, float angular_speed)
+ /* set the robot velocity in terms of x,y and angular speed*/
+void SimulationInterface::SetVelocity(float x_speed, float y_speed, 
+    float angular_speed)
 {
   this->using_wheel_speed = false;
   this->x_speed = x_speed;
@@ -63,21 +67,26 @@ void SimulationInterface::SetVelocity(float x_speed, float y_speed, float angula
   this->angular_speed = angular_speed;
 }
 
-void SimulationInterface::SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed,
-    float back_right_wheel_speed, float front_right_wheel_speed)
+/* set the robot velocity by setting the speed of robot wheels */
+void SimulationInterface::SetVelocity(float front_left_wheel_speed, 
+    float back_left_wheel_speed,
+    float back_right_wheel_speed, 
+    float front_right_wheel_speed)
 {
   this->using_wheel_speed = true;
-  this->wheel1 = -front_left_wheel_speed;
-  this->wheel2 = -back_left_wheel_speed;
-  this->wheel3 = back_right_wheel_speed;
-  this->wheel4 = front_right_wheel_speed;
+  this->wheel_1 = -front_left_wheel_speed;
+  this->wheel_2 = -back_left_wheel_speed;
+  this->wheel_3 = back_right_wheel_speed;
+  this->wheel_4 = front_right_wheel_speed;
 }
 
+/* Function to set the velocity of the kicker */
 void SimulationInterface::SetKickerSpeed(float kicker_speed)
 {
   this->kicker_speed = kicker_speed;
 }
 
+/* Function to control spinner */
 void SimulationInterface::SetSpinnerOn(bool spinner_on)
 {
   this->spinner_on = spinner_on;
@@ -109,10 +118,10 @@ GrSimPacket SimulationInterface::CreateProtoPacket()
   command->set_kick_speed_z(0.0F);
   command->set_spinner(spinner_on);
   command->set_wheels_speed(using_wheel_speed);
-  command->set_wheel1(wheel1);
-  command->set_wheel2(wheel2);
-  command->set_wheel3(wheel3);
-  command->set_wheel4(wheel4);
+  command->set_wheel_1(wheel_1);
+  command->set_wheel_2(wheel_2);
+  command->set_wheel_3(wheel_3);
+  command->set_wheel_4(wheel_4);
   command->set_vel_tangent(x_speed);
   command->set_vel_normal(y_speed);
   command->set_vel_angular(angular_speed);
@@ -132,8 +141,8 @@ void SimulationInterface::SendPacket(GrSimPacket packet)
   packet.SerializeToArray(buffer, size);
 
   /* Send the UDP packet*/
-  ::sendto(socket, buffer, size, 0, reinterpret_cast<sockaddr *>(&destination),
-           sizeof(destination));
+  ::sendto(socket, buffer, size, 0, 
+      reinterpret_cast<sockaddr *>(&destination), sizeof(destination));
 
   free(buffer);
 }

@@ -13,10 +13,10 @@
 #define ROBOTCONTROLLERINTERFACE_SIMULATIONINTERFACE_SIMULATIONINTERFACE_H
 
 /* C system headers */
-#include <arpa/inet.h>
+#include "arpa/inet.h"
 
 /* C++ standard library headers */
-#include <string>
+#include "string"
 
 /* Project .h files */
 #include "../simulation-interface/generated/grsim_packet.pb.h"
@@ -31,8 +31,8 @@ namespace simulation_interface
  * @brief Class for interfacíng to grSim .
  * 
  * Class that allows communication with grSim and methods to control one robot
- * in the simulation. Multiple robots can be controlled with multiple instantiations
- * of this class.
+ * in the simulation. Multiple robots can be controlled with multiple 
+ * instantiations of this class.
  */
 class SimulationInterface
 {
@@ -40,13 +40,13 @@ public:
   /*!
     * @brief Constructor that sets up connection to grSim for one robot.
     *
-    * @param[in] ip Ip address of the computer that is running grSim. When running
-    * grSim on the same computer that the simulation interface is running on this
-    * value should be localhost i.e. "127.0.0.1".
+    * @param[in] ip Ip address of the computer that is running grSim. When 
+    * running grSim on the same computer that the simulation interface is 
+    * running on this value should be localhost i.e. "127.0.0.1".
     *
     * @param[in] port The command listen port of grSim. This should
-    * be set to the same value as that which is set in the grSim configuration
-    * in Communication->Command listen port.
+    * be set to the same value as that which is set in the grSim 
+    * configuration in Communication->Command listen port.
     * 
     * @param[in] id Id number of the robot that is conntrolled in grSim.
     * 
@@ -96,9 +96,11 @@ public:
     * 
     * @param[in] angular_speed The angular speed of the robot in radians/s.
     * 
-    * @note The velocity can either be set in terms of x, y and theta using this method,
-    * or alternatively by setting the speed of the individual wheels by using
-    * SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed, float back_right_wheel_speed, float front_right_wheel_speed).
+    * @note The velocity can either be set in terms of x, y and theta using 
+    * this method,or alternatively by setting the speed of the individual 
+    * wheels by using 
+    * SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed, 
+    * float back_right_wheel_speed, float front_right_wheel_speed).
     * 
     * @pre In order for robot commands to take effect, UDP packets need
     * to be sent continuously by calling SendPacket().
@@ -106,32 +108,36 @@ public:
   void SetVelocity(float x_speed, float y_speed, float angular_speed);
 
   /*!
-    * @brief Method to set the robot velocity by setting the speeds of the individual wheels.
+    * @brief Method to set the robot velocity by setting the speeds of the 
+    individual wheels.
     *
-    * @param[in] front_left_wheel_speed The speed of the front left wheel in m/s.
+    * @param[in] front_left_wheel_speed The speed of the front left wheel in 
+    * m/s.
     * 
     * @param[in] back_left_wheel_speed The speed of the back left wheel in m/s.
     * 
-    * @param[in] back_right_wheel_speed The speed of the back right wheel in m/s.
+    * @param[in] back_right_wheel_speed The speed of the back right wheel in 
+    * m/s.
     * 
-    * @param[in] front_right_wheel_speed The speed of the front right wheel in m/s.
+    * @param[in] front_right_wheel_speed The speed of the front right wheel in 
+    * m/s.
     * 
-    * @note the velocity can either be set in terms of setting the individual wheel speeds
-    * using this method, ot by setting the velocity in terms of x, y and theta by using
-    * SetVelocity(float x_speed, float y_speed, float angular_speed).
+    * @note the velocity can either be set in terms of setting the individual 
+    * wheel speeds using this method, ot by setting the velocity in terms of 
+    * x, y and theta by using SetVelocity(float x_speed, float y_speed, 
+    * float angular_speed).
     * 
     * @pre In order for robot commands to take effect, UDP packets need
     * to be sent continuously by calling SendPacket().
     */
   void SetVelocity(float front_left_wheel_speed, float back_left_wheel_speed,
-    float back_right_wheel_speed, float front_right_wheel_speed);
+      float back_right_wheel_speed, float front_right_wheel_speed);
 
   /*!
     * @brief Sends a UDP packet to grSim, carrying the robot command
     * 
-    * Sends a UDP packet to grSim, needs to be called periodically
-    * in order for communication to be maintained, recommended minimum rate
-    * of 50Hz.
+    * Sends a UDP packet to grSim, needs to be called periodically in order for 
+    * communication to be maintained, recommended minimum rate of 50Hz.
     * 
     * @warning A robot that is not continously receiving commands will just
     * stand still.
@@ -195,26 +201,27 @@ protected:
   /*!
    * @brief Speed of front left wheel in m/s.
    */
-  float wheel1;
+  float wheel_1;
 
   /*!
    * @brief Speed of back left wheel in m/s.
    */
-  float wheel2;
+  float wheel_2;
 
   /*!
    * @brief Speed of back right wheel in m/s.
    */
-  float wheel3;
+  float wheel_3;
 
   /*!
    * @brief Speed of front right wheel in m/s.
    */
-  float wheel4;
+  float wheel_4;
 
   /*!
    * @brief Flag indicating whether individual wheel speeds are set or if
-   * velocity is determined by setting the x, y, theta speeds of the entire robot.
+   * velocity is determined by setting the x, y, theta speeds of the entire 
+   * robot.
    */
   bool using_wheel_speed;
 

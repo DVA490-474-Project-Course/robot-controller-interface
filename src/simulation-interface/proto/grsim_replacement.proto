@@ -7,7 +7,7 @@ message GrSimRobotReplacement
   required double dir=3;
   required uint32 id=4;
   required bool yellow_team=5;
-  optional bool turnon=6;
+  optional bool turn_on=6;
 }
 
 message GrSimBallReplacement
