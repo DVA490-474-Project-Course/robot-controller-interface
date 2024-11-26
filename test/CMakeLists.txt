@@ -26,7 +26,6 @@ target_link_libraries(
   state_lib
   ball_lib
   supporting_lib
-  simulation_interface_lib
 )
 
 #===============================================================================
@@ -39,7 +38,6 @@ target_sources(main_test_exe PRIVATE
   individual-robot-behaviour-test/state_test.cc
   individual-robot-behaviour-test/ball_test.cc
   individual-robot-behaviour-test/supporting_test.cc
-  simulation-interface-test/simulation_interface_test.cc
   )
 
 # !!! Add packages that must be included here !!!

@@ -5,7 +5,6 @@ add_executable(main_exe main.cc)
 
 # Where to find source code for libraries etc
 add_subdirectory(individual-robot-behaviour)
-add_subdirectory(simulation-interface)
 
 #===============================================================================
 # Dependencies
