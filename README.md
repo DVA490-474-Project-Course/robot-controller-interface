@@ -99,14 +99,13 @@ No examples available.
 Roadmap
 -----------------------
 API:
-- [x] Develop Simulation Interface
 - [ ] Develop Hardware Interface
 
 Individual Robot Behaviour (executable):
 - [x] Develop Path planning 
 - [x] Develop robot ability to shoot
 - [ ] nav2 stack configuration
-- [ ] Integrate Simulation/Hardware Interface
+- [ ] Integrate Hardware Interface
 - [ ] Ability to send data
 - [ ] Ability to receive data
 - [ ] Initilization of robot
@@ -115,8 +114,7 @@ Design diagrams
 -----------------------
 Design diagrams/files can be found in the [docs](/docs) directory. Additionally 
 they are available on:
-- [Simulation Interface](https://www.mermaidchart.com/raw/16fc3609-d826-440a-bef5-40a7a39f1140?theme=dark&version=v0.1&format=svg)
-- [Hardware Interface]()
+- [Hardware Interface](https://www.mermaidchart.com/raw/11c442f5-192c-4ac3-b61e-867a3e2ca6ea?theme=dark&version=v0.1&format=svg)
 - [Individual Robot Behaviour](https://www.mermaidchart.com/raw/dc459e07-4c98-46b8-8ac0-41c56aa6950f?theme=dark&version=v0.1&format=svg)
 
 License
