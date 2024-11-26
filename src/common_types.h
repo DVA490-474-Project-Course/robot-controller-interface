@@ -28,17 +28,6 @@ namespace robot_controller_interface
 /*============================================================================*/
 
 /*! 
- * @brief Enum indicating player team.
- */
-enum class Team
-{
-  kBlue = 0,
-  kYellow = 1
-};
-
-/*============================================================================*/
-
-/*! 
  * @brief Struct describing the playing field dimensions in millimeters (mm).
  */
 struct PlayingField
