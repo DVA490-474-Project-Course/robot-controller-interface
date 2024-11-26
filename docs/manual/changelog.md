@@ -7,6 +7,10 @@ Unresolved issues/bugs
 -----------------------
 - [nav2 stack configuration](https://robotics.stackexchange.com/questions/113468/no-map-received-timed-out-waiting-for-transform-from-base-footprint-to-map)
 
+2024-11-26
+-----------------------
+- Simulation interface moved to the other repo, centralised-ai
+
 2024-11-15
 -----------------------
 - nav2 custom config file have been depricated
