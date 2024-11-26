@@ -5,12 +5,11 @@ About
 -----------------------
 This repository contains the executable code intended for running on the 
 individual robots (on the raspberry pi), termed Individual Robot Behaviour, 
-and the accompanying API Simulation Interface and Hardware Interface.
+and the accompanying API Hardware Interface.
 
 ### Built with
 The Robot Controller Interface is built with the following:
 
-- [Protobuf 3](https://protobuf.dev/)
 - [ROS2 Humble](https://docs.ros.org/en/humble/index.html)
 - [nav2](https://docs.nav2.org/)
 - [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox)
@@ -19,9 +18,9 @@ Getting started
 -----------------------
 
 ### Prerequisites
-On Ubuntu and other Debian derivatives, the dependencies can be installed with:
+On Ubuntu and other Debian derivatives, CMake can be installed with:
 ```
-sudo apt install build-essential cmake libprotobuf-dev protobuf-compiler
+sudo apt install build-essential cmake
 ```
 
 For ros2 humble see: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
@@ -32,7 +31,7 @@ For SLAM Toolbox see: https://docs.nav2.org/tutorials/docs/navigation2_with_slam
 
 ### Installation
 1. Clone the repository:
-```sh
+```
 git clone https://github.com/DVA490-474-Project-Course/robot-controller-interface.git
 ```
 2. Navigate to the project directory:

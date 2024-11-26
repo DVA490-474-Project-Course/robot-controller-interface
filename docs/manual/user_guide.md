@@ -8,9 +8,9 @@ Getting started
 -----------------------
 
 ### Prerequisites
-On Ubuntu and other Debian derivatives, the dependencies can be installed with:
+On Ubuntu and other Debian derivatives, CMake can be installed with:
 ```
-sudo apt install build-essential cmake libprotobuf-dev protobuf-compiler
+sudo apt install build-essential cmake
 ```
 
 For ros2 humble see: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
