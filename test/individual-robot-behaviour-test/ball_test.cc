@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-23
- * Last modified: 2024-10-26 by Carl Larsson
+ * Last modified: 2024-11-16 by Carl Larsson
  * Description: Test file for ball source and header files.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -123,6 +123,10 @@ TEST(FindShootTargetTest, PlayingRightBottom)
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 
-/* TODO fix tests */
+/* 
+ * TODO fix tests.
+ * Contains forever while loop, uncertain if i can be tested through a google 
+ * test.
+ */
 
 /*============================================================================*/

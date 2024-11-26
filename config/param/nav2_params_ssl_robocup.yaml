@@ -1,4 +1,11 @@
-# nav2 params for SSL-RoboCup robot
+# nav2_params_ssl_robocup.yaml
+#===============================================================================
+# Author: Carl Larsson
+# Creation date: -
+# Last modified: 2024-11-15 by Carl Larsson
+# Description: nav2 stack params file, used by launch file. (DEPRICATED)
+# License: See LICENSE file for license details.
+#===============================================================================
 
 
 amcl:
@@ -13,7 +20,7 @@ amcl:
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
-    do_beamskip: false
+    do_beamskip: False
     global_frame_id: "map"
     lambda_short: 0.1
     laser_likelihood_max_dist: 2.0
@@ -29,10 +36,11 @@ amcl:
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 1
+    # Change to omni later
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
     save_pose_rate: 0.5
     sigma_hit: 0.2
-    tf_broadcast: true
+    tf_broadcast: True
     transform_tolerance: 1.0
     update_min_a: 0.2
     update_min_d: 0.25
@@ -40,8 +48,8 @@ amcl:
     z_max: 0.05
     z_rand: 0.5
     z_short: 0.05
-    scan_topic: scan
-    map_topic: map
+    scan_topic: /scan
+    map_topic: /map
     first_map_only: False
     set_initial_pose: True
     initial_pose: 
@@ -51,11 +59,43 @@ amcl:
       yaw: 0.0
 
 
+ekf_node:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: True
+    publish_acceleration: True
+    publish_tf: True
+
+    # Odometry from wheel encoders
+    odom0: /odom
+    odom0_config: [False, False, False,
+                   True, True, False, 
+                   False, False, False, 
+                   True, True, False]
+    odom0_queue_size: 10
+
+    # IMU data for orientation
+    imu0: /imu
+    imu0_config: [False, False, False,
+                  True, True, False,
+                  False, False, False,
+                  True, True, False]
+    imu0_queue_size: 10
+    imu0_differential: False
+    imu0_relative: True
+
+    # Output frames
+    map_frame: "map"
+    odom_frame: "odom"
+    base_link_frame: "base_footprint"
+    world_frame: "odom"
+
+
 bt_navigator:
   ros__parameters:
     use_sim_time: False
-    global_frame: map
-    robot_base_frame: base_footprint
+    global_frame: "map"
+    robot_base_frame: "base_footprint"
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -128,11 +168,11 @@ bt_navigator_navigate_to_pose_rclcpp_node:
 controller_server:
   ros__parameters:
     use_sim_time: False
-    odom_topic: "odom"
+    odom_topic: /odom
     # Set: <username> soft rtprio 99 <username> hard rtprio 99
     # in: /etc/security/limits.conf
     # to use use_realtime_priority
-    use_realtime_priority: True
+    use_realtime_priority: False
     publish_zero_velocity: True
     controller_frequency: 20.0
     min_x_velocity_threshold: 0.001
@@ -201,11 +241,11 @@ local_costmap:
     ros__parameters:
       update_frequency: 5.0
       publish_frequency: 2.0
-      global_frame: odom
-      map_topic: "map"
-      robot_base_frame: base_footprint
+      global_frame: "odom"
+      map_topic: /map
+      robot_base_frame: "base_footprint"
       use_sim_time: False
-      rolling_window: true
+      rolling_window: True
       width: 3
       height: 3
       resolution: 0.05
@@ -220,7 +260,7 @@ local_costmap:
         scan:
           topic: /scan
           # ???
-          sensor_frame: base_footprint
+          sensor_frame: "base_footprint"
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -237,7 +277,7 @@ local_costmap:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
         subscribe_to_updates: True
-        map_topic: "map"
+        map_topic: /map
       # Maybe set to False?
       always_send_full_costmap: True
 
@@ -247,15 +287,15 @@ global_costmap:
     ros__parameters:
       update_frequency: 1.0
       publish_frequency: 1.0
-      global_frame: map
-      map_topic: "map"
-      robot_base_frame: base_footprint
+      global_frame: "map"
+      map_topic: /map
+      robot_base_frame: "base_footprint"
       use_sim_time: False
       static_map: True
       robot_radius: 0.22
       resolution: 0.05
       transform_tolerance: 0.3
-      track_unknown_space: true
+      track_unknown_space: True
       trinary_costmap: True
       plugins: ["static_layer", "inflation_layer", "obstacle_layer"]
       obstacle_layer:
@@ -265,7 +305,7 @@ global_costmap:
         scan:
           topic: /scan
           # ???
-          sensor_frame: base_footprint
+          sensor_frame: "base_footprint"
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -282,7 +322,7 @@ global_costmap:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
         subscribe_to_updates: True
-        map_topic: "map"
+        map_topic: /map
       # Maybe set to False?
       always_send_full_costmap: True
 
@@ -290,7 +330,7 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: False
-    topic_name: "map"
+    topic_name: /map
     frame_id: "map"
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
@@ -305,16 +345,16 @@ planner_server:
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
-      use_astar: false
-      allow_unknown: true
+      use_astar: False
+      allow_unknown: True
 
 
 behavior_server:
   ros__parameters:
-    local_costmap_topic: local_costmap/costmap_raw
-    global_costmap_topic: global_costmap/costmap_raw
-    local_footprint_topic: local_costmap/published_footprint
-    global_footprint_topic: global_costmap/published_footprint
+    local_costmap_topic: /local_costmap/costmap_raw
+    global_costmap_topic: /global_costmap/costmap_raw
+    local_footprint_topic: /local_costmap/published_footprint
+    global_footprint_topic: /global_costmap/published_footprint
     cycle_frequency: 10.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "wait"]
     spin:
@@ -325,9 +365,9 @@ behavior_server:
       plugin: "nav2_behaviors/DriveOnHeading"
     wait:
       plugin: "nav2_behaviors/Wait"
-    local_frame: odom
-    global_frame: map
-    robot_base_frame: base_footprint
+    local_frame: "odom"
+    global_frame: "map"
+    robot_base_frame: "base_footprint"
     transform_tolerance: 0.1
     use_sim_time: False
     simulate_ahead_time: 2.0

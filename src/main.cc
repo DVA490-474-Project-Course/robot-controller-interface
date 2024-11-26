@@ -33,7 +33,8 @@
 int main(int argc, char **argv)
 {
   /* Variables */
-  robot_controller_interface::individual_robot_behaviour::Pose *target_position = nullptr;
+  robot_controller_interface::individual_robot_behaviour::
+      Pose *target_position = nullptr;
   std::atomic_bool *shoot_ball = nullptr;
   std::atomic_int *robot_id = nullptr;
   std::atomic_bool *playing_left = nullptr;
@@ -43,7 +44,8 @@ int main(int argc, char **argv)
 
   /* Initialize robot */
   /* Gain robot ID and initial pose */
-  robot_controller_interface::individual_robot_behaviour::InitializeRobot(robot_id, target_position);
+  robot_controller_interface::individual_robot_behaviour::
+      InitializeRobot(robot_id, target_position);
 
   /* TODO Complete the functions the threads are to run */
   /*

@@ -1,7 +1,13 @@
 <!--
-  SSL RoboCup behaviour tree for DWB NavigateToPose
+ to_pose_ssl.xml
+================================================================================
+ Author: Carl Larsson
+ Creation date: -
+ Last modified: 2024-11-15 by Carl Larsson
+ Description: SSL RoboCup behaviour tree for DWB NavigateToPose. (DEPRICATED)
+ License: See LICENSE file for license details.
+================================================================================
 -->
-
 
 
 <root main_tree_to_execute="MainTree">

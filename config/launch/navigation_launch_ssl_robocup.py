@@ -1,4 +1,11 @@
-# SSL RoboCup nav2 launch file
+# navigation_launch_ssl_robocup.py
+#===============================================================================
+# Author: Carl Larsson
+# Creation date: -
+# Last modified: 2024-11-15 by Carl Larsson
+# Description: SSL RoboCup nav2 stack launch file. (DEPRICATED)
+# License: See LICENSE file for license details.
+#===============================================================================
 
 
 import os
@@ -29,6 +36,7 @@ def generate_launch_description():
 
     lifecycle_nodes = ['controller_server',
                        #'static_transform_publisher',
+                       'ekf_node',
                        'planner_server',
                        'behavior_server',
                        'bt_navigator',
@@ -41,7 +49,8 @@ def generate_launch_description():
     # https://github.com/ros/geometry2/issues/32
     # https://github.com/ros/robot_state_publisher/pull/30
     remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
+                  ('/tf_static', 'tf_static'),
+                  ('/odometry/filtered', '/odom')]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
@@ -66,7 +75,7 @@ def generate_launch_description():
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='False',
         description='Use simulation (Gazebo) clock if true')
 
     declare_params_file_cmd = DeclareLaunchArgument(
@@ -80,7 +89,7 @@ def generate_launch_description():
         description='Full path to map yaml file to load')
 
     declare_autostart_cmd = DeclareLaunchArgument(
-        'autostart', default_value='true',
+        'autostart', default_value='True',
         description='Automatically startup the nav2 stack')
 
     declare_use_composition_cmd = DeclareLaunchArgument(
@@ -121,6 +130,16 @@ def generate_launch_description():
             #    parameters=[configured_params],
             #    arguments=['0','0','0','0','0','0','1','map','odom'],
             #    remappings=remappings),
+            Node(
+                package='robot_localization',
+                executable='ekf_node',
+                name='ekf_node',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
             Node(
                 package='nav2_planner',
                 executable='planner_server',
@@ -199,6 +218,12 @@ def generate_launch_description():
             #    name='static_transform_publisher',
             #    parameters=[configured_params],
             #    remappings=remappings),
+            ComposableNode(
+                package='robot_localization',
+                plugin='robot_localization::EkfNode',
+                name='ekf_node',
+                parameters=[configured_params],
+                remappings=remappings),
             ComposableNode(
                 package='nav2_planner',
                 plugin='nav2_planner::PlannerServer',
