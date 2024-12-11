@@ -5,7 +5,7 @@ About
 -----------------------
 This repository contains the executable code intended for running on the 
 individual robots (on the raspberry pi), termed Individual Robot Behaviour, 
-and the accompanying API Hardware Interface.
+and the accompanying Raspberry Pi part of the Hardware interface API.
 
 ### Built with
 The Robot Controller Interface is built with the following:
