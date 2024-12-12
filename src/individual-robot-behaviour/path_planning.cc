@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-19
- * Last modified: 2024-10-27 by Carl Larsson
+ * Last modified: 2024-12-12 by Carl Larsson
  * Description: Path planning source file, global path planning is not
  * necessary, passing the desitnation position instantly and letting DWA (local
  * path planning) handle the rest is an acceptable simplification in the 
@@ -73,21 +73,21 @@ DwbController::DwbController() : rclcpp::Node("dwb_controller")
 /* Function for sending the target pose to DWB controller. */
 void DwbController::SendTargetPose(Pose target_pose)
 {
-  geometry_msgs::msg::PoseStamped target_pose_;
+  geometry_msgs::msg::PoseStamped local_target_pose;
   /* Message contents (target pose) */
-  target_pose_.header.frame_id = "map"; /* TODO Change? */
-  target_pose_.header.stamp = this->now();
-  target_pose_.pose.position.x = target_pose.GetX();
-  target_pose_.pose.position.y = target_pose.GetY();
+  local_target_pose.header.frame_id = "map"; /* TODO Change? */
+  local_target_pose.header.stamp = this->now();
+  local_target_pose.pose.position.x = target_pose.GetX();
+  local_target_pose.pose.position.y = target_pose.GetY();
   
   /* Transform Euler angle to quaternion */
   tf2::Quaternion quaternion_heading;
   quaternion_heading.setRPY(0, 0, target_pose.GetTheta());
-  target_pose_.pose.orientation = tf2::toMsg(quaternion_heading);
+  local_target_pose.pose.orientation = tf2::toMsg(quaternion_heading);
 
   nav2_msgs::action::NavigateToPose::Goal goal_msg;
   /* Send target pose */
-  goal_msg.pose = target_pose_;
+  goal_msg.pose = local_target_pose;
 
   /* Options to receive results if target was reached */
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions 

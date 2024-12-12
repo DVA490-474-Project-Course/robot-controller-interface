@@ -156,6 +156,8 @@ void LocalPathPlanning(Pose *target_pose);
  * 0 indicates work has not been completed
  * 1 then work called by local_path_planner is completed
  * 2 then work called by shoot_setup is completed
+ *
+ * This variable is accessed by multiple threads and hence must be global.
  */
 extern std::atomic_int atomic_target_reached_flag;
 /*!
@@ -163,6 +165,9 @@ extern std::atomic_int atomic_target_reached_flag;
  *
  * Informs the callback function for the DWB controller that it was a move
  * command which called and wanted path planning work to be done.
+ *
+ * Must be a global variable since multiple threads need to be able to access 
+ * it.
  */
 extern std::atomic_bool atomic_move_to_target;
 
