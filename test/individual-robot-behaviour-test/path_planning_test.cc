@@ -56,8 +56,6 @@ class DwbControllerTest : public ::testing::Test
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO Make the test pass once target has been reached */
-
 /* 
  * Test case for SendTargetPose.
  * To run this test you need baselink to odom transform, baselink to map 

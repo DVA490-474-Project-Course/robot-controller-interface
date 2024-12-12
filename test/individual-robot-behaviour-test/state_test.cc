@@ -49,7 +49,7 @@ class PoseClassTest : public ::testing::Test {
 
 /* 
  * Test case for Pose class, initial values (assuming default constructor was 
- * used) and GetX,GetY,GetTheta
+ * used) and GetX, GetY, GetTheta
  */
 TEST_F(PoseClassTest, DefaultConstructor)
 {
@@ -153,7 +153,6 @@ TEST_F(PoseClassTest, AssignmentOperator)
   double default_value = 0.0;
   double val = 2.0;
 
-
   /* The one to assign from */
   robot_controller_interface::individual_robot_behaviour::Pose a;
   a.SetX(val);
@@ -186,7 +185,6 @@ TEST_F(PoseClassTest, InequalityOperator)
   b.SetX(val);
   b.SetY(val);
   b.SetTheta(val);
-
   
   /* Exactly equal */
   EXPECT_FALSE(a != b);
