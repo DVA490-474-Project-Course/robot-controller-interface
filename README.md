@@ -58,7 +58,7 @@ Usage
 
 To use individual robot behaviour (path planning etc), then the following 
 preconditions must be started:
-Start SLAM Toolbox (this require publishing LIDAR values on the /scan topic):
+Start SLAM Toolbox (this requires publishing LIDAR values on the /scan topic):
 ```
 ros2 launch slam_toolbox online_async_launch.py
 ```

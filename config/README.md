@@ -11,7 +11,7 @@ Alternative
 The temporary alternative is to use the default nav2 stack together with SLAM 
 Toolbox. To start everything which is necessary to run the individual robot 
 behaviour (path planning):
-Start SLAM Toolbox (this require publishing LIDAR values on the /scan topic):
+Start SLAM Toolbox (this requires publishing LIDAR values on the /scan topic):
 ```
 ros2 launch slam_toolbox online_async_launch.py
 ```
