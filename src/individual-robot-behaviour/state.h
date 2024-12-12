@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-27 by Carl Larsson
+ * Last modified: 2024-12-12 by Carl Larsson
  * Description: Robot state header file.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -208,7 +208,7 @@ class Pose
   /*!
    * @brief Mutex ensuring the class methods are thread safe.
    *
-   * @note Can not be accessed.
+   * @note Can not be accessed directly.
    *
    * @warning This mutex does not ensure there are no interruptions inbetween 
    * subsequent or multiple calls to different class functions.
@@ -384,7 +384,7 @@ class RobotState
   /*!
    * @brief Mutex ensuring all class functions are thread safe.
    *
-   * @note Can not be accessed.
+   * @note Can not be accessed directly.
    *
    * @warning This mutex does not ensure there are no interruptions inbetween 
    * subsequent or multiple calls to different class functions.

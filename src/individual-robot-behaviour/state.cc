@@ -2,7 +2,7 @@
  *==============================================================================
  * Author: Carl Larsson
  * Creation date: 2024-09-22
- * Last modified: 2024-10-27 by Carl Larsson
+ * Last modified: 2024-12-12 by Carl Larsson
  * Description: Robot state source file. Odometry, drift correction etc.
  * License: See LICENSE file for license details.
  *==============================================================================
@@ -35,7 +35,8 @@ namespace individual_robot_behaviour
 /*============================================================================*/
 
 /* 
- * Global variable for keeping track of current robot state
+ * Global variable for keeping track of current robot state.
+ *
  * Needs to be global since its used between multiple threads to keep track
  * of current robot state.
  */
