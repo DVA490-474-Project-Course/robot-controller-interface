@@ -13,7 +13,7 @@ Unresolved issues/bugs
 
 2024-11-15
 -----------------------
-- nav2 custom config file have been depricated
+- nav2 custom config files have been depricated
 - nav2 functionality now relies on default nav2 stack files and SLAM Toolbox, 
 see @ref user_guide
 

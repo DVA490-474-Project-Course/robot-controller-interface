@@ -71,12 +71,12 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left)
 /* Ensure robot is setup for a shot, then shoots */
 void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target, 
     std::atomic_bool *atomic_shoot_ball, std::atomic_bool *atomic_playing_left, 
-    Pose *atomic_shoot_target, Pose *target_pose)
+    Pose *shoot_target, Pose *target_pose)
 {
   /* These should only be null when the robot has not been initialized */
   if(goalie_pose == nullptr || atomic_goal_target == nullptr || 
       atomic_shoot_ball == nullptr || atomic_playing_left == nullptr || 
-      atomic_shoot_target == nullptr || target_pose == nullptr)
+      shoot_target == nullptr || target_pose == nullptr)
   {
     throw std::invalid_argument(
         "ShootSetup can not run with uninitialized arguments (nullptr)");
@@ -103,7 +103,7 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target,
     if((*atomic_shoot_ball) & (current_state.GetBall()))
     {
       /* Store local copy of shoot target */
-      shoot_target_pose = *atomic_shoot_target;
+      shoot_target_pose = *shoot_target;
 
       /* If we are to shoot towards goal */
       if(*atomic_goal_target)
@@ -117,7 +117,7 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target,
 
       /* 
        * Setting target_pose will trigger path_planner to start angling 
-	     * towards target.
+       * towards target.
        */
       /* We do not want to move */
       (*target_pose).SetX(current_state.GetX());
@@ -129,10 +129,10 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target,
       atomic_shoot_setup_work = true;
 
       /* 
-	     * Ensure we do not get stuck in while loop while waiting for getting
+       * Ensure we do not get stuck in while loop while waiting for getting
        * correct direction, since this command could get abborted and a new
        * command pursued instead, could also loose the ball. 
-	     */
+       */
       while((*atomic_shoot_ball) & (current_state.GetBall()))
       {
         /* Limit loop speed of inner loop */

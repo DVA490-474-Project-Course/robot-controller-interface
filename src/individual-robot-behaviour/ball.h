@@ -84,7 +84,7 @@ Pose FindShootTarget(Pose goalie_pose, bool playing_left);
  */
 void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target, 
     std::atomic_bool *atomic_shoot_ball, std::atomic_bool *atomic_playing_left, 
-    Pose *atomic_shoot_target, Pose *target_pose);
+    Pose *shoot_target, Pose *target_pose);
 
 /*============================================================================*/
 
@@ -95,6 +95,8 @@ void ShootSetup(Pose *goalie_pose, std::atomic_bool *atomic_goal_target,
  * This global atomic variable indicates whether the shoot_setup function set
  * LocalPathPlanning to work so that the callback function knows which 
  * function it should tell that the task has been completed. 
+ *
+ * It needs to be global since multiple threads need to access it.
  */
 extern std::atomic_bool atomic_shoot_setup_work;
 
